@@ -60,7 +60,7 @@ public class WavefrontParser {
                 // add face to the current mesh
                 int[] indices = new int[tokens.length - 1];
                 for (int i = 0; i < indices.length; i++) {
-                    indices[0] = Integer.parseInt(tokens[i+1]) - 1;
+                    indices[i] = Integer.parseInt(tokens[i+1]) - 1;
                 }
                 currentMesh.addFace(new Face(indices));
             } else if (lineStart.equals(VERTEX)) {

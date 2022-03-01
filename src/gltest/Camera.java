@@ -9,28 +9,31 @@ public class Camera {
     private Vector3f translation = new Vector3f();
     private Vector3f rotation = new Vector3f();
 
+    // amount to move by each frame
+    private static final float TRANSLATE_DELTA = 0.1f;
+
     void moveForward() {
-        ++translation.z;
+        translation.z += TRANSLATE_DELTA;
     }
     
     void moveBack() {
-        --translation.z;
+        translation.z -= TRANSLATE_DELTA;
     }
     
     void moveLeft() {	
-        --translation.x;
+        translation.x -= TRANSLATE_DELTA;
     }
     
     void moveRight() {
-        ++translation.x;
+        translation.x += TRANSLATE_DELTA;
     }
     
     void moveUp() { 
-        ++translation.y; 
+        translation.y += TRANSLATE_DELTA; 
     }
     
     void moveDown() { 
-        --translation.y; 
+        translation.y -= TRANSLATE_DELTA; 
     }
     
     void rotateLeft() { 
@@ -49,6 +52,8 @@ public class Camera {
         rotation.x = (float) ((rotation.x - Math.PI/8) % (2 * Math.PI));
     }
     
+    // TODO: I think this may be broken - perspective can just be done with
+    // TODO: the perspective call in setViewMatrix, we should just make this normal scale
     void changeScale(int change) {
         scale += change * 10;
         scale = Math.min(Math.max(scale, 400), 800);
@@ -58,7 +63,7 @@ public class Camera {
         viewMatrix.identity();
         
         // add perspective
-        viewMatrix.perspective(90f, width / height, 0.1f, scale);
+        viewMatrix.perspective(90f, width / height, 0.1f, 1000f);
 
         //scale to zoom, translate to move, and rotate on x/y axis to tilt camera
         Vector3f translationInverse = new Vector3f();

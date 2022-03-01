@@ -15,6 +15,7 @@ public class Mesh {
     }
 
     private void setIndices(int[] indices) {
+        System.out.println("Length of mesh is " + indices.length);
         this.indices = indices;
     }
 

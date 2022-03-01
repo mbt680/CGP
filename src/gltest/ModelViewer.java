@@ -84,21 +84,22 @@ public class ModelViewer {
         Shader shader = new Shader(dir + "/shaders/basic.vs", dir + "/shaders/basic.fs");
 
         //crashes
-        //shader.createUniform("viewMatrix");
-        //shader.setUniform("viewMatrix", camera.viewMatrix);
+        shader.createUniform("viewMatrix");
+        shader.setUniform("viewMatrix", camera.viewMatrix);
 
         // Load models.
         List<Model> modelList = WavefrontParser.parse(dir + "/data/cube.obj", shader);
         
         glEnable(GL_DEPTH_TEST);
         // draw a wireframe
-        glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+        // glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
         while (!glfwWindowShouldClose(window)) {
             glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
             glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
             camera.setViewMatrix(WIDTH, HEIGHT);
-            
+            shader.setUniform("viewMatrix", camera.viewMatrix);
+
             // Main draw loop
             for (Model model : modelList) {
                 model.draw();
