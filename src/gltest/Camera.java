@@ -5,9 +5,13 @@ import org.joml.Vector3f;
 
 public class Camera {
     Matrix4f viewMatrix = new Matrix4f();
-    private int scale = 1;
+    private int scale = 10;
     private Vector3f translation = new Vector3f();
     private Vector3f rotation = new Vector3f();
+
+    Camera() {
+        translation.z = 5;
+    }
 
     // amount to move by each frame
     private static final float TRANSLATE_DELTA = 0.1f;
@@ -37,42 +41,41 @@ public class Camera {
     }
     
     void rotateLeft() { 
-        rotation.y = (float) ((rotation.y + Math.PI/8) % (2 * Math.PI)); 
+        rotation.y = (float) ((rotation.y + Math.PI/32) % (2 * Math.PI)); 
     }
     
     void rotateRight() { 
-        rotation.y = (float) ((rotation.y - Math.PI/8) % (2 * Math.PI)); 
+        rotation.y = (float) ((rotation.y - Math.PI/32) % (2 * Math.PI)); 
     }
     
     void rotateUp() { 
-        rotation.x = (float) ((rotation.x + Math.PI/8) % (2 * Math.PI)); 
+        rotation.x = (float) ((rotation.x + Math.PI/32) % (2 * Math.PI)); 
     }
     
     void rotateDown() { 
-        rotation.x = (float) ((rotation.x - Math.PI/8) % (2 * Math.PI));
+        rotation.x = (float) ((rotation.x - Math.PI/32) % (2 * Math.PI));
     }
     
-    // TODO: I think this may be broken - perspective can just be done with
-    // TODO: the perspective call in setViewMatrix, we should just make this normal scale
+    private final int minScale = 1;
+    private final int maxScale = 20;
     void changeScale(int change) {
-        scale += change * 10;
-        scale = Math.min(Math.max(scale, 400), 800);
+        scale = Math.min(Math.max(scale + change, minScale), maxScale);
     }
 
     public void setViewMatrix(float width, float height) {
         viewMatrix.identity();
         
-        // add perspective
-        viewMatrix.perspective(90f, width / height, 0.1f, 1000f);
+        // add perspective with scale
+        float scaledFovy = (maxScale - scale + 1) * (float) Math.PI/(maxScale + 1);
+        viewMatrix.perspective(scaledFovy, width / height, 0.1f, 1000f);
 
-        //scale to zoom, translate to move, and rotate on x/y axis to tilt camera
+        //translate to move, and rotate on x/y axis to tilt camera
         Vector3f translationInverse = new Vector3f();
         translationInverse.x = -translation.x;
         translationInverse.y = -translation.y;
         translationInverse.z = -translation.z;
 
-        viewMatrix.scale(scale).
-                    translate(translationInverse).
+        viewMatrix.translate(translationInverse).
                     rotateX(-rotation.x).
                     rotateY(-rotation.y);
     }

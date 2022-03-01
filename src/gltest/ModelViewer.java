@@ -45,9 +45,9 @@ public class ModelViewer {
             } else if (key == GLFW_KEY_X) {
                 camera.moveUp();
             }else if (key == GLFW_KEY_EQUAL) {
-                camera.changeScale(-1);
-            } else if (key == GLFW_KEY_MINUS) {
                 camera.changeScale(1);
+            } else if (key == GLFW_KEY_MINUS) {
+                camera.changeScale(-1);
             }
         }
     };
