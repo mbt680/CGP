@@ -5,6 +5,7 @@ import java.util.List;
 import org.lwjgl.opengl.GL;
 import org.lwjgl.glfw.GLFWFramebufferSizeCallback;
 import org.lwjgl.glfw.GLFWKeyCallback;
+import org.lwjgl.glfw.GLFWScrollCallback;
 
 import static org.lwjgl.glfw.GLFW.*;
 import static org.lwjgl.opengl.GL33.*;
@@ -52,6 +53,13 @@ public class ModelViewer {
         }
     };
 
+    private static final GLFWScrollCallback scrollCallback = new GLFWScrollCallback() {
+        @Override
+        public void invoke(long window, double xoffset, double yoffset) {
+            camera.changeScale((int)yoffset);      
+        }
+    };
+
     private static final GLFWFramebufferSizeCallback bufferSizeCallback = new GLFWFramebufferSizeCallback() {
         @Override
         public void invoke(long window, int width, int height) {
@@ -76,6 +84,7 @@ public class ModelViewer {
         GL.createCapabilities();
 
         glfwSetKeyCallback(window, keyCallback);
+        glfwSetScrollCallback(window, scrollCallback);
         glfwSetFramebufferSizeCallback(window, bufferSizeCallback);
 
         
