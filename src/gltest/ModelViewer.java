@@ -64,9 +64,11 @@ public class ModelViewer {
         @Override
         public void invoke(long window, int width, int height) {
             glfwSetWindowSize(window, width, height);
+            // Needs to change if initial aspect ratio is changed and no longer 1
+            int imageSize = Math.min(width, height);
+            glViewport((width - imageSize)/2, (height - imageSize)/2, imageSize, imageSize);
         }   
     };
-
     public static void main(String[] args) throws Exception {
         long window;
 
@@ -86,13 +88,12 @@ public class ModelViewer {
         glfwSetKeyCallback(window, keyCallback);
         glfwSetScrollCallback(window, scrollCallback);
         glfwSetFramebufferSizeCallback(window, bufferSizeCallback);
-
-        
+    
         // Get the current directory
         String dir = System.getProperty("user.dir");
         Shader shader = new Shader(dir + "/shaders/basic.vs", dir + "/shaders/basic.fs");
 
-        //crashes
+        // create uniform for camera view
         shader.createUniform("viewMatrix");
         shader.setUniform("viewMatrix", camera.viewMatrix);
 

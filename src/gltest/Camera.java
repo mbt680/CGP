@@ -17,11 +17,11 @@ public class Camera {
     private static final float TRANSLATE_DELTA = 0.1f;
 
     void moveForward() {
-        translation.z += TRANSLATE_DELTA;
+        translation.z -= TRANSLATE_DELTA;
     }
     
     void moveBack() {
-        translation.z -= TRANSLATE_DELTA;
+        translation.z += TRANSLATE_DELTA;
     }
     
     void moveLeft() {	
