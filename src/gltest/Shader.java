@@ -7,7 +7,10 @@ import java.util.Map;
 import java.util.Scanner;
 
 import org.joml.Matrix4f;
+import org.joml.Vector3f;
 import org.lwjgl.system.MemoryStack;
+
+import javafx.util.Pair;
 
 import static org.lwjgl.opengl.GL33.*;
 
@@ -15,8 +18,9 @@ import static org.lwjgl.opengl.GL33.*;
  * Shader class for creating and using shader programs
  */
 public class Shader {
-    private int id;
-    private static final Map<String, Integer> uniforms = new HashMap<>();
+    public int id;
+    private Map<String, Pair<Integer, Vector3f>> persistentUniform;
+    private Map<String, Integer> uniforms;
 
     /**
      * Constructor
@@ -24,6 +28,9 @@ public class Shader {
      * @param fragmentPath Path to fragment shader file
      */
     public Shader(String vertexPath, String fragmentPath) {
+        persistentUniform = new HashMap<>();
+        uniforms = new HashMap<>();
+    
         String vertexCode = "";
         String fragmentCode = "";
         Scanner vertexScanner, fragmentScanner;
@@ -103,6 +110,15 @@ public class Shader {
      */
     public void use() {
         glUseProgram(id);
+
+        for (String key : persistentUniform.keySet()) {
+            Pair<Integer, Vector3f> uniform = persistentUniform.get(key);
+            try (MemoryStack stack = MemoryStack.stackPush()) {
+                FloatBuffer fb = stack.mallocFloat(3);
+                uniform.getValue().get(fb);
+                glUniform3fv(uniform.getKey(),  fb);
+            }
+        }
     }
 
     /**
@@ -133,12 +149,34 @@ public class Shader {
     }
 
     /**
+     * setConstantUniform3fv sets a vector3 for the shader, which is set each time when the program
+     * is used.
+     * @param uniformName Variable to set
+     * @param value Value of variable
+     * @throws Exception If uniformName is not valid 
+     */
+    public void setConstantUniform3fv(String uniformName, Vector3f value) throws Exception {
+        // System.out.printf("Setting %s in shader %d\n", uniformName, id);
+        int uniformLocation = glGetUniformLocation(id, uniformName);
+        if (uniformLocation < 0) {  
+            throw new Exception("Could not find uniform: " + uniformName); 
+        } else {
+            persistentUniform.put(uniformName, new Pair<>(uniformLocation, value));
+        }
+    }
+
+    /**
      * Clean up this object
      */
     public void delete() {
         glDeleteProgram(id);
     }
 
+    /**
+     * createUniform for the shader, and store its location
+     * @param uniformName Name of the uniform in the shader
+     * @throws Exception If name is not valid
+     */
     public void createUniform(String uniformName) throws Exception {
         int uniformLocation = glGetUniformLocation(id, uniformName);
         if (uniformLocation < 0) {  
@@ -147,6 +185,12 @@ public class Shader {
         uniforms.put(uniformName, uniformLocation);
     }
 
+    /**
+     * setUniform variable to value (this method only works when the uniform is a Matrix4f.)
+     * TODO: Add more setUniform methods for other data types
+     * @param uniformName Name of the uniform to set
+     * @param value Value to set the uniform to
+     */
     public void setUniform(String uniformName, Matrix4f value) {
         // Dump the matrix into a float buffer
         try (MemoryStack stack = MemoryStack.stackPush()) {

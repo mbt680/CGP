@@ -2,8 +2,12 @@ package gltest;
 
 import java.nio.*;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
+import org.joml.Matrix4f;
 import org.lwjgl.BufferUtils;
 
 import static org.lwjgl.opengl.GL33.*;
@@ -12,24 +16,76 @@ import static org.lwjgl.opengl.GL33.*;
  * Model class that can draw a model with several meshes.
  */
 public class Model {
+    private String name;
     private float[] vertices;
     private Mesh[] meshes;
+    private Map<String, Mesh> meshMap;
     private int[] vbo;
     private int[] ebo;
     private int[] vao;
 
+    private Model() {
+        meshMap = new HashMap<String, Mesh>();
+    }
+
     /**
      * draw this model.
      */
-    public void draw() {
+    public void draw(Matrix4f viewMatrix) {
         for (int i = 0; i < meshes.length; i++) {
             Mesh tmp = meshes[i];
-            tmp.getProgram().use();
+            Shader program = tmp.getProgram();
+            program.use();
+            program.setUniform("viewMatrix", viewMatrix);
             int nVertices = tmp.getIndices().length;
         
             glBindVertexArray(vao[i]);
             glDrawElements(GL_TRIANGLES, nVertices, GL_UNSIGNED_INT, 0);
         }
+    }
+
+    /**
+     * getMeshNames of this model. 
+     * @return A Set of names of each mesh
+     */
+    public Set<String> getMeshNames() {
+        return meshMap.keySet();
+    }
+
+    /**
+     * getMeshForKey returns the mesh mapped to key.
+     * @param key to query map with
+     * @return Mesh or null if key isn't in the map
+     */
+    public Mesh getMeshForKey(String key) {
+        return meshMap.get(key);
+    }
+
+    /**
+     * setProgramForkey sets the program of the Mesh in this model matching key.
+     * If key does not exist in the map, will return.
+     * @param key to find matching Mesh for
+     * @param program Shader to set on the Mesh
+     */
+    public void setProgramForKey(String key, Shader program) {
+        Mesh tmpMesh = meshMap.get(key);
+        if (tmpMesh == null) return;
+        System.out.println(this + " " + program + " " + key);
+        for (Mesh mesh : meshes) {
+            if (tmpMesh == mesh) {
+                mesh.setProgram(program);
+                break;
+            }
+        }
+        tmpMesh.setProgram(program);
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    private void setName(String name) {
+        this.name = name;
     }
 
     private void setVertices(float[] vertices) {
@@ -38,6 +94,9 @@ public class Model {
 
     private void setMeshes(Mesh[] meshes) {
         this.meshes = meshes;
+        for (Mesh mesh : meshes) {
+            meshMap.put(mesh.getName(), mesh);
+        }
     }
 
     private void setupBuffers() {
@@ -99,11 +158,13 @@ public class Model {
     public static class Builder {
         private List<float[]> vertices;
         private List<Mesh> meshes;
+        private String name;
 
         /**
          * Constructor
          */
-        public Builder() {
+        public Builder(String name) {
+            this.name = name;
             vertices = new ArrayList<>();
             meshes = new ArrayList<>();
         }
@@ -140,7 +201,7 @@ public class Model {
          */
         public Model getModel() {
             Model model = new Model();
-            
+            model.setName(name);
             // convert list of meshes to an array
             int nMesh = meshes.size();
             Mesh[] arrMesh = new Mesh[nMesh];
@@ -162,7 +223,7 @@ public class Model {
             model.setVertices(modelVertices);
             model.setupBuffers();
 
-            System.out.println("Made model with meshes " + meshes.size());
+            // System.out.println("Made model " + model.getName() + " with " + meshes.size() + " meshes");
 
             return model;
         }

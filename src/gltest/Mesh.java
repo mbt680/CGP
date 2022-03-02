@@ -9,13 +9,32 @@ import java.util.List;
 public class Mesh {
     private Shader program;
     private int[] indices;
+    private String name;
 
-    private void setProgram(Shader program) {
+    /**
+     * getName return the name of this shader
+     * @return
+     */
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        // System.out.println("Set name for mesh to " + name);
+        this.name = name;
+    }
+
+    /**
+     * setProgram to a new shader. The shader should have a viewMatrix uniform.
+     * @param program
+     */
+    public void setProgram(Shader program) {
+        // System.out.println("Set program for " + name + " to " + program.id + " " + this);
         this.program = program;
     }
 
     private void setIndices(int[] indices) {
-        System.out.println("Length of mesh is " + indices.length);
+        // System.out.println("Length of mesh is " + indices.length);
         this.indices = indices;
     }
 
@@ -53,9 +72,10 @@ public class Mesh {
          * Constructor
          * @param program Shader to use with the mesh
          */
-        public Builder(Shader program) {
+        public Builder(String name) {
             mesh = new Mesh();
-            mesh.setProgram(program);
+            //mesh.setProgram(program);
+            mesh.setName(name);
             faces = new ArrayList<>();
         }
 

@@ -1,8 +1,11 @@
 package gltest;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import org.lwjgl.opengl.GL;
+import org.joml.Vector3f;
 import org.lwjgl.glfw.GLFWFramebufferSizeCallback;
 import org.lwjgl.glfw.GLFWKeyCallback;
 import org.lwjgl.glfw.GLFWScrollCallback;
@@ -91,14 +94,38 @@ public class ModelViewer {
     
         // Get the current directory
         String dir = System.getProperty("user.dir");
-        Shader shader = new Shader(dir + "/shaders/basic.vs", dir + "/shaders/basic.fs");
+
+        // Setup shaders
+        Shader yellowShader = new Shader(dir + "/shaders/color.vs", dir + "/shaders/color.fs");
+        Shader redShader = new Shader(dir + "/shaders/color.vs", dir + "/shaders/color.fs");
 
         // create uniform for camera view
-        shader.createUniform("viewMatrix");
-        shader.setUniform("viewMatrix", camera.viewMatrix);
+        yellowShader.createUniform("viewMatrix");
+        // set uniform containing colour that the shader uses
+        yellowShader.setConstantUniform3fv("ourColor", new Vector3f(1f, 1f, 0f));
+        redShader.createUniform("viewMatrix");
+        redShader.setConstantUniform3fv("ourColor", new Vector3f(1f, 0f, 0f));
+
+        List<Shader> shaderList = new ArrayList<>();
+        shaderList.add(yellowShader);
+        shaderList.add(redShader);
 
         // Load models.
-        List<Model> modelList = WavefrontParser.parse(dir + "/data/cube.obj", shader);
+        WavefrontParser.setDefaultShader(yellowShader);
+        Map<String, Model> modelMap = WavefrontParser.parse(dir + "/data/teddy.obj.txt");
+        for (String key : modelMap.keySet()) {
+            Model model = modelMap.get(key);
+            System.out.println("Model: " + model.getName());
+            for (String meshKey : model.getMeshNames()) {
+                Mesh mesh = model.getMeshForKey(meshKey);
+                System.out.println("  has mesh: " + mesh.getName());
+            }
+        }
+
+        // Get model by the name of "Teddy"
+        Model teddy = modelMap.get("Teddy");
+        // Set shader program for Mesh "None" to redShader
+        teddy.setProgramForKey("None", redShader);
         
         glEnable(GL_DEPTH_TEST);
         // draw a wireframe
@@ -108,11 +135,10 @@ public class ModelViewer {
             glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
             camera.setViewMatrix(WIDTH, HEIGHT);
-            shader.setUniform("viewMatrix", camera.viewMatrix);
-
             // Main draw loop
-            for (Model model : modelList) {
-                model.draw();
+            for (String key : modelMap.keySet()) {
+                Model model = modelMap.get(key);
+                model.draw(camera.viewMatrix);
             }
 
             glfwSwapBuffers(window);

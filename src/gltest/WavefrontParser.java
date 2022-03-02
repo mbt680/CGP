@@ -4,7 +4,9 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Scanner;
 
 public class WavefrontParser {
@@ -16,18 +18,20 @@ public class WavefrontParser {
     private static final String MTLLIB = "mtllib";
     private static final String COMMENT = "#";
 
-    public static List<Model> parse(String wavefrontPath, Shader defaultShader) {
+    private static Shader defaultShader;
+
+    public static Map<String, Model> parse(String wavefrontPath) {
         // open a stream
         Scanner wavefrontFile; 
         
         try {
             wavefrontFile = new Scanner(new FileInputStream(wavefrontPath));
         } catch (FileNotFoundException fe) {
-            return new ArrayList<>();
+            return new HashMap<>();
         }
 
         // parse the file
-        List<Model> modelsList = new ArrayList<>();
+        Map<String, Model> modelMap = new HashMap<>();
         Model.Builder currentModel = null;
         Mesh.Builder currentMesh = null;
         while (wavefrontFile.hasNextLine()) {
@@ -47,15 +51,37 @@ public class WavefrontParser {
             } else if (lineStart.equals(OBJECT)) {
                 // update the current model
                 if (currentModel != null) {
-                    modelsList.add(currentModel.getModel());
+                    Model model = currentModel.getModel();
+                    if (currentMesh != null) {
+                        Mesh mesh = currentMesh.getMesh();
+                        if (model.getMeshForKey(mesh.getName()) != null) {
+                            // System.out.println("Mesh already exists with name " + mesh.getName() + " in " + model.getName());
+                        } else {
+                            // System.out.println("NEW_OBJECT: New mesh with name " + mesh.getName() + " " + mesh);
+                            mesh.setProgram(defaultShader);
+                            currentModel.addMesh(mesh);
+                        }
+                        model = currentModel.getModel();
+                    }
+                    currentMesh = null;
+                    modelMap.put(model.getName(), model);
                 }
-                currentModel = new Model.Builder();
+                currentModel = new Model.Builder(tokens[1]);
             } else if (lineStart.equals(USEMTL)) {
                 // create a new mesh
                 if (currentMesh != null) {
-                    currentModel.addMesh(currentMesh.getMesh());
+                    Mesh mesh = currentMesh.getMesh();
+                    Model model = currentModel.getModel();
+                    if (model.getMeshForKey(mesh.getName()) != null) {
+                        // System.out.println("Mesh already exists with name " + mesh.getName() + " in " + model.getName());
+                    } else {
+                        // System.out.println("New mesh with name " + mesh.getName() + " " + mesh);
+                        mesh.setProgram(defaultShader);
+                        currentModel.addMesh(mesh);
+                    }
                 }
-                currentMesh = new Mesh.Builder(defaultShader);
+                currentMesh = new Mesh.Builder(tokens[1]);
+                
             } else if (lineStart.equals(FACE)) {
                 // add face to the current mesh
                 int[] indices = new int[tokens.length - 1];
@@ -73,11 +99,27 @@ public class WavefrontParser {
             } 
         }
         if (currentMesh != null) {
-            currentModel.addMesh(currentMesh.getMesh());
+            Model model = currentModel.getModel();
+            Mesh mesh = currentMesh.getMesh();
+            if (model.getMeshForKey(mesh.getName()) == null) {
+                mesh.setProgram(defaultShader);
+
+                currentModel.addMesh(mesh);
+            }
         }
         if (currentModel != null) {
-            modelsList.add(currentModel.getModel());
+            Model model = currentModel.getModel();
+            modelMap.put(model.getName(), model);
         }
-        return modelsList;
+        return modelMap;
+    }
+
+    /**
+     * setDefaultShader to be used for meshes
+     * @param defaultShader Any shader that can handler Vector3f as input. 
+     * Must accept a Matrix4f as a view matrix.
+     */
+    public static void setDefaultShader(Shader defaultShader) {
+        WavefrontParser.defaultShader = defaultShader;
     }
 }
