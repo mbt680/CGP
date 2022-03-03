@@ -49,6 +49,7 @@ public class WavefrontParser {
             } else if (lineStart.equals(SURFACE)) {
                 continue;
             } else if (lineStart.equals(OBJECT)) {
+                System.out.println("Found object");
                 // update the current model
                 if (currentModel != null) {
                     Model model = currentModel.getModel();
@@ -68,6 +69,7 @@ public class WavefrontParser {
                 }
                 currentModel = new Model.Builder(tokens[1]);
             } else if (lineStart.equals(USEMTL)) {
+                System.out.println("Found mesh");
                 // create a new mesh
                 if (currentMesh != null) {
                     Mesh mesh = currentMesh.getMesh();
@@ -87,6 +89,10 @@ public class WavefrontParser {
                 int[] indices = new int[tokens.length - 1];
                 for (int i = 0; i < indices.length; i++) {
                     indices[i] = Integer.parseInt(tokens[i+1]) - 1;
+                }
+                // Some wavefront files have no material, this handles that
+                if (currentMesh == null) {
+                    currentMesh = new Mesh.Builder("noname");
                 }
                 currentMesh.addFace(new Face(indices));
             } else if (lineStart.equals(VERTEX)) {
