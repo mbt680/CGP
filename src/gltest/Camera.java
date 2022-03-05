@@ -14,7 +14,7 @@ public class Camera {
     }
 
     // amount to move by each frame
-    private static final float TRANSLATE_DELTA = 0.1f;
+    private static final float TRANSLATE_DELTA = 0.5f;
 
     void moveForward() {
         translation.z -= TRANSLATE_DELTA;

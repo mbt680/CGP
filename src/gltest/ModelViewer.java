@@ -134,8 +134,22 @@ public class ModelViewer {
             glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
             glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
+            glPolygonMode( GL_FRONT_AND_BACK, GL_FILL );
             camera.setViewMatrix(WIDTH, HEIGHT);
+            WavefrontParser.setDefaultShader(yellowShader);
+            teddy.setProgramForKey("None", redShader);
+
             // Main draw loop
+            for (String key : modelMap.keySet()) {
+                Model model = modelMap.get(key);
+                model.draw(camera.viewMatrix);
+            }
+
+            glLineWidth(2f);
+            glPolygonMode( GL_FRONT_AND_BACK, GL_LINE );
+            teddy.setProgramForKey("None", yellowShader);
+
+            // Ouline draw loop
             for (String key : modelMap.keySet()) {
                 Model model = modelMap.get(key);
                 model.draw(camera.viewMatrix);
