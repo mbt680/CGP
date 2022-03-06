@@ -70,7 +70,7 @@ public class Model {
     public void setProgramForKey(String key, Shader program) {
         Mesh tmpMesh = meshMap.get(key);
         if (tmpMesh == null) return;
-        System.out.println(this + " " + program + " " + key);
+        // System.out.println(this + " " + program + " " + key);
         for (Mesh mesh : meshes) {
             if (tmpMesh == mesh) {
                 mesh.setProgram(program);

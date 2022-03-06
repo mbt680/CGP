@@ -67,7 +67,7 @@ public class Camera {
         
         // add perspective with scale
         float scaledFovy = (maxScale - scale + 1) * (float) Math.PI/(maxScale + 1);
-        viewMatrix.perspective(scaledFovy, width / height, 0.1f, 1000f);
+        viewMatrix.perspective(scaledFovy * 0.7f, width / height, 0.1f, 1000f);
 
         //translate to move, and rotate on x/y axis to tilt camera
         Vector3f translationInverse = new Vector3f();

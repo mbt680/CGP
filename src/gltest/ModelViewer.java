@@ -28,27 +28,27 @@ public class ModelViewer {
         public void invoke(long window, int key, int scancode, int action, int mods) {
             if (key == GLFW_KEY_Q) {
                 glfwSetWindowShouldClose(window, true);
-            } else if (key == GLFW_KEY_LEFT) {
+            } if (key == GLFW_KEY_LEFT) {
                 camera.rotateLeft();
             } else if (key == GLFW_KEY_RIGHT) {
                 camera.rotateRight();
-            } else if (key == GLFW_KEY_UP) {
+            } if (key == GLFW_KEY_UP) {
                 camera.rotateUp();
             } else if (key == GLFW_KEY_DOWN) {
                 camera.rotateDown();
-            } else if (key == GLFW_KEY_W) {
+            } if (key == GLFW_KEY_W) {
                 camera.moveForward();
-            } else if (key == GLFW_KEY_A) {
-                camera.moveLeft();
             } else if (key == GLFW_KEY_S) {
                 camera.moveBack();
+            } if (key == GLFW_KEY_A) {
+                camera.moveLeft();
             } else if (key == GLFW_KEY_D) {
                 camera.moveRight();
-            } else if (key == GLFW_KEY_Z) {
+            } if (key == GLFW_KEY_Z) {
                 camera.moveDown();
             } else if (key == GLFW_KEY_X) {
                 camera.moveUp();
-            }else if (key == GLFW_KEY_EQUAL) {
+            } if (key == GLFW_KEY_EQUAL) {
                 camera.changeScale(1);
             } else if (key == GLFW_KEY_MINUS) {
                 camera.changeScale(-1);
@@ -97,22 +97,22 @@ public class ModelViewer {
 
         // Setup shaders
         Shader yellowShader = new Shader(dir + "/shaders/color.vs", dir + "/shaders/color.fs");
-        Shader redShader = new Shader(dir + "/shaders/color.vs", dir + "/shaders/color.fs");
+        Shader blackShader = new Shader(dir + "/shaders/color.vs", dir + "/shaders/color.fs");
 
         // create uniform for camera view
         yellowShader.createUniform("viewMatrix");
         // set uniform containing colour that the shader uses
-        yellowShader.setConstantUniform3fv("ourColor", new Vector3f(1f, 1f, 0f));
-        redShader.createUniform("viewMatrix");
-        redShader.setConstantUniform3fv("ourColor", new Vector3f(1f, 0f, 0f));
+        yellowShader.setConstantUniform3fv("ourColor", new Vector3f(1f, 0.933f, 0.345f));
+        blackShader.createUniform("viewMatrix");
+        blackShader.setConstantUniform3fv("ourColor", new Vector3f(0f, 0f, 0f));
 
         List<Shader> shaderList = new ArrayList<>();
         shaderList.add(yellowShader);
-        shaderList.add(redShader);
+        shaderList.add(blackShader);
 
         // Load models.
         WavefrontParser.setDefaultShader(yellowShader);
-        Map<String, Model> modelMap = WavefrontParser.parse(dir + "/data/teddy.obj.txt");
+        Map<String, Model> modelMap = WavefrontParser.parse(dir + "/data/engineer_2.obj");
         for (String key : modelMap.keySet()) {
             Model model = modelMap.get(key);
             System.out.println("Model: " + model.getName());
@@ -122,10 +122,10 @@ public class ModelViewer {
             }
         }
 
-        // Get model by the name of "Teddy"
-        Model teddy = modelMap.get("Teddy");
-        // Set shader program for Mesh "None" to redShader
-        teddy.setProgramForKey("None", redShader);
+        // Get model by the name of "engineer_morphs_low"
+        Model teddy = modelMap.get("engineer_morphs_low");
+        // Set shader program for Mesh "noname" to redShader
+        teddy.setProgramForKey("noname", blackShader);
         
         glEnable(GL_DEPTH_TEST);
         // draw a wireframe
@@ -134,26 +134,28 @@ public class ModelViewer {
             glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
             glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-            glPolygonMode( GL_FRONT_AND_BACK, GL_FILL );
             camera.setViewMatrix(WIDTH, HEIGHT);
-            WavefrontParser.setDefaultShader(yellowShader);
-            teddy.setProgramForKey("None", redShader);
-
-            // Main draw loop
-            for (String key : modelMap.keySet()) {
-                Model model = modelMap.get(key);
-                model.draw(camera.viewMatrix);
-            }
-
-            glLineWidth(2f);
-            glPolygonMode( GL_FRONT_AND_BACK, GL_LINE );
-            teddy.setProgramForKey("None", yellowShader);
 
             // Ouline draw loop
+            teddy.setProgramForKey("noname", blackShader);
+            glEnable( GL_POLYGON_OFFSET_FILL );
+            glPolygonOffset( -2.5f, -2.5f );
+            glPolygonMode( GL_FRONT_AND_BACK, GL_LINE );
+            glLineWidth(5.0f);
             for (String key : modelMap.keySet()) {
                 Model model = modelMap.get(key);
                 model.draw(camera.viewMatrix);
             }
+
+            // Main draw loop
+            glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+            glLineWidth(1.0f);
+            teddy.setProgramForKey("noname", yellowShader);
+            for (String key : modelMap.keySet()) {
+                Model model = modelMap.get(key);
+                model.draw(camera.viewMatrix);
+            }
+            glDisable( GL_POLYGON_OFFSET_FILL);
 
             glfwSwapBuffers(window);
             glfwPollEvents();
