@@ -112,7 +112,7 @@ public class ModelViewer {
 
         // Load models.
         WavefrontParser.setDefaultShader(yellowShader);
-        Map<String, Model> modelMap = WavefrontParser.parse(dir + "/data/engineer_2.obj");
+        Map<String, Model> modelMap = WavefrontParser.parse(dir + "/data/engineer7.obj");
         for (String key : modelMap.keySet()) {
             Model model = modelMap.get(key);
             System.out.println("Model: " + model.getName());
@@ -123,9 +123,8 @@ public class ModelViewer {
         }
 
         // Get model by the name of "engineer_morphs_low"
-        Model teddy = modelMap.get("engineer_morphs_low");
-        // Set shader program for Mesh "noname" to redShader
-        teddy.setProgramForKey("noname", blackShader);
+        Model teddy = modelMap.get("unnamed");
+        
         
         glEnable(GL_DEPTH_TEST);
         // draw a wireframe
@@ -137,7 +136,7 @@ public class ModelViewer {
             camera.setViewMatrix(WIDTH, HEIGHT);
 
             // Ouline draw loop
-            teddy.setProgramForKey("noname", blackShader);
+            teddy.setProgramForAllKeys(blackShader);
             glEnable( GL_POLYGON_OFFSET_FILL );
             glPolygonOffset( -2.5f, -2.5f );
             glPolygonMode( GL_FRONT_AND_BACK, GL_LINE );
@@ -150,7 +149,7 @@ public class ModelViewer {
             // Main draw loop
             glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
             glLineWidth(1.0f);
-            teddy.setProgramForKey("noname", yellowShader);
+            teddy.setProgramForAllKeys(yellowShader);
             for (String key : modelMap.keySet()) {
                 Model model = modelMap.get(key);
                 model.draw(camera.viewMatrix);

@@ -37,7 +37,7 @@ public class Model {
             Shader program = tmp.getProgram();
             program.use();
             program.setUniform("viewMatrix", viewMatrix);
-            int nVertices = tmp.getIndices().length;
+            int nVertices = tmp.getVertexIndices().length;
         
             glBindVertexArray(vao[i]);
             glDrawElements(GL_TRIANGLES, nVertices, GL_UNSIGNED_INT, 0);
@@ -80,6 +80,12 @@ public class Model {
         tmpMesh.setProgram(program);
     }
 
+    public void setProgramForAllKeys(Shader program) {
+        for (String key : meshMap.keySet()) {
+            setProgramForKey(key, program);
+        }
+    }
+
     public String getName() {
         return name;
     }
@@ -111,7 +117,7 @@ public class Model {
         verticesBuffer.flip();
         for (int i = 0; i < vao.length; i++) {
             Mesh tmpMesh = meshes[i];
-            int[] indices = tmpMesh.getIndices();
+            int[] indices = tmpMesh.getVertexIndices();
 
             IntBuffer indicesBuffer = BufferUtils.createIntBuffer(indices.length);
             indicesBuffer.put(indices);
@@ -157,6 +163,7 @@ public class Model {
      */
     public static class Builder {
         private List<float[]> vertices;
+        private List<float[]> vertexNormals;
         private List<Mesh> meshes;
         private String name;
 
@@ -193,6 +200,24 @@ public class Model {
          */
         public void addVertex(float x, float y, float z) {
             vertices.add(new float[]{x, y, z});
+        }
+
+        /**
+         * addVertexNormal to model
+         * @param vertexNormal Array of points to add
+         */
+        public void addVertexNormal(float[] vertexNormal) {
+            vertexNormals.add(vertexNormal);
+        }
+
+        /**
+         * addVertexNormal to model
+         * @param x xc of normal
+         * @param y yc of normal
+         * @param z zc of normal
+         */
+        public void addVertexNormal(float x, float y, float z) {
+            vertexNormals.add(new float[]{x, y, z});
         }
 
         /**

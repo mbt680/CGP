@@ -8,7 +8,8 @@ import java.util.List;
  */
 public class Mesh {
     private Shader program;
-    private int[] indices;
+    private int[] vertexIndices;
+    private int[] vertexNormalIndices;
     private String name;
 
     /**
@@ -33,9 +34,9 @@ public class Mesh {
         this.program = program;
     }
 
-    private void setIndices(int[] indices) {
+    private void setVertexIndices(int[] vertexIndices) {
         // System.out.println("Length of mesh is " + indices.length);
-        this.indices = indices;
+        this.vertexIndices = vertexIndices;
     }
 
     /**
@@ -47,11 +48,11 @@ public class Mesh {
     }
 
     /**
-     * getIndices of vertices of the model that compose this Mesh
+     * getVertexIndices of vertices of the model that compose this Mesh
      * @return
      */
-    public int[] getIndices() {
-        return indices;
+    public int[] getVertexIndices() {
+        return vertexIndices;
     }
 
     /**
@@ -101,11 +102,11 @@ public class Mesh {
             int i = 0;
             for (Face face : faces) {
                 int nToCopy = face.size();
-                System.arraycopy(face.getIndices(), 0, indices, i, nToCopy);
+                System.arraycopy(face.getVertexIndices(), 0, indices, i, nToCopy);
                 i += nToCopy;
             }
 
-            mesh.setIndices(indices);
+            mesh.setVertexIndices(indices);
 
             return mesh;
         }
