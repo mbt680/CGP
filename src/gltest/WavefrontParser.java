@@ -11,7 +11,7 @@ public class WavefrontParser {
     private static final String VERTEX = "v";
     private static final String OBJECT = "o";
     private static final String VERTEX_NORMAL = "vn";
-    private static final String VINDEX_VNINDEX_SEPERATOR = "\\\\";
+    private static final String VINDEX_VNINDEX_SEPERATOR = "//";
     private static final String FACE = "f";
     private static final String USEMTL = "usemtl";
     private static final String MATERIAL_GROUP = "g";
@@ -109,7 +109,8 @@ public class WavefrontParser {
                 if (currentMesh == null) {
                     currentMesh = new Mesh.Builder("noname");
                 }
-                currentMesh.addFace(new Face(vertexIndices, vertexNormalIndices));
+                Face tmpFace = new Face(vertexIndices, vertexNormalIndices);
+                currentMesh.addFace(tmpFace);
             } else if (lineStart.equals(VERTEX)) {
                 // add vertex to the current model
                 float[] vertices = new float[tokens.length - 1];

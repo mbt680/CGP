@@ -19,7 +19,11 @@ public class Face {
         return vertexNormalIndices;
     }
 
-    public int size() {
+    public int sizeVertex() {
         return vertexIndices.length;
+    }
+
+    public int sizeVertexNormal() {
+        return vertexNormalIndices.length;
     }
 }

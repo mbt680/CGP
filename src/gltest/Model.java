@@ -24,6 +24,9 @@ public class Model {
     private int[] ebo;
     private int[] vao;
 
+    private boolean hasVertexNormals;
+    private int vnOffset;
+
     private Model() {
         meshMap = new HashMap<String, Mesh>();
     }
@@ -105,6 +108,11 @@ public class Model {
         }
     }
 
+    private void setHasVertexNormals(boolean hasVertexNormals, int offset) {
+        this.hasVertexNormals = hasVertexNormals;
+        this.vnOffset = offset;
+    }
+
     private void setupBuffers() {
         int nMesh = meshes.length;
 
@@ -137,6 +145,11 @@ public class Model {
 
             glVertexAttribPointer(0, 3, GL_FLOAT, false, 0, 0);
             glEnableVertexAttribArray(0);
+
+            if (hasVertexNormals) {
+                glVertexAttribPointer(1, 3, GL_FLOAT, false, 0, vnOffset);
+                glEnableVertexAttribArray(0);
+            }
         }
 
         glBindBuffer(GL_ARRAY_BUFFER, 0);
@@ -173,6 +186,7 @@ public class Model {
         public Builder(String name) {
             this.name = name;
             vertices = new ArrayList<>();
+            vertexNormals = new ArrayList<>();
             meshes = new ArrayList<>();
         }
 
@@ -237,18 +251,36 @@ public class Model {
 
             // convert list of vertices to an array
             int nVertices = vertices.size();
-            int requiredSize = nVertices * 3;
+            int nVn = vertexNormals.size();
+
+            /*
+            if (nVn != nVertices && nVn > 0) {
+                System.err.printf("nVertices is size %d while nVn is size %d\n", nVertices, nVn);
+                System.exit(1);
+            }*/
+
+            int requiredSize = (nVertices + nVn) * 3;
             float[] modelVertices = new float[requiredSize];
 
             for (int i = 0; i < nVertices; i++) {
                 float[] tmp = vertices.get(i);
+                //float[] tmpVn = vertexNormals.get(i+1);
                 System.arraycopy(tmp, 0, modelVertices, i*3, 3);
+                //System.arraycopy(tmpVn, 0, modelVertices, (i+1)*3, 3);
             }
+            int start = nVertices;
+            int end = nVertices + nVn;
+            for (int i = start; i < end; i++) {
+                float[] tmpVn = vertexNormals.get(i-start);
+                System.arraycopy(tmpVn, 0, modelVertices, i*3, 3);
+            }  
 
             model.setVertices(modelVertices);
             model.setupBuffers();
 
-            // System.out.println("Made model " + model.getName() + " with " + meshes.size() + " meshes");
+            if (nVn > 0) {
+                model.setHasVertexNormals(true, start);
+            }
 
             return model;
         }

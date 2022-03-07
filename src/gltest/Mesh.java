@@ -39,6 +39,10 @@ public class Mesh {
         this.vertexIndices = vertexIndices;
     }
 
+    private void setVertexNormalIndices(int[] vertexNormalIndices) {
+        this.vertexNormalIndices = vertexNormalIndices;
+    }
+
     /**
      * getProgram gets the shader program being used
      * @return
@@ -53,6 +57,14 @@ public class Mesh {
      */
     public int[] getVertexIndices() {
         return vertexIndices;
+    }
+
+    /**
+     * getVertexNormalIndices
+     * @return
+     */
+    public int[] getVertexNormalIndices() {
+        return vertexNormalIndices;
     }
 
     /**
@@ -93,20 +105,28 @@ public class Mesh {
          * @return
          */
         public Mesh getMesh() {
-            int requiredSpace = 0;
+            int requiredSpaceV = 0;
+            int requiredSpaceVn = 0;
             for (Face face : faces) {
-                requiredSpace += face.size();
+                requiredSpaceV += face.sizeVertex();
+                requiredSpaceVn += face.sizeVertexNormal();
             }
 
-            int[] indices = new int[requiredSpace];
+            int[] vertexIndices = new int[requiredSpaceV];
+            int[] vertexNormalIndices = new int[requiredSpaceVn];
             int i = 0;
+            int j = 0;
             for (Face face : faces) {
-                int nToCopy = face.size();
-                System.arraycopy(face.getVertexIndices(), 0, indices, i, nToCopy);
-                i += nToCopy;
+                int nToCopyV = face.sizeVertex();
+                int nToCopyVn = face.sizeVertexNormal();
+                System.arraycopy(face.getVertexIndices(), 0, vertexIndices, i, nToCopyV);
+                System.arraycopy(face.getVertexNormalIndices(), 0, vertexNormalIndices, j, nToCopyVn);
+                i += nToCopyV;
+                j += nToCopyVn;
             }
 
-            mesh.setVertexIndices(indices);
+            mesh.setVertexIndices(vertexIndices);
+            mesh.setVertexNormalIndices(vertexNormalIndices);
 
             return mesh;
         }
