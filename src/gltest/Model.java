@@ -148,7 +148,7 @@ public class Model {
 
             if (hasVertexNormals) {
                 glVertexAttribPointer(1, 3, GL_FLOAT, false, 0, vnOffset);
-                glEnableVertexAttribArray(0);
+                glEnableVertexAttribArray(1);
             }
         }
 
@@ -276,11 +276,12 @@ public class Model {
             }  
 
             model.setVertices(modelVertices);
-            model.setupBuffers();
-
             if (nVn > 0) {
                 model.setHasVertexNormals(true, start);
             }
+
+            model.setupBuffers();
+
 
             return model;
         }
