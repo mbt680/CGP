@@ -19,6 +19,7 @@ import static org.lwjgl.system.MemoryUtil.NULL;
  */
 public class ModelViewer {
     private static Camera camera = new Camera();
+    private static Light lighting = new Light();
     private static final int WIDTH = 400;
     private static final int HEIGHT = 400;
 
@@ -105,6 +106,15 @@ public class ModelViewer {
         yellowShader.setConstantUniform3fv("ourColor", new Vector3f(1f, 0.933f, 0.345f));
         blackShader.createUniform("viewMatrix");
         blackShader.setConstantUniform3fv("ourColor", new Vector3f(0f, 0f, 0f));
+        //create lighting uniforms
+        yellowShader.createUniform("lightPos");
+        blackShader.setConstantUniform3fv("lightPos", lighting.position );
+        yellowShader.createUniform("ambientLight");
+        yellowShader.setConstantUniform3fv("ambientLight", lighting.ambient );
+        yellowShader.createUniform("specularLight");
+        yellowShader.setConstantUniform3fv("specularLight", lighting.specular );
+        yellowShader.createUniform("diffuseLight");
+        yellowShader.setConstantUniform3fv("diffuseLight", lighting.diffuse );
 
         List<Shader> shaderList = new ArrayList<>();
         shaderList.add(yellowShader);

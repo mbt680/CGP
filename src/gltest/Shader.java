@@ -157,7 +157,7 @@ public class Shader {
         // System.out.printf("Setting %s in shader %d\n", uniformName, id);
         int uniformLocation = glGetUniformLocation(id, uniformName);
         if (uniformLocation < 0) {  
-            throw new Exception("Could not find uniform: " + uniformName); 
+            //throw new Exception("Could not find uniform: " + uniformName); 
         } else {
             persistentUniform.put(uniformName, new Pair<>(uniformLocation, value));
         }
@@ -178,7 +178,7 @@ public class Shader {
     public void createUniform(String uniformName) throws Exception {
         int uniformLocation = glGetUniformLocation(id, uniformName);
         if (uniformLocation < 0) {  
-            throw new Exception("Could not find uniform: " + uniformName); 
+        //    throw new Exception("Could not find uniform: " + uniformName); 
         }
         uniforms.put(uniformName, uniformLocation);
     }
