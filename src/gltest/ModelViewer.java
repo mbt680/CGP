@@ -114,8 +114,11 @@ public class ModelViewer {
         yellowShader.setConstantUniform3fv("ourColor", new Vector3f(1f, 0.933f, 0.345f));
         blackShader.createUniform("viewMatrix");
         blackShader.setConstantUniform3fv("ourColor", new Vector3f(0f, 0f, 0f));
+        
         //create lighting uniforms
         yellowShader.createUniform("lightPos");
+        yellowShader.createUniform("shininess");
+        yellowShader.setInt("shininess", lighting.shininess);
         yellowShader.createUniform("ambientLight");
         yellowShader.setConstantUniform3fv("ambientLight", lighting.ambient );
         yellowShader.createUniform("specularLight");

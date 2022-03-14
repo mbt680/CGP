@@ -9,6 +9,7 @@ uniform vec3 ourColor; // specify a color output to the fragment shader
 // Lighting
 uniform vec3 lightPos;
 uniform vec3 ambientLight, specularLight, diffuseLight;
+uniform int shininess;
 
 out vec3 ptColor;
 out vec3 ptNorm;
@@ -17,19 +18,15 @@ void main()
 {
     gl_Position = viewMatrix * vec4(aPos, 1.0); // convert aPos to homogoneous coordinates
     ptNorm = vec3(aNorm);
-    float shininess = 1;
-    
-    vec3 N = ptNorm;
-    vec3 L = normalize(lightPos.xyz - aPos.xyz);
-    vec3 E = -normalize(aPos);
-    vec3 H = normalize(L+E);
+    int shininess = 1;
 
     vec3 ambient = ambientLight;
 
-    float d = dot(N, L);
-    vec3 diffuse = (d > 0? diffuseLight*d : vec3(0.0, 0.0, 0.0));
+    vec3 lightNorm = normalize(lightPos.xyz - aPos.xyz);
+    float d = max(dot(lightNorm, ptNorm), 0);
+    vec3 diffuse = diffuseLight*d;
 
-    vec3 specular = max(pow(max(dot(N, H), 0.0), shininess) * specularLight, 0.0);
-    ptColor = vec3( ambient + diffuse + specular ).xyz;
-    //ptColor = ptNorm;
+    vec3 halfway = normalize(lightNorm - normalize(aPos));
+    vec3 specular = max(pow(max(dot(ptNorm, halfway), 0.0), shininess) * specularLight, 0.0);
+    ptColor = (ourColor.xyz / 4) + ambient.xyz + diffuse.xyz + specular.xyz;
 }
