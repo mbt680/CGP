@@ -6,12 +6,10 @@ import org.joml.Vector3f;
 public class Camera {
     Matrix4f viewMatrix = new Matrix4f();
     private int scale = 10;
-    private Vector3f translation = new Vector3f();
+    private Vector3f translation = new Vector3f(0,50,100);
     private Vector3f rotation = new Vector3f();
 
-    Camera() {
-        translation.z = 5;
-    }
+    Camera() {}
 
     // amount to move by each frame
     private static final float TRANSLATE_DELTA = 0.5f;

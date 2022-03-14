@@ -20,16 +20,16 @@ void main()
     float shininess = 1;
     
     vec3 N = ptNorm;
-    vec3 L = normalize(lightPos.xyz - gl_Position.xyz);
+    vec3 L = normalize(lightPos.xyz - aPos.xyz);
     vec3 E = -normalize(aPos);
     vec3 H = normalize(L+E);
 
-    float d = max(dot(L, N), 0.0);
-    float s = pow(max(dot(N, H), 0.0), shininess);
     vec3 ambient = ambientLight;
-    vec3 diffuse = d*diffuseLight;
+
+    float d = dot(N, L);
+    vec3 diffuse = (d > 0? diffuseLight*d : vec3(0.0, 0.0, 0.0));
+
     vec3 specular = max(pow(max(dot(N, H), 0.0), shininess) * specularLight, 0.0);
     ptColor = vec3( ambient + diffuse + specular ).xyz;
-   
-    // ptColor = N;
+    //ptColor = ptNorm;
 }

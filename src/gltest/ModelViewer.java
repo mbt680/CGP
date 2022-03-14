@@ -53,6 +53,14 @@ public class ModelViewer {
                 camera.changeScale(1);
             } else if (key == GLFW_KEY_MINUS) {
                 camera.changeScale(-1);
+            } if (key == GLFW_KEY_T) {
+                lighting.moveUp();
+            } else if (key == GLFW_KEY_G) {
+                lighting.moveDown();
+            } if (key == GLFW_KEY_F) {
+                lighting.moveBack();
+            } else if (key == GLFW_KEY_H) {
+                lighting.moveForward();
             }
         }
     };
@@ -108,7 +116,6 @@ public class ModelViewer {
         blackShader.setConstantUniform3fv("ourColor", new Vector3f(0f, 0f, 0f));
         //create lighting uniforms
         yellowShader.createUniform("lightPos");
-        blackShader.setConstantUniform3fv("lightPos", lighting.position );
         yellowShader.createUniform("ambientLight");
         yellowShader.setConstantUniform3fv("ambientLight", lighting.ambient );
         yellowShader.createUniform("specularLight");
@@ -144,6 +151,7 @@ public class ModelViewer {
             glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
             camera.setViewMatrix(WIDTH, HEIGHT);
+            yellowShader.setUniform("lightPos", lighting.position );
 
             // Ouline draw loop
             teddy.setProgramForAllKeys(blackShader);

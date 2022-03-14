@@ -186,15 +186,24 @@ public class Shader {
     /**
      * setUniform variable to value (this method only works when the uniform is a Matrix4f.)
      * TODO: Add more setUniform methods for other data types
+     * @param <T>
      * @param uniformName Name of the uniform to set
      * @param value Value to set the uniform to
      */
-    public void setUniform(String uniformName, Matrix4f value) {
-        // Dump the matrix into a float buffer
+
+    public <T> void setUniform(String uniformName, T value) {
+        // Dump the matrix into a float bufferpublic static <E> 
         try (MemoryStack stack = MemoryStack.stackPush()) {
-            FloatBuffer fb = stack.mallocFloat(16);
-            value.get(fb);
-            glUniformMatrix4fv(uniforms.get(uniformName), false, fb);
+            int uniformLocation = glGetUniformLocation(id, uniformName);
+            if (value instanceof Matrix4f) {
+                FloatBuffer fb = stack.mallocFloat(16);
+                Matrix4f matrix = (Matrix4f) value;
+                matrix.get(fb);
+                glUniformMatrix4fv(uniformLocation, false, fb);
+            } else if (value instanceof Vector3f) {
+                Vector3f vector = (Vector3f) value;
+                glUniform3f(uniformLocation, vector.x, vector.y, vector.z);
+            }
         }
     }
 }
