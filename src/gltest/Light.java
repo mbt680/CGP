@@ -7,8 +7,8 @@ public class Light {
     public int shininess = 1;
 
     public final Vector3f ambient = new Vector3f( 0.4f, 0.2f, 0.0f );
-    public final Vector3f diffuse = new Vector3f( 0.05f, 0.06f, 0.05f );
-    public final Vector3f specular = new Vector3f( 0.8f, 0.8f, 0.8f );
+    public final Vector3f diffuse = new Vector3f( 0.06f, 0.06f, 0.06f );
+    public final Vector3f specular = new Vector3f( 0f, 0.0f, 0.0f );
 
     private static final float TRANSLATE_DELTA = 10000f;
     public void moveForward() {

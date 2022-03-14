@@ -22,13 +22,14 @@ void main()
 
     vec3 ambient = ambientLight;
 
-    vec3 lightNorm = normalize(lightPos.xyz - aPos.xyz);
+    int numColors = 8;
+    vec3 lightNorm = round(normalize(lightPos.xyz - aPos.xyz) * numColors) / numColors;
     float d = max(dot(lightNorm, ptNorm), 0);
-    vec3 diffuse = diffuseLight * d;
+    vec3 diffuse = round(diffuseLight * d * numColors) / numColors;
 
     vec3 halfway = normalize(lightNorm - normalize(aPos));
     float s = max(-pow(max(dot(ptNorm, halfway), 0.0), shininess), 0.0);
-    vec3 specular = s * specularLight;
-    int numColors = 10;
-    ptColor = round((ambient.xyz * ourColor + diffuse.xyz * ourColor + specular.xyz * ourColor) * numColors) / numColors;
+    vec3 specular = round(s * specularLight * numColors) / numColors;
+
+    ptColor = (ambient.xyz + diffuse.xyz + specular.xyz) * ourColor;
 }
