@@ -24,9 +24,9 @@ void main()
 
     vec3 lightNorm = normalize(lightPos.xyz - aPos.xyz);
     float d = max(dot(lightNorm, ptNorm), 0);
-    vec3 diffuse = diffuseLight*d;
+    vec3 diffuse = diffuseLight * d;
 
     vec3 halfway = normalize(lightNorm - normalize(aPos));
     vec3 specular = max(pow(max(dot(ptNorm, halfway), 0.0), shininess) * specularLight, 0.0);
-    ptColor = (ourColor.xyz / 4) + ambient.xyz + diffuse.xyz + specular.xyz;
+    ptColor = ambient.xyz * ourColor + diffuse.xyz * ourColor + specular.xyz * ourColor;
 }
