@@ -29,7 +29,7 @@ void main()
     vec3 ambient = ambientLight;
     vec3 diffuse = d*diffuseLight;
     vec3 specular = max(pow(max(dot(N, H), 0.0), shininess) * specularLight, 0.0);
-   // ptColor = vec3( ambient + diffuse + specular ).xyz;
+    ptColor = vec3( ambient + diffuse + specular ).xyz;
    
-    ptColor = N;
+    // ptColor = N;
 }

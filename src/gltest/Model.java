@@ -1,5 +1,7 @@
 package gltest;
 
+import java.io.IOException;
+import java.io.PrintWriter;
 import java.nio.*;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -126,6 +128,30 @@ public class Model {
         for (int i = 0; i < vao.length; i++) {
             Mesh tmpMesh = meshes[i];
             int[] indices = tmpMesh.getVertexIndices();
+            if (hasVertexNormals) {
+                int[] vnIndices = tmpMesh.getVertexNormalIndices();
+                int[] tmpIndices = new int[indices.length + vnIndices.length];
+                
+                System.arraycopy(indices, 0, tmpIndices, 0, indices.length);
+                int sj = indices.length;
+                for (int j = indices.length; j < tmpIndices.length; j++) {
+                    tmpIndices[j] = vnIndices[j-sj] + vnOffset;
+                }
+                indices = tmpIndices;
+                PrintWriter logFile = null;
+                try {
+                    logFile = new PrintWriter(i+ "logfile.txt");
+                    int hx = indices.length/2;
+                    for (int j = 0; j < hx; j+=3)
+                    {
+                        logFile.printf("f %d//%d %d//%d %d//%d\n", indices[j], indices[j+hx], indices[j+1], indices[j+hx+1], indices[j+2], indices[j+hx+2]);
+                    }
+                } catch (IOException ie) {
+                    
+                } finally {
+                    logFile.close();
+                }
+            }
 
             IntBuffer indicesBuffer = BufferUtils.createIntBuffer(indices.length);
             indicesBuffer.put(indices);
@@ -143,11 +169,15 @@ public class Model {
             glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ebo[i]);
             glBufferData(GL_ELEMENT_ARRAY_BUFFER, indicesBuffer, GL_STATIC_DRAW);
 
+            // int stride = hasVertexNormals?24:0;
             glVertexAttribPointer(0, 3, GL_FLOAT, false, 0, 0);
             glEnableVertexAttribArray(0);
 
+            // System.out.println(vnOffset);
+            // System.out.println(vnOffset * 12);
             if (hasVertexNormals) {
-                glVertexAttribPointer(1, 3, GL_FLOAT, false, 0, vnOffset);
+                glVertexAttribPointer(1, 3, GL_FLOAT, false, 0, 0);
+                // glVertexAttribPointer(1, 3, GL_FLOAT, false, 0, 0);
                 glEnableVertexAttribArray(1);
             }
         }
@@ -274,14 +304,13 @@ public class Model {
                 float[] tmpVn = vertexNormals.get(i-start);
                 System.arraycopy(tmpVn, 0, modelVertices, i*3, 3);
             }  
+            //System.out.printf("Number of norms: %d\n Number of vertices: %d\n", nVn, nVertices);
 
             model.setVertices(modelVertices);
             if (nVn > 0) {
                 model.setHasVertexNormals(true, start);
             }
-
             model.setupBuffers();
-
 
             return model;
         }
