@@ -185,6 +185,8 @@ public class ModelViewer {
         shader.createUniform("vertexLevels");
         shader.createUniform("fragLevels");
     }
+
+    static String prevFileLocation = "";
   
     static void applySettings(Shader shader) throws Exception {
         Settings.camera.setViewMatrix(WIDTH, HEIGHT);
@@ -204,8 +206,10 @@ public class ModelViewer {
             shader.setInt("fragLevels", Integer.MAX_VALUE );
         }
 
-        if (!Settings.materialFileLoc.isEmpty()) {
+        String fileLocation = Settings.materialFileLoc;
+        if (!fileLocation.isEmpty() && fileLocation!= prevFileLocation) {
             loadMaterial(shader);
+            prevFileLocation = fileLocation;
         }
     }
 
