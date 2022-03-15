@@ -2,14 +2,13 @@
 
 out vec4 FragColor;
 
-in vec3 ltColor;
+in vec4 ltColor;
 in vec3 ptColor;
 in vec3 ptNorm;
-
-const int numColors = 20;
+flat in int levels;
 
 void main()
 {
     // variables that do nothing can be optimized out in GLSL by default
-    FragColor = vec4( (floor(ltColor * numColors) / numColors ) * ptColor, 1.0);
+    FragColor =  (floor(ltColor * levels) / levels ) * vec4(ptColor, 1.0);
 }
