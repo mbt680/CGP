@@ -2,7 +2,7 @@ Compiling all files
 ====================================================
 .\compile.bat or ./compile.sh
 
-Running Introduction.java
+Running ModelViewer.java
 ====================================================
 .\run.bat or ./run.sh
 
