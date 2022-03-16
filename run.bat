@@ -1,1 +1,1 @@
-java -cp ";lib/*;build/" gltest.MtlParser
+java -cp ";lib/*;build/" gltest.ModelViewer
