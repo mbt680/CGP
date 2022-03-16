@@ -11,6 +11,8 @@ public class WavefrontParser {
     private static final String VERTEX = "v";
     private static final String OBJECT = "o";
     private static final String VERTEX_NORMAL = "vn";
+    private static final String VERTEX_UV = "vt";
+    private static final String VERTEX_TEX_SEPERATOR = "/";
     private static final String VINDEX_VNINDEX_SEPERATOR = "//";
     private static final String FACE = "f";
     private static final String USEMTL = "usemtl";
@@ -71,7 +73,7 @@ public class WavefrontParser {
                     modelMap.put(model.getName(), model);
                 }
                 currentModel = new Model.Builder(tokens[1]);
-            } else if (lineStart.equals(USEMTL) || lineStart.equals(MATERIAL_GROUP)) {
+            } else if (lineStart.equals(USEMTL) /*|| lineStart.equals(MATERIAL_GROUP)*/) {
                 System.out.println("Found mesh");
                 // create a new mesh
                 if (currentMesh != null) {
