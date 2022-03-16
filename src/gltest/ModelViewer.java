@@ -25,6 +25,7 @@ public class ModelViewer {
         public static String materialFileLoc = "";
         public static boolean hasCelShading = true;
         public static boolean hasLighting = true;
+        public static boolean hasRimLighting = true;
         public static boolean hasContours = true;
         public static boolean hasSugContours = true;
     };
@@ -147,14 +148,16 @@ public class ModelViewer {
             applySettings(yellowShader);
 
             // Ouline draw loop
-            teddy.setProgramForAllKeys(blackShader);
-            glEnable( GL_POLYGON_OFFSET_FILL );
-            glPolygonOffset( -2.5f, -2.5f );
-            glPolygonMode( GL_FRONT_AND_BACK, GL_LINE );
-            glLineWidth(5.0f);
-            for (String key : modelMap.keySet()) {
-                Model model = modelMap.get(key);
-                model.draw(Settings.camera.viewMatrix);
+            if (Settings.hasContours) {
+                teddy.setProgramForAllKeys(blackShader);
+                glEnable( GL_POLYGON_OFFSET_FILL );
+                glPolygonOffset( -2.5f, -2.5f );
+                glPolygonMode( GL_FRONT_AND_BACK, GL_LINE );
+                glLineWidth(5.0f);
+                for (String key : modelMap.keySet()) {
+                    Model model = modelMap.get(key);
+                    model.draw(Settings.camera.viewMatrix);
+                }
             }
 
             // Main draw loop
@@ -176,6 +179,7 @@ public class ModelViewer {
 
     static void loadLighting(Shader shader) throws Exception {
         shader.createUniform("applyLighting");
+        shader.createUniform("applyRimLighting");
         shader.createUniform("lightPos");
         shader.createUniform("shininess");
         shader.setInt("shininess", Settings.lighting.shininess);
@@ -192,6 +196,7 @@ public class ModelViewer {
         Settings.camera.setViewMatrix(WIDTH, HEIGHT);
 
         shader.setBool("applyLighting", Settings.hasLighting);
+        shader.setBool("applyRimLighting", Settings.hasRimLighting);
         shader.setUniform("lightPos", Settings.lighting.position );
 
         shader.setUniform("ambientLight", Settings.lighting.ambient );

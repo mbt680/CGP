@@ -13,42 +13,35 @@ uniform int shininess;
 uniform int vertexLevels;
 uniform int fragLevels;
 uniform bool applyLighting;
+uniform bool applyRimLighting;
 
 //in  vec2 textureCoord;
 
-out vec4 ltColor;
 out vec3 ptColor;
 out vec3 ptNorm;
 out int levels;
 
 uniform sampler2D ourTexture;
 
+out vec3 ptLightNorm, ptAmbientLight, ptSpecularLight, ptDiffuseLight, ptApplyLight;
+
 void main()
 {
+    // Calculate position based on view matrix
     gl_Position = viewMatrix * vec4(aPos, 1.0); // convert aPos to homogoneous coordinates
-    ptNorm = vec3(aNorm);
-    levels = fragLevels;
 
     // Select initial color from texture, currently just samples aPos for all points
     ptColor = texture(ourTexture, aPos.xy).xyz;
+    if (ptColor == vec3(0,0,0))
+        ptColor = ourColor;
 
-    // Lighting effects
-    if (applyLighting) {
-        int shininess = 1;
+    // Set up lighting values for fragment shader
+    ptNorm = vec3(aNorm);
+    levels = fragLevels;
+    ptLightNorm = normalize(viewMatrix * vec4(lightPos, 0)).xyz;
+    ptAmbientLight = ambientLight; 
+    ptSpecularLight = specularLight;
+    ptDiffuseLight = diffuseLight;
+    ptApplyLight = vec3(1, applyLighting, applyRimLighting);
 
-        vec4 ambient = vec4(ambientLight, 0);
-        vec3 lightNorm = normalize(lightPos.xyz);
-        float d = max(dot(lightNorm, ptNorm), 0);
-        vec4 diffuse = round(vec4(diffuseLight, 0).xyzw * d * vertexLevels) / vertexLevels ;
-        //vec4 diffuse = vec4(diffuseLight, 0)*d;
-
-        // TODO: no effect from specular light
-        vec3 halfway = normalize(lightNorm - normalize(aPos));
-        float s = max(-pow(max(dot(ptNorm, halfway), 0.0), shininess), 0.0);
-        vec4 specular = vec4(specularLight * s, 0);
-
-        ltColor = ambient.xyzw + diffuse.xyzw + specular.xyzw;
-    }
-    else
-        ltColor = vec4(1,1,1,1);
 }

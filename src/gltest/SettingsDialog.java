@@ -35,6 +35,7 @@ public class SettingsDialog extends JFrame {
 
 	private JCheckBox chkCelShading;
 	private JCheckBox chkLighting;
+	private JCheckBox chkRimLighting;
 	private JCheckBox chkContours;
 	private JCheckBox chkSugContours;
 	private JTextField materialSourceTxt;
@@ -80,18 +81,22 @@ public class SettingsDialog extends JFrame {
 		setVisible(true); 		
 	}
 
-	private JPanel effects = new JPanel(new GridLayout(2,2)) { {
+	private JPanel effects = new JPanel(new GridLayout(3,2)) { {
 		setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
-		chkCelShading = new JCheckBox("Cel Shading", true);
-		chkLighting = new JCheckBox("Lighting", true);
-		chkContours = new JCheckBox("Contours", true);
-		chkSugContours = new JCheckBox("Suggestive Contours", true);
+		chkCelShading = new JCheckBox("Cel Shading", Settings.hasCelShading);
+		chkLighting = new JCheckBox("Diffuse Lighting", Settings.hasLighting);
+		chkRimLighting = new JCheckBox("Rim Lighting", Settings.hasRimLighting);
+		chkContours = new JCheckBox("Contours", Settings.hasContours);
+		chkSugContours = new JCheckBox("Suggestive Contours", Settings.hasSugContours);
 
 		chkCelShading.addActionListener(new ActionListener() {
 			@Override public void actionPerformed(ActionEvent e) { Settings.hasCelShading = chkCelShading.isSelected(); }	
 		});
 		chkLighting.addActionListener(new ActionListener() {
 			@Override public void actionPerformed(ActionEvent e) { Settings.hasLighting = chkLighting.isSelected(); }	
+		});
+		chkRimLighting.addActionListener(new ActionListener() {
+			@Override public void actionPerformed(ActionEvent e) { Settings.hasRimLighting = chkRimLighting.isSelected(); }	
 		});
 		chkContours.addActionListener(new ActionListener() {
 			@Override public void actionPerformed(ActionEvent e) { Settings.hasContours = chkContours.isSelected(); }	
@@ -101,8 +106,9 @@ public class SettingsDialog extends JFrame {
 		});
 
 		add(chkLighting);
-		add(chkContours);
-		add(chkCelShading);			
+		add(chkRimLighting);	
+		add(chkCelShading);	
+		add(chkContours);		
 		add(chkSugContours);
 	} };
 
@@ -148,7 +154,7 @@ public class SettingsDialog extends JFrame {
 		colorLevelsVertex = new IntTextField(Settings.lighting.vertexLevels, 3);
 		colorLevelsFragment = new IntTextField(Settings.lighting.fragLevels, 3);
 
-		add(new JLabel("Vertex Shader: ")); 	add(colorLevelsVertex);
+		//add(new JLabel("Vertex Shader: ")); 	add(colorLevelsVertex);
 		add(new JLabel("Fragment Shader: "));	add(colorLevelsFragment);
 	} };
 

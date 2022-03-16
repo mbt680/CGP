@@ -6,7 +6,7 @@ import org.joml.Vector3f;
 public class Camera {
     Matrix4f viewMatrix = new Matrix4f();
     private int scale = 10;
-    private Vector3f translation = new Vector3f(0,50,100);
+    private Vector3f translation = new Vector3f(0,40,100);
     private Vector3f rotation = new Vector3f();
 
     Camera() {}
@@ -39,19 +39,19 @@ public class Camera {
     }
     
     void rotateLeft() { 
-        rotation.y = (float) ((rotation.y + Math.PI/32) % (2 * Math.PI)); 
+        rotation.y = (float) ((rotation.y + Math.PI/128) % (2 * Math.PI)); 
     }
     
     void rotateRight() { 
-        rotation.y = (float) ((rotation.y - Math.PI/32) % (2 * Math.PI)); 
+        rotation.y = (float) ((rotation.y - Math.PI/128) % (2 * Math.PI)); 
     }
     
     void rotateUp() { 
-        rotation.x = (float) ((rotation.x + Math.PI/32) % (2 * Math.PI)); 
+        rotation.x = (float) ((rotation.x + Math.PI/128) % (2 * Math.PI)); 
     }
     
     void rotateDown() { 
-        rotation.x = (float) ((rotation.x - Math.PI/32) % (2 * Math.PI));
+        rotation.x = (float) ((rotation.x - Math.PI/128) % (2 * Math.PI));
     }
     
     private final int minScale = 1;
