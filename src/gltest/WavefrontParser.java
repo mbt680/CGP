@@ -42,12 +42,14 @@ public class WavefrontParser {
         Map<String, Image> currentMtlLib = null;
         String faceType = VERTEX;
 
+        int lineCount = 0;
         while (wavefrontFile.hasNextLine()) {
-            String line = wavefrontFile.nextLine();
-            if (line.trim().isEmpty())
+            lineCount++;
+            String line = wavefrontFile.nextLine().trim();
+            if (line.isEmpty())
                 continue;
             
-            String[] tokens = line.split(" ");
+            String[] tokens = line.split("\\s+");
             String[] vnTokens = line.split(VINDEX_VNINDEX_SEPERATOR);
             String[] vtTokens = line.split(VERTEX_TEX_SEPERATOR);
             
@@ -142,7 +144,11 @@ public class WavefrontParser {
                 // add vertex to the current model
                 float[] vertices = new float[tokens.length - 1];
                 for (int i = 0; i < vertices.length; i++) {
+                    try {
                     vertices[i] = Float.parseFloat(tokens[i+1]);
+                    } catch (NumberFormatException ne) {
+                        System.out.printf("NFE At line: %d\n For %s!!%s\n", lineCount, tokens[i+1], line);
+                    }
                 } 
                 if (currentModel == null) {
                     currentModel = new Model.Builder(DEFAULT_NAME);
@@ -176,7 +182,7 @@ public class WavefrontParser {
                     System.out.println("Changing face type to " + VERTEX_UV);
 
                 }
-                currentModel.addVertexNormal(vertices);
+                currentModel.addVertexUV(vertices);
             }
         }
         if (currentMesh != null) {

@@ -154,10 +154,11 @@ public class Model {
                     tmpIndices[j] = vnIndices[j-sj] + vnOffset;
                 }
                 indices = tmpIndices;
+                
                 PrintWriter logFile = null;
                 try {
                     logFile = new PrintWriter(i+ "logfile.txt");
-                    int hx = indices.length/2;
+                    int hx = indices.length/3;
                     for (int j = 0; j < hx; j+=3)
                     {
                         logFile.printf("f %d//%d %d//%d %d//%d\n", indices[j], indices[j+hx], indices[j+1], indices[j+hx+1], indices[j+2], indices[j+hx+2]);
@@ -315,15 +316,18 @@ public class Model {
             int nVn = vertexNormals.size();
             int nUv = vertexUVs.size();
 
+            System.out.printf("nVert: %d nVn: %d nUV: %d\n", nVertices, nVn, nUv);
+
             /*
             if (nVn != nVertices && nVn > 0) {
                 System.err.printf("nVertices is size %d while nVn is size %d\n", nVertices, nVn);
                 System.exit(1);
             }*/
 
-            int requiredSize = (nVertices + nVn) * 3 + nUv * 2;
+            int requiredSize = (nVertices + nVn) * 3 + nUv * 3;
             float[] modelVertices = new float[requiredSize];
 
+            System.out.printf("required size: %d\n", requiredSize);
             for (int i = 0; i < nVertices; i++) {
                 float[] tmp = vertices.get(i);
                 //float[] tmpVn = vertexNormals.get(i+1);
@@ -333,6 +337,7 @@ public class Model {
             int start = nVertices;
             int end = nVertices + nVn;
             for (int i = start; i < end; i++) {
+                System.out.printf("i-start: %d, i*3: %d\n", i-start, i*3);
                 float[] tmpVn = vertexNormals.get(i-start);
                 System.arraycopy(tmpVn, 0, modelVertices, i*3, 3);
             }  
