@@ -4,7 +4,8 @@ import java.awt.Image;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
-
+import java.io.IOException;
+import java.io.PrintWriter;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Scanner;
@@ -42,6 +43,13 @@ public class WavefrontParser {
         Map<String, Image> currentMtlLib = null;
         String faceType = VERTEX;
 
+        PrintWriter writer = null;
+        try {
+            writer = new PrintWriter("faces.txt");
+        } catch (IOException ie) {
+
+        }
+
         int lineCount = 0;
         while (wavefrontFile.hasNextLine()) {
             lineCount++;
@@ -50,9 +58,6 @@ public class WavefrontParser {
                 continue;
             
             String[] tokens = line.split("\\s+");
-            String[] vnTokens = line.split(VINDEX_VNINDEX_SEPERATOR);
-            String[] vtTokens = line.split(VERTEX_TEX_SEPERATOR);
-            
             String lineStart = tokens[0];
             //System.out.println(lineStart);
             if (lineStart.equals(COMMENT)) {
@@ -72,11 +77,11 @@ public class WavefrontParser {
                 if (currentModel != null) {
                     Model model = currentModel.getModel();
                     if (currentMesh != null) {
-                        Mesh mesh = currentMesh.getMesh();
-                        if (currentModel.getMeshForKey(mesh.getName()) != null) {
+                        if (currentModel.getMeshForKey(currentMesh.getName()) != null) {
                             // System.out.println("Mesh already exists with name " + mesh.getName() + " in " + model.getName());
                         } else {
                             // System.out.println("NEW_OBJECT: New mesh with name " + mesh.getName() + " " + mesh);
+                            Mesh mesh = currentMesh.getMesh();
                             mesh.setProgram(defaultShader);
                             currentModel.addMesh(mesh);
                         }
@@ -90,7 +95,6 @@ public class WavefrontParser {
                 System.out.println("Found mesh");
                 // create a new mesh
                 if (currentMesh != null) {
-                    Mesh mesh = currentMesh.getMesh();
                     if (currentModel == null)
                     {
                         System.out.println("ModelBuilder is null");
@@ -98,10 +102,11 @@ public class WavefrontParser {
                     }
                     // Model model = currentModel.getModel();
                     // if (model == null) System.out.println("Model is null?"); 
-                    if (currentModel.getMeshForKey(mesh.getName()) != null) {
+                    if (currentModel.getMeshForKey(currentMesh.getName()) != null) {
                         // System.out.println("Mesh already exists with name " + mesh.getName() + " in " + model.getName());
                     } else {
                         // System.out.println("New mesh with name " + mesh.getName() + " " + mesh);
+                        Mesh mesh = currentMesh.getMesh();
                         mesh.setProgram(defaultShader);
                         currentModel.addMesh(mesh);
                     }
@@ -110,8 +115,8 @@ public class WavefrontParser {
             } else if (lineStart.equals(FACE)) {
                 // add face to the current mesh
                 int[] vertexIndices = new int[tokens.length - 1];
-                int[] vertexNormalIndices = new int[Math.max(0, Math.max(vnTokens.length - 1, vtTokens.length))];
-                int[] vertexUVIndices = new int[Math.max(0, vtTokens.length - 1)];
+                int[] vertexNormalIndices = new int[tokens.length - 1];
+                int[] vertexUVIndices = new int[tokens.length - 1];
                 // System.out.println("Note that face type is currently " + faceType);
                 if (faceType.equals(VERTEX)) {
                     for (int i = 0; i < vertexIndices.length; i++) {
@@ -139,6 +144,7 @@ public class WavefrontParser {
                     currentMesh = new Mesh.Builder(DEFAULT_NAME);
                 }
                 Face tmpFace = new Face(vertexIndices, vertexNormalIndices, vertexUVIndices);
+                writer.printf("%d %d %d\n", vertexUVIndices[0], vertexUVIndices[1], vertexUVIndices[2]);
                 currentMesh.addFace(tmpFace);
             } else if (lineStart.equals(VERTEX)) {
                 // add vertex to the current model
@@ -201,6 +207,9 @@ public class WavefrontParser {
             Model model = currentModel.getModel();
             modelMap.put(model.getName(), model);
         }
+
+        if (writer != null) writer.close();
+
         return modelMap;
     }
 

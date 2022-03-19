@@ -2,6 +2,7 @@
 
 layout (location = 0) in vec3 aPos; // position variable w attribute position 0
 layout (location = 1) in vec3 aNorm; // normal vector
+layout (location = 2) in vec3 aTex; //texture coordinates
 
 uniform mat4 viewMatrix;
 uniform vec3 ourColor; // specify a color output to the fragment shader

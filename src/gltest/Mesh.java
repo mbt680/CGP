@@ -101,6 +101,10 @@ public class Mesh {
             faces = new ArrayList<>();
         }
 
+        public String getName() {
+            return mesh.name;
+        }
+
         /**
          * addFace to the model
          * @param face
@@ -145,6 +149,8 @@ public class Mesh {
             mesh.setVertexNormalIndices(vertexNormalIndices);
             mesh.setVertexUVIndices(vertexUvIndices);
 
+            System.out.printf("Built mesh %s with %d faces\n", mesh.name, faces.size());
+            System.out.printf("Number of\n  vertices %d\n  normals %d\n  tvertices %d\n", requiredSpaceV, requiredSpaceVn, requiredSpaceUv);
             return mesh;
         }
     }
