@@ -19,7 +19,7 @@ uniform bool applyRimLighting;
 
 out vec3 ptColor;
 out vec3 ptNorm;
-out int levels;
+flat out int levels;
 
 uniform sampler2D ourTexture;
 
