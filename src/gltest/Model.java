@@ -1,5 +1,7 @@
 package gltest;
 
+import java.awt.Image;
+
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.nio.*;
@@ -25,9 +27,14 @@ public class Model {
     private int[] vbo;
     private int[] ebo;
     private int[] vao;
+    /* Maps names of meshes to the location of their textures */
+    private Map<String, Integer> textureMap;
 
     private boolean hasVertexNormals;
     private int vnOffset;
+
+    private boolean hasUvs;
+    private int uvOffset;
 
     private Model() {
         meshMap = new HashMap<String, Mesh>();
@@ -113,6 +120,15 @@ public class Model {
     private void setHasVertexNormals(boolean hasVertexNormals, int offset) {
         this.hasVertexNormals = hasVertexNormals;
         this.vnOffset = offset;
+    }
+
+    private void setHasUVs(boolean hasVertexUvs, int offset) {
+        this.hasUvs = hasVertexUvs;
+        this.uvOffset = offset;
+    }
+
+    private void setupTextures(Map<String, Image> materialMap) {
+
     }
 
     private void setupBuffers() {
@@ -207,7 +223,9 @@ public class Model {
     public static class Builder {
         private List<float[]> vertices;
         private List<float[]> vertexNormals;
+        private List<float[]> vertexUVs;
         private List<Mesh> meshes;
+        private Map<String, Image> materialMap;
         private String name;
 
         /**
@@ -217,6 +235,7 @@ public class Model {
             this.name = name;
             vertices = new ArrayList<>();
             vertexNormals = new ArrayList<>();
+            vertexUVs = new ArrayList<>();
             meshes = new ArrayList<>();
         }
 
@@ -264,6 +283,18 @@ public class Model {
             vertexNormals.add(new float[]{x, y, z});
         }
 
+        public void addVertexUV(float[] uv) {
+            vertexUVs.add(uv);
+        }
+
+        public void addVertexUV(float x, float y) {
+            vertexUVs.add(new float[]{x, y});
+        }
+
+        public void setMaterialLib(Map<String, Image> materialMap) {
+            this.materialMap = materialMap;
+        }
+
         /**
          * getModel constructs and returns the model.
          * @return Constructed model
@@ -282,6 +313,7 @@ public class Model {
             // convert list of vertices to an array
             int nVertices = vertices.size();
             int nVn = vertexNormals.size();
+            int nUv = vertexUVs.size();
 
             /*
             if (nVn != nVertices && nVn > 0) {
@@ -289,7 +321,7 @@ public class Model {
                 System.exit(1);
             }*/
 
-            int requiredSize = (nVertices + nVn) * 3;
+            int requiredSize = (nVertices + nVn) * 3 + nUv * 2;
             float[] modelVertices = new float[requiredSize];
 
             for (int i = 0; i < nVertices; i++) {
@@ -306,13 +338,33 @@ public class Model {
             }  
             //System.out.printf("Number of norms: %d\n Number of vertices: %d\n", nVn, nVertices);
 
+            int vnStart = start;
+            start = end;
+            end = start + nUv;
+            for (int i = start; i < end; i++) {
+                float[] tmpUv = vertexUVs.get(i-start);
+                System.arraycopy(tmpUv, 0, modelVertices, i*3, 3);
+            }
             model.setVertices(modelVertices);
             if (nVn > 0) {
-                model.setHasVertexNormals(true, start);
+                model.setHasVertexNormals(true, vnStart);
             }
+            if (nUv > 0) {
+                model.setHasUVs(true, start);
+            }
+            model.setupTextures(materialMap);
             model.setupBuffers();
 
             return model;
+        }
+
+        public Mesh getMeshForKey(String key) {
+            for (Mesh mesh : meshes) {
+                if (mesh.getName().equals(key)) {
+                    return mesh;
+                }
+            }
+            return null;
         }
     }
 }
