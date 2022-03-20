@@ -36,9 +36,9 @@ void main()
     // if (ptColor == vec3(0,0,0))
     //     ptColor = ourColor;
 
-    if (aTex == aPos && aTex == aNorm) {
-        ptColor = vec3(1, 0, 0);
-    }
+    // if (aTex == aPos && aTex == aNorm) {
+    //     ptColor = vec3(1, 0, 0);
+    // }
 
     // Set up lighting values for fragment shader
     ptNorm = vec3(aNorm);
