@@ -1,7 +1,7 @@
 package gltest;
 
 import java.awt.Image;
-
+import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.nio.*;
@@ -38,6 +38,7 @@ public class Model {
 
     private Model() {
         meshMap = new HashMap<String, Mesh>();
+        textureMap = new HashMap<>();
     }
 
     /**
@@ -50,7 +51,9 @@ public class Model {
             program.use();
             program.setUniform("viewMatrix", viewMatrix);
             int nVertices = tmp.getVertexIndices().length;
-        
+            int texture = textureMap.get(tmp.getName());
+            glActiveTexture(GL_TEXTURE0);
+            glBindTexture(GL_TEXTURE_2D, texture);
             glBindVertexArray(vao[i]);
             glDrawElements(GL_TRIANGLES, nVertices, GL_UNSIGNED_INT, 0);
         }
@@ -128,7 +131,11 @@ public class Model {
     }
 
     private void setupTextures(Map<String, Image> materialMap) {
-
+        for (String key : materialMap.keySet()) {
+            Image tmpImage = materialMap.get(key);
+            int loc = TextureLoader.loadTexture((BufferedImage)tmpImage);
+            textureMap.put(key, loc);
+        }
     }
 
     private void setupBuffers() {
@@ -145,6 +152,7 @@ public class Model {
             Mesh tmpMesh = meshes[i];
             System.out.printf("Setting up Mesh %s\n", tmpMesh.getName());
             int[] indices = tmpMesh.getVertexIndices();
+            int nvertices = indices.length;
             if (hasUvs && hasVertexNormals) {
                 int[] vnIndices = tmpMesh.getVertexNormalIndices();
                 int[] uvIndices = tmpMesh.getVertexUVIndices();
@@ -194,6 +202,7 @@ public class Model {
                             indices[j]-uvOffset, indices[j+1]-uvOffset, indices[j+2]-uvOffset
                         );
                     }
+                    vtFile.close();
                 } catch (IOException ie) {
                     
                 }
@@ -266,7 +275,6 @@ public class Model {
             // System.out.println(vnOffset * 12);
             if (hasVertexNormals) {
                 glVertexAttribPointer(1, 3, GL_FLOAT, false, 0, 0);
-                // glVertexAttribPointer(1, 3, GL_FLOAT, false, 0, 0);
                 glEnableVertexAttribArray(1);
             }
             if (hasUvs) {
@@ -362,7 +370,7 @@ public class Model {
 
         public void addVertexUV(float[] uv) {
             if (uv.length == 2) {
-                float[] tmp = new float[]{uv[0], uv[1], uv[2]};
+                float[] tmp = new float[]{uv[0], uv[1], 0f};
                 vertexUVs.add(tmp);
             } else if (uv.length == 3) {
                 vertexUVs.add(uv);

@@ -32,9 +32,13 @@ void main()
     gl_Position = viewMatrix * vec4(aPos, 1.0); // convert aPos to homogoneous coordinates
 
     // Select initial color from texture, currently just samples aPos for all points
-    ptColor = texture(ourTexture, aPos.xy).xyz;
-    if (ptColor == vec3(0,0,0))
-        ptColor = ourColor;
+    ptColor = texture(ourTexture, aTex.xy).xyz;
+    // if (ptColor == vec3(0,0,0))
+    //     ptColor = ourColor;
+
+    if (aTex == aPos && aTex == aNorm) {
+        ptColor = vec3(1, 0, 0);
+    }
 
     // Set up lighting values for fragment shader
     ptNorm = vec3(aNorm);
