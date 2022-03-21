@@ -33,9 +33,10 @@ void main()
 
     // Select initial color from texture, currently just samples aPos for all points
     ptColor = texture(ourTexture, aTex.xy).xyz;
-    // if (ptColor == vec3(0,0,0))
-    //     ptColor = ourColor;
+    if (ptColor == vec3(0,0,0))
+        ptColor = ourColor;
 
+    // uncomment me to test if aTex, aPos, and aNorm are the same. Paints the whole model red
     // if (aTex == aPos && aTex == aNorm) {
     //     ptColor = vec3(1, 0, 0);
     // }

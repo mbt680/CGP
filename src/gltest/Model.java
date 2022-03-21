@@ -25,7 +25,7 @@ public class Model {
     private Mesh[] meshes;
     private Map<String, Mesh> meshMap;
     private int[] vbo;
-    private int[] ebo;
+    // private int[] ebo;
     private int[] vao;
     /* Maps names of meshes to the location of their textures */
     private Map<String, Integer> textureMap;
@@ -55,7 +55,9 @@ public class Model {
             glActiveTexture(GL_TEXTURE0);
             glBindTexture(GL_TEXTURE_2D, texture);
             glBindVertexArray(vao[i]);
-            glDrawElements(GL_TRIANGLES, nVertices, GL_UNSIGNED_INT, 0);
+            // glDrawElements(GL_TRIANGLES, nVertices, GL_UNSIGNED_INT, 0);
+            // System.out.println(nVertices+"");
+            glDrawArrays(GL_TRIANGLES, 0, nVertices);
         }
     }
 
@@ -143,21 +145,112 @@ public class Model {
 
         vao = new int[nMesh];
         vbo = new int[nMesh];
-        ebo = new int[nMesh];
+        // ebo = new int[nMesh];
 
-        FloatBuffer verticesBuffer = BufferUtils.createFloatBuffer(vertices.length);
+        /* FloatBuffer verticesBuffer = BufferUtils.createFloatBuffer(vertices.length);
         verticesBuffer.put(vertices);
-        verticesBuffer.flip();
+        verticesBuffer.flip(); */
+        FloatBuffer verticesBuffer = null;
         for (int i = 0; i < vao.length; i++) {
             Mesh tmpMesh = meshes[i];
             System.out.printf("Setting up Mesh %s\n", tmpMesh.getName());
             int[] indices = tmpMesh.getVertexIndices();
-            int nvertices = indices.length;
+            for (int z = 0; z < indices.length; z += 3) {
+                System.out.printf("v %d %d %d\n", indices[z], indices[z+1], indices[z+2]);
+            }
+            //int nvertices = indices.length;
             if (hasUvs && hasVertexNormals) {
                 int[] vnIndices = tmpMesh.getVertexNormalIndices();
                 int[] uvIndices = tmpMesh.getVertexUVIndices();
-                int[] tmpIndices = new int[indices.length + vnIndices.length + uvIndices.length];
+                System.out.printf("indices %d vnIndices %d vtIndices %d\n", indices.length, vnIndices.length, uvIndices.length);
+                // int[] tmpIndices = new int[indices.length + vnIndices.length + uvIndices.length];
                 
+                float[] buffer = new float[(indices.length + vnIndices.length + uvIndices.length)*3];
+                System.out.printf("vnOffset %d\nuvOffset %d\n buffer %d\n vertices %d\n", vnOffset, uvOffset, buffer.length, vertices.length);
+                for (int j = 0; j < buffer.length; j+=3) {
+                    int content = j % 9;
+                    int c1 = j / 9;
+                    int index = j / 3;
+                    // System.out.printf("j %d indices[] %d vnIndices[] %d uvIndices[] %d\n", j, indices[index], (vnIndices[index]+vnOffset), (uvIndices[index]+uvOffset));
+                    System.out.printf("j %d c1 %d indices[] %d vnIndices[] %d uvIndices[] %d\n", j, c1, indices[c1], (vnIndices[c1]), (uvIndices[c1]));
+
+                    if (content == 0) {
+                        // System.arraycopy(vertices, indices[c1], buffer, j, 3);
+                        int k = (indices[c1])*3;
+                        System.out.printf("%d %.4f %d %.4f %d %.4f \n", k, vertices[k], k+1, vertices[k+1], k+2, vertices[k+2]);
+                        System.arraycopy(vertices, k, buffer, j, 3);
+                    } else if (content == 3) {
+                        // System.arraycopy(vertices, (vnIndices[index]+vnOffset)*3, buffer, j, 3);
+                        int k = (vnIndices[c1]+vnOffset)*3;
+                        System.out.printf("%d %.4f %d %.4f %d %.4f \n", k, vertices[k], k+1, vertices[k+1], k+2, vertices[k+2]);
+                        System.arraycopy(vertices, k, buffer, j, 3);
+                    } else if (content == 6) {
+                        // System.arraycopy(vertices, (uvIndices[index]+uvOffset)*3, buffer, j, 3);
+                        int k = (uvIndices[c1]+uvOffset)*3;
+                        System.out.printf("%d %.4f %d %.4f %d %.4f \n", k, vertices[k], k+1, vertices[k+1], k+2, vertices[k+2]);
+                        System.arraycopy(vertices, k, buffer, j, 3);
+                    }
+                } 
+
+                verticesBuffer = BufferUtils.createFloatBuffer(buffer.length);
+                verticesBuffer.put(buffer);
+                verticesBuffer.flip();
+
+                // log vertices contents
+                PrintWriter logFile = null;
+                try {
+                    logFile = new PrintWriter(i + "vertices.txt");
+                    
+                    for (int j = 0; j < vertices.length; j+=3) {
+                        logFile.printf("%.4f %.4f %.4f\n",
+                            vertices[j], vertices[j+1], vertices[j+2] 
+                        );
+                    }
+                    logFile.close();
+                } catch (IOException ie) {
+                    
+                }
+
+                // log buffer contents
+                logFile = null;
+                try {
+                    logFile = new PrintWriter(i + "logfile.txt");
+                    
+                    for (int j = 0; j < buffer.length; j+=3) {
+                        logFile.printf("%.4f %.4f %.4f\n",
+                            buffer[j], buffer[j+1], buffer[j+2]
+                        );
+                    }
+                    logFile.close();
+                } catch (IOException ie) {
+                    
+                }
+
+                // log vertices contents
+                logFile = null;
+                try {
+                    logFile = new PrintWriter(i + "_logfile.txt");
+                    
+                    for (int j = 0; j < buffer.length; j+=3) {
+                        int content = j % 9;
+                        if (content == 0) {
+                            logFile.printf("v  %d %.4f %.4f %.4f\n",
+                                j, buffer[j], buffer[j+1], buffer[j+2]
+                            );
+                        } else if (content == 3) {
+                        logFile.printf("vn %d %.4f %.4f %.4f\n",
+                            j, buffer[j], buffer[j+1], buffer[j+2]
+                        );
+                        } else 
+                        logFile.printf("vt %d %.4f %.4f %.4f\n",
+                            j, buffer[j], buffer[j+1], buffer[j+2]
+                        );
+                    }
+                    logFile.close();
+                } catch (IOException ie) {
+                    
+                }
+                /*
                 System.arraycopy(indices, 0, tmpIndices, 0, indices.length);
                 int sj = indices.length;
                 int ej = sj + vnIndices.length;
@@ -170,14 +263,13 @@ public class Model {
                 ej = sj + uvIndices.length;
                 // System.out.printf("tmpIndices.len: %d uvIndices.len: %d sj: %d ej: %d\n", tmpIndices.length, uvIndices.length, sj, ej);
                 System.out.printf("Copying vertex textures from %d to %d\n", sj, ej);
-
                 for (int j = sj; j < ej; j++) {
                     tmpIndices[j] = uvIndices[j-sj] + uvOffset;
                 }
                 int nVert = indices.length;
                 indices = tmpIndices;
                 
-                PrintWriter vnFile = null;
+                /*PrintWriter vnFile = null;
                 try {
                     vnFile = new PrintWriter(i+ "vnfile.txt");
                     int hx = nVert;
@@ -224,8 +316,9 @@ public class Model {
                     
                 } finally {
                     logFile.close();
-                }
-            } else if (hasVertexNormals) {
+                }*/
+            }
+             /*else if (hasVertexNormals) {
                 int[] vnIndices = tmpMesh.getVertexNormalIndices();
                 int[] tmpIndices = new int[indices.length + vnIndices.length];
                 
@@ -249,36 +342,37 @@ public class Model {
                 } finally {
                     logFile.close();
                 }
-            }
+            }*/
 
+            /*
             IntBuffer indicesBuffer = BufferUtils.createIntBuffer(indices.length);
             indicesBuffer.put(indices);
             indicesBuffer.flip();
-
+            */
             vao[i] = glGenVertexArrays();
             vbo[i] = glGenBuffers();
-            ebo[i] = glGenBuffers();
+            // ebo[i] = glGenBuffers();
 
             glBindVertexArray(vao[i]);
 
             glBindBuffer(GL_ARRAY_BUFFER, vbo[i]);
             glBufferData(GL_ARRAY_BUFFER, verticesBuffer, GL_STATIC_DRAW);
 
-            glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ebo[i]);
-            glBufferData(GL_ELEMENT_ARRAY_BUFFER, indicesBuffer, GL_STATIC_DRAW);
+            // glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ebo[i]);
+            // glBufferData(GL_ELEMENT_ARRAY_BUFFER, indicesBuffer, GL_STATIC_DRAW);
 
             // int stride = hasVertexNormals?24:0;
-            glVertexAttribPointer(0, 3, GL_FLOAT, false, 0, 0);
+            glVertexAttribPointer(0, 3, GL_FLOAT, false, 36, 0);
             glEnableVertexAttribArray(0);
 
             // System.out.println(vnOffset);
             // System.out.println(vnOffset * 12);
             if (hasVertexNormals) {
-                glVertexAttribPointer(1, 3, GL_FLOAT, false, 0, 0);
+                glVertexAttribPointer(1, 3, GL_FLOAT, false, 36, 12);
                 glEnableVertexAttribArray(1);
             }
             if (hasUvs) {
-                glVertexAttribPointer(2, 3, GL_FLOAT, false, 0, 0);
+                glVertexAttribPointer(2, 3, GL_FLOAT, false, 36, 24);
                 glEnableVertexAttribArray(2);
             }
         }
@@ -296,7 +390,7 @@ public class Model {
             meshes[i].delete();
             glDeleteVertexArrays(vao[i]);
             glDeleteBuffers(vbo[i]);
-            glDeleteBuffers(ebo[i]);
+            // glDeleteBuffers(ebo[i]);
         }
     }
 
@@ -426,27 +520,27 @@ public class Model {
                 //System.arraycopy(tmpVn, 0, modelVertices, (i+1)*3, 3);
             }
             int start = nVertices;
-            int end = nVertices + nVn;
+            int end = nVertices + nUv;
             for (int i = start; i < end; i++) {
                 // System.out.printf("i-start: %d, i*3: %d\n", i-start, i*3);
-                float[] tmpVn = vertexNormals.get(i-start);
-                System.arraycopy(tmpVn, 0, modelVertices, i*3, 3);
+                float[] tmpUv = vertexUVs.get(i-start);
+                System.arraycopy(tmpUv, 0, modelVertices, i*3, 3);
             }  
             //System.out.printf("Number of norms: %d\n Number of vertices: %d\n", nVn, nVertices);
 
-            int vnStart = start;
+            int uvStart = start;
             start = end;
-            end = start + nUv;
+            end = start + nVn;
             for (int i = start; i < end; i++) {
-                float[] tmpUv = vertexUVs.get(i-start);
-                System.arraycopy(tmpUv, 0, modelVertices, i*3, 3);
+                float[] tmpVn = vertexNormals.get(i-start);
+                System.arraycopy(tmpVn, 0, modelVertices, i*3, 3);
             }
             model.setVertices(modelVertices);
             if (nVn > 0) {
-                model.setHasVertexNormals(true, vnStart);
+                model.setHasVertexNormals(true, start);
             }
             if (nUv > 0) {
-                model.setHasUVs(true, start);
+                model.setHasUVs(true, uvStart);
             }
             model.setupTextures(materialMap);
             model.setupBuffers();

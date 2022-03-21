@@ -135,8 +135,8 @@ public class WavefrontParser {
                         String[] subTokens = tokens[i+1].split(VERTEX_TEX_SEPERATOR);
                         // System.out.println(subTokens.length);
                         vertexIndices[i] = Integer.parseInt(subTokens[0]) - 1;
-                        vertexNormalIndices[i] = Integer.parseInt(subTokens[1]) - 1;
-                        vertexUVIndices[i] = Integer.parseInt(subTokens[2]) - 1;
+                        vertexUVIndices[i] = Integer.parseInt(subTokens[1]) - 1;
+                        vertexNormalIndices[i] = Integer.parseInt(subTokens[2]) - 1;
                     }
                 }
                 // Some wavefront files have no material, this handles that
