@@ -35,7 +35,11 @@ void main()
         ptColor = ourColor;
     }
     ptColor = vec3(0.0, 0.0, 0.0);
-    ptTex = vec2(aTex.x, 1.0-aTex.y);
+    if (aTex.y < 0) {
+        ptTex = vec2(aTex.x, -aTex.y);
+    } else {
+        ptTex = vec2(aTex.x, 1.0 - aTex.y);
+    }
 
     // uncomment me to test if aTex, aPos, and aNorm are the same. Paints the whole model red
     // if (aTex == aPos && aTex == aNorm) {

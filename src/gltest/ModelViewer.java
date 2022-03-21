@@ -127,7 +127,7 @@ public class ModelViewer {
         System.out.println("About to load model");
         // Load models.
         WavefrontParser.setDefaultShader(yellowShader);
-        Map<String, Model> modelMap = WavefrontParser.parse(dir + "/data/Knight/knight.obj");
+        Map<String, Model> modelMap = WavefrontParser.parse(dir + "/data/engineer12/eng.obj");
         for (String key : modelMap.keySet()) {
             Model model = modelMap.get(key);
             System.out.println("Model: " + model.getName());
@@ -138,7 +138,7 @@ public class ModelViewer {
         }
 
         // Get model by the name of "engineer_morphs_low"
-        Model teddy = modelMap.get("Knight");
+        Model teddy = modelMap.get("engineer");
 
         if (teddy == null) {
             System.out.println("Model is null!");
