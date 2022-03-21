@@ -124,9 +124,10 @@ public class ModelViewer {
         shaderList.add(yellowShader);
         shaderList.add(blackShader);
 
+        System.out.println("About to load model");
         // Load models.
         WavefrontParser.setDefaultShader(yellowShader);
-        Map<String, Model> modelMap = WavefrontParser.parse(dir + "/data/engineer8.obj");
+        Map<String, Model> modelMap = WavefrontParser.parse(dir + "/data/cube/textured_cube.obj");
         for (String key : modelMap.keySet()) {
             Model model = modelMap.get(key);
             System.out.println("Model: " + model.getName());
@@ -137,7 +138,11 @@ public class ModelViewer {
         }
 
         // Get model by the name of "engineer_morphs_low"
-        Model teddy = modelMap.get("unnamed");
+        Model teddy = modelMap.get("Cube");
+
+        if (teddy == null) {
+            System.out.println("Model is null!");
+        }
 
         glEnable(GL_DEPTH_TEST);
 

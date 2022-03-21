@@ -1,2 +1,6 @@
 build/
 *logfile.txt
+faces.txt
+*vnfile.txt
+*vtfile.txt
+0vertices.txt

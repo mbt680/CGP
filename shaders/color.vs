@@ -2,6 +2,7 @@
 
 layout (location = 0) in vec3 aPos; // position variable w attribute position 0
 layout (location = 1) in vec3 aNorm; // normal vector
+layout (location = 2) in vec3 aTex; //texture coordinates
 
 uniform mat4 viewMatrix;
 uniform vec3 ourColor; // specify a color output to the fragment shader
@@ -19,9 +20,8 @@ uniform bool applyRimLighting;
 
 out vec3 ptColor;
 out vec3 ptNorm;
+out vec2 ptTex;
 flat out int levels;
-
-uniform sampler2D ourTexture;
 
 out vec3 ptLightNorm, ptAmbientLight, ptSpecularLight, ptDiffuseLight, ptApplyLight;
 
@@ -31,9 +31,16 @@ void main()
     gl_Position = viewMatrix * vec4(aPos, 1.0); // convert aPos to homogoneous coordinates
 
     // Select initial color from texture, currently just samples aPos for all points
-    ptColor = texture(ourTexture, aPos.xy).xyz;
-    if (ptColor == vec3(0,0,0))
+    if (ptColor == vec3(0,0,0)) {
         ptColor = ourColor;
+    }
+    ptColor = vec3(0.0, 0.0, 0.0);
+    ptTex = vec2(aTex.xy);
+
+    // uncomment me to test if aTex, aPos, and aNorm are the same. Paints the whole model red
+    // if (aTex == aPos && aTex == aNorm) {
+    //     ptColor = vec3(1, 0, 0);
+    // }
 
     // Set up lighting values for fragment shader
     ptNorm = vec3(aNorm);

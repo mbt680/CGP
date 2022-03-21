@@ -10,6 +10,7 @@ public class Mesh {
     private Shader program;
     private int[] vertexIndices;
     private int[] vertexNormalIndices;
+    private int[] vertexUVIndices;
     private String name;
 
     /**
@@ -43,6 +44,10 @@ public class Mesh {
         this.vertexNormalIndices = vertexNormalIndices;
     }
 
+    private void setVertexUVIndices(int[] vertexUVIndices) {
+        this.vertexUVIndices = vertexUVIndices;
+    }
+
     /**
      * getProgram gets the shader program being used
      * @return
@@ -65,6 +70,14 @@ public class Mesh {
      */
     public int[] getVertexNormalIndices() {
         return vertexNormalIndices;
+    }
+
+    /**
+     * getVertexUVIndices
+     * @return
+     */
+    public int[] getVertexUVIndices() {
+        return vertexUVIndices;
     }
 
     /**
@@ -92,6 +105,10 @@ public class Mesh {
             faces = new ArrayList<>();
         }
 
+        public String getName() {
+            return mesh.name;
+        }
+
         /**
          * addFace to the model
          * @param face
@@ -107,27 +124,37 @@ public class Mesh {
         public Mesh getMesh() {
             int requiredSpaceV = 0;
             int requiredSpaceVn = 0;
+            int requiredSpaceUv = 0;
             for (Face face : faces) {
                 requiredSpaceV += face.sizeVertex();
                 requiredSpaceVn += face.sizeVertexNormal();
+                requiredSpaceUv += face.sizeVertexUV();
             }
 
             int[] vertexIndices = new int[requiredSpaceV];
             int[] vertexNormalIndices = new int[requiredSpaceVn];
+            int[] vertexUvIndices = new int[requiredSpaceUv];
             int i = 0;
             int j = 0;
+            int k = 0;
             for (Face face : faces) {
                 int nToCopyV = face.sizeVertex();
                 int nToCopyVn = face.sizeVertexNormal();
+                int nToCopyUv = face.sizeVertexUV();
                 System.arraycopy(face.getVertexIndices(), 0, vertexIndices, i, nToCopyV);
                 System.arraycopy(face.getVertexNormalIndices(), 0, vertexNormalIndices, j, nToCopyVn);
+                System.arraycopy(face.getVertexUVIndices(), 0, vertexUvIndices, k, nToCopyUv);
                 i += nToCopyV;
                 j += nToCopyVn;
+                k += nToCopyUv;
             }
 
             mesh.setVertexIndices(vertexIndices);
             mesh.setVertexNormalIndices(vertexNormalIndices);
+            mesh.setVertexUVIndices(vertexUvIndices);
 
+            System.out.printf("Built mesh %s with %d faces\n", mesh.name, faces.size());
+            System.out.printf("Number of\n  vertices %d\n  normals %d\n  tvertices %d\n", requiredSpaceV, requiredSpaceVn, requiredSpaceUv);
             return mesh;
         }
     }

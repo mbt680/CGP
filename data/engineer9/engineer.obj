@@ -1,9 +1,7 @@
 # Max2Obj Version 4.0 Mar 10th, 2001
 #
 mtllib ./engineer.mtl
-g
-# object (null) to come ...
-#
+o engineer
 v  6.906632 1.387925 7.096088
 v  6.821254 1.901825 6.890792
 v  5.865305 1.111409 4.594421
