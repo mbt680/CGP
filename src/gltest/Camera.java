@@ -55,7 +55,7 @@ public class Camera {
     }
     
     private final int minScale = 1;
-    private final int maxScale = 20;
+    private final int maxScale = 100;
     void changeScale(int change) {
         scale = Math.min(Math.max(scale + change, minScale), maxScale);
     }

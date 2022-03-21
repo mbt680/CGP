@@ -17,7 +17,7 @@ void main()
 {
     vec4 texColor = texture(ourTexture, ptTex);
     // variables that do nothing can be optimized out in GLSL by default
-    FragColor =  getLightingColor() * (vec4(ptColor*0.0, 1.0) + texColor);
+    FragColor =  getLightingColor() * texColor + vec4(ptColor,0)*0;
 }
 
 // Lighting effects

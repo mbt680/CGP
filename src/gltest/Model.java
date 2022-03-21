@@ -172,8 +172,12 @@ public class Model {
                         System.arraycopy(vertices, k, buffer, j, 3);
                     } else if (content == 3) {
                         int k = (vnIndices[c1]+vnOffset)*3;
+                        // if (k >= vertices.length) {
+                        //     System.out.println(k);
+                        // } else {
                         // System.out.printf("%d %.4f %d %.4f %d %.4f \n", k, vertices[k], k+1, vertices[k+1], k+2, vertices[k+2]);
                         System.arraycopy(vertices, k, buffer, j, 3);
+                        // }
                     } else if (content == 6) {
                         int k = (uvIndices[c1]+uvOffset)*3;
                         // System.out.printf("%d %.4f %d %.4f %d %.4f \n", k, vertices[k], k+1, vertices[k+1], k+2, vertices[k+2]);
