@@ -72,6 +72,10 @@ public class Mesh {
         return vertexNormalIndices;
     }
 
+    /**
+     * getVertexUVIndices
+     * @return
+     */
     public int[] getVertexUVIndices() {
         return vertexUVIndices;
     }

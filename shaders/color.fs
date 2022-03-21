@@ -3,17 +3,21 @@
 out vec4 FragColor;
 
 in vec3 ptColor;
+in vec2 ptTex;
 in vec3 ptNorm;
 flat in int levels;
 
 in vec3 ptLightNorm, ptAmbientLight, ptSpecularLight, ptDiffuseLight, ptApplyLight;
 
+uniform sampler2D ourTexture;
+
 vec4 getLightingColor();
 
 void main()
 {
+    vec4 texColor = texture(ourTexture, ptTex);
     // variables that do nothing can be optimized out in GLSL by default
-    FragColor =  getLightingColor() * vec4(ptColor, 1.0);
+    FragColor =  getLightingColor() * (vec4(ptColor*0.0, 1.0) + texColor);
 }
 
 // Lighting effects
