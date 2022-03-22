@@ -161,7 +161,7 @@ public class ModelViewer {
                 glLineWidth(5.0f);
                 for (String key : modelMap.keySet()) {
                     Model model = modelMap.get(key);
-                    model.draw(Settings.camera.viewMatrix, Settings.materialFileLoc);
+                    model.draw(Settings.camera.viewMatrix, textureID);
                 }
             }
 
@@ -171,7 +171,7 @@ public class ModelViewer {
             teddy.setProgramForAllKeys(yellowShader);
             for (String key : modelMap.keySet()) {
                 Model model = modelMap.get(key);
-                model.draw(Settings.camera.viewMatrix, Settings.materialFileLoc);
+                model.draw(Settings.camera.viewMatrix, textureID);
             }
             glDisable( GL_POLYGON_OFFSET_FILL);
 
@@ -196,6 +196,7 @@ public class ModelViewer {
     }
 
     static String prevFileLocation = "";
+    static int textureID = -1;
   
     static void applySettings(Shader shader) throws Exception {
         Settings.camera.setViewMatrix(WIDTH, HEIGHT);
@@ -217,23 +218,19 @@ public class ModelViewer {
         }
 
         String fileLocation = Settings.materialFileLoc;
-        if (!fileLocation.isEmpty() && fileLocation!= prevFileLocation) {
-            loadMaterial(shader);
+        if (fileLocation.isEmpty() ) {
+            textureID = -1;
+        } else if (fileLocation!= prevFileLocation) {
+            textureID = loadMaterial(shader);
             prevFileLocation = fileLocation;
         }
     }
 
-    static void loadMaterial(Shader shader) throws Exception {
+    static int loadMaterial(Shader shader) throws Exception {
         BufferedImage image = TextureLoader.loadImage(Settings.materialFileLoc);
         int textureID = TextureLoader.loadTexture(image);
         glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
         glGenerateMipmap(GL_TEXTURE_2D);
-
-        // Only needed for multiple textures
-        //shader.createUniform("ourTexture");
-        //shader.setUniform("texture_sampler", 0);
-
-        glActiveTexture(GL_TEXTURE0);
-        glBindTexture(GL_TEXTURE_2D, textureID);
+        return textureID;
     }
 }
