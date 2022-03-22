@@ -7,7 +7,7 @@ public class Light {
     public int shininess = 1;
 
     public final Vector3f ambient = new Vector3f( 0.5f, 0.5f, 0.5f  );
-    public final Vector3f diffuse = new Vector3f( 0.05f, 0.05f, 0.05f );
+    public final Vector3f diffuse = new Vector3f( 0.5f, 0.5f, 0.5f );
     public final Vector3f specular = new Vector3f( 0.1f, 0.1f, 0.1f );
 
     public int vertexLevels = 32;

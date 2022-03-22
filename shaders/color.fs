@@ -11,14 +11,20 @@ in vec3 ptLightNorm, ptAmbientLight, ptSpecularLight, ptDiffuseLight, ptApplyLig
 
 uniform sampler2D ourTexture;
 
+vec4 applyCelShading(vec4 colour, int levels);
 vec4 getLightingColor();
 
 void main()
 {
     vec4 texColor = texture(ourTexture, ptTex);
     // variables that do nothing can be optimized out in GLSL by default
-    FragColor =  getLightingColor() * texColor + vec4(ptColor,0)*0;
+    FragColor = applyCelShading(getLightingColor(), levels) * texColor + vec4(ptColor,0)*0;
 }
+
+vec4 applyCelShading(vec4 colour, int levels) {
+    return round(colour * levels) / levels;
+}
+
 
 // Lighting effects
 vec4 getLightingColor() 
@@ -44,7 +50,7 @@ vec4 getLightingColor()
     }
 
     // Apply cel shading
-    specular = round(specular * 4) / 4;
+    specular = applyCelShading(specular, 2);
     diffuse = round(diffuse * levels) / levels;
     ltColor = ambient.xyzw + specular.xyzw + diffuse.xyzw;
 

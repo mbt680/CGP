@@ -43,14 +43,21 @@ public class Model {
     /**
      * draw this model.
      */
-    public void draw(Matrix4f viewMatrix) {
+    public void draw(Matrix4f viewMatrix, String textureFileLocation) {
         for (int i = 0; i < meshes.length; i++) {
             Mesh tmp = meshes[i];
             Shader program = tmp.getProgram();
             program.use();
             program.setUniform("viewMatrix", viewMatrix);
             int nVertices = tmp.getVertexIndices().length;
-            int texture = textureMap.get(tmp.getName());
+
+            int texture;
+            if (textureFileLocation.isEmpty() ) {
+                texture = textureMap.get(tmp.getName());
+            } else {
+                BufferedImage image = TextureLoader.loadImage(textureFileLocation);
+                texture = TextureLoader.loadTexture(image);
+            }
             glBindTexture(GL_TEXTURE_2D, texture);
             glBindVertexArray(vao[i]);
             glDrawArrays(GL_TRIANGLES, 0, nVertices);

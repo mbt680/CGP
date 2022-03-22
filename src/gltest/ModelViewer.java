@@ -161,7 +161,7 @@ public class ModelViewer {
                 glLineWidth(5.0f);
                 for (String key : modelMap.keySet()) {
                     Model model = modelMap.get(key);
-                    model.draw(Settings.camera.viewMatrix);
+                    model.draw(Settings.camera.viewMatrix, Settings.materialFileLoc);
                 }
             }
 
@@ -171,7 +171,7 @@ public class ModelViewer {
             teddy.setProgramForAllKeys(yellowShader);
             for (String key : modelMap.keySet()) {
                 Model model = modelMap.get(key);
-                model.draw(Settings.camera.viewMatrix);
+                model.draw(Settings.camera.viewMatrix, Settings.materialFileLoc);
             }
             glDisable( GL_POLYGON_OFFSET_FILL);
 

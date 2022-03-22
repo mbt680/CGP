@@ -115,7 +115,7 @@ public class SettingsDialog extends JFrame {
 	private JPanel materialSelection = new JPanel(new FlowLayout(FlowLayout.LEFT)) { {
 		setBorder(new CompoundBorder( BorderFactory.createEmptyBorder(5, 5, 5, 5), BorderFactory.createTitledBorder(new TitledBorder("Material"))));
 
-		materialSourceTxt = new JTextField("", 16);
+		materialSourceTxt = new JTextField("", 12);
 		JButton selectBtn = new JButton("Select");
 		selectBtn.addActionListener(new ActionListener() {
 			@Override public void actionPerformed(ActionEvent e) { 
@@ -131,9 +131,18 @@ public class SettingsDialog extends JFrame {
 			}
 		});
 
+		JButton clearBtn = new JButton("Clear");
+		clearBtn.addActionListener(new ActionListener() {
+			@Override public void actionPerformed(ActionEvent e) { 
+				materialSourceTxt.setText( "" );
+				Settings.materialFileLoc = "";
+			}
+		});
+
 		add(new JLabel("Image: "));
 		add(materialSourceTxt);
 		add(selectBtn);
+		add(clearBtn);
 	}};	
 
 	private JPanel lightingEffects = new JPanel() { {
