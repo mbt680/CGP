@@ -127,7 +127,7 @@ public class ModelViewer {
         System.out.println("About to load model");
         // Load models.
         WavefrontParser.setDefaultShader(yellowShader);
-        Map<String, Model> modelMap = WavefrontParser.parse(dir + "/data/engineer13/eng.obj");
+        Map<String, Model> modelMap = WavefrontParser.parse(dir + "/data/engineer14/eng.obj");
         for (String key : modelMap.keySet()) {
             Model model = modelMap.get(key);
             System.out.println("Model: " + model.getName());
