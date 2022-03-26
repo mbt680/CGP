@@ -16,7 +16,7 @@ import static org.lwjgl.opengl.GL33.*;
 import static org.lwjgl.system.MemoryUtil.NULL;
 
 /**
- * View 3D models 
+ * View 3D models
  */
 public class ModelViewer {
     static class Settings {
@@ -39,27 +39,33 @@ public class ModelViewer {
             Camera camera = Settings.camera;
             if (key == GLFW_KEY_Q) {
                 glfwSetWindowShouldClose(window, true);
-            } if (key == GLFW_KEY_LEFT) {
+            }
+            if (key == GLFW_KEY_LEFT) {
                 camera.rotateLeft();
             } else if (key == GLFW_KEY_RIGHT) {
                 camera.rotateRight();
-            } if (key == GLFW_KEY_UP) {
+            }
+            if (key == GLFW_KEY_UP) {
                 camera.rotateUp();
             } else if (key == GLFW_KEY_DOWN) {
                 camera.rotateDown();
-            } if (key == GLFW_KEY_W) {
+            }
+            if (key == GLFW_KEY_W) {
                 camera.moveForward();
             } else if (key == GLFW_KEY_S) {
                 camera.moveBack();
-            } if (key == GLFW_KEY_A) {
+            }
+            if (key == GLFW_KEY_A) {
                 camera.moveLeft();
             } else if (key == GLFW_KEY_D) {
                 camera.moveRight();
-            } if (key == GLFW_KEY_Z) {
+            }
+            if (key == GLFW_KEY_Z) {
                 camera.moveDown();
             } else if (key == GLFW_KEY_X) {
                 camera.moveUp();
-            } if (key == GLFW_KEY_EQUAL) {
+            }
+            if (key == GLFW_KEY_EQUAL) {
                 camera.changeScale(1);
             } else if (key == GLFW_KEY_MINUS) {
                 camera.changeScale(-1);
@@ -70,7 +76,7 @@ public class ModelViewer {
     private static final GLFWScrollCallback scrollCallback = new GLFWScrollCallback() {
         @Override
         public void invoke(long window, double xoffset, double yoffset) {
-            Settings.camera.changeScale((int)yoffset);      
+            Settings.camera.changeScale((int) yoffset);
         }
     };
 
@@ -80,9 +86,10 @@ public class ModelViewer {
             glfwSetWindowSize(window, width, height);
             // Needs to change if initial aspect ratio is changed and no longer 1
             int imageSize = Math.max(width, height);
-            glViewport((width - imageSize)/2, (height - imageSize)/2, imageSize, imageSize);
-        }   
+            glViewport((width - imageSize) / 2, (height - imageSize) / 2, imageSize, imageSize);
+        }
     };
+
     public static void main(String[] args) throws Exception {
         long window;
         if (!glfwInit()) {
@@ -94,14 +101,14 @@ public class ModelViewer {
             glfwTerminate();
             throw new IllegalStateException("Unable to create window");
         }
-        
+
         glfwMakeContextCurrent(window);
         GL.createCapabilities();
 
         glfwSetKeyCallback(window, keyCallback);
         glfwSetScrollCallback(window, scrollCallback);
         glfwSetFramebufferSizeCallback(window, bufferSizeCallback);
-    
+
         // Get the current directory
         String dir = System.getProperty("user.dir");
 
@@ -115,10 +122,9 @@ public class ModelViewer {
         yellowShader.setConstantUniform3fv("ourColor", new Vector3f(1f, 0.933f, 0.345f));
         blackShader.createUniform("viewMatrix");
         blackShader.setConstantUniform3fv("ourColor", new Vector3f(0f, 0f, 0f));
-        
+
         SettingsDialog dialog = new SettingsDialog();
         loadLighting(yellowShader);
-        
 
         List<Shader> shaderList = new ArrayList<>();
         shaderList.add(yellowShader);
@@ -147,23 +153,20 @@ public class ModelViewer {
         glEnable(GL_DEPTH_TEST);
 
         while (!glfwWindowShouldClose(window)) {
-            glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
-            glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+            glStencilOp(GL_KEEP, GL_KEEP, GL_REPLACE);
+            glEnable(GL_STENCIL_TEST);
 
-            applySettings(yellowShader);
+            glClearColor(0, 0, 0, 1);
+            glClearStencil(0);
+            glStencilMask(0xFF);
+            glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
 
-            // Ouline draw loop
-            if (Settings.hasContours) {
-                teddy.setProgramForAllKeys(blackShader);
-                glEnable( GL_POLYGON_OFFSET_FILL );
-                glPolygonOffset( -2.5f, -2.5f );
-                glPolygonMode( GL_FRONT_AND_BACK, GL_LINE );
-                glLineWidth(5.0f);
-                for (String key : modelMap.keySet()) {
-                    Model model = modelMap.get(key);
-                    model.draw(Settings.camera.viewMatrix, textureID);
-                }
-            }
+            applySettings(blackShader);
+
+            glEnable(GL_STENCIL_TEST);
+            glStencilFunc(GL_ALWAYS, 1, 0xFF);
+            glStencilMask(0xFF);
+            glStencilOp(GL_REPLACE, GL_REPLACE, GL_REPLACE);
 
             // Main draw loop
             glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
@@ -173,11 +176,36 @@ public class ModelViewer {
                 Model model = modelMap.get(key);
                 model.draw(Settings.camera.viewMatrix, textureID);
             }
-            glDisable( GL_POLYGON_OFFSET_FILL);
+
+            glStencilOp(GL_KEEP, GL_KEEP, GL_KEEP);
+            glStencilFunc(GL_EQUAL, 0, 0xFF);
+            glStencilMask(0x00);
+            glDisable(GL_DEPTH_TEST);
+
+            glPolygonMode(GL_FRONT_AND_BACK, Settings.hasContours ? GL_LINE : GL_FILL);
+            glLineWidth(1.0f);
+            teddy.setProgramForAllKeys(blackShader);
+            for (String key : modelMap.keySet()) {
+                Model model = modelMap.get(key);
+                model.draw(Settings.camera.viewMatrix, textureID);
+            }
+
+            glDisable(GL_STENCIL_TEST);
+            glEnable(GL_DEPTH_TEST);
+
+            /*
+             * glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+             * glLineWidth(1.0f);
+             * teddy.setProgramForAllKeys(yellowShader);
+             * for (String key : modelMap.keySet()) {
+             * Model model = modelMap.get(key);
+             * model.draw(Settings.camera.viewMatrix, textureID);
+             * }
+             */
 
             glfwSwapBuffers(window);
             glfwPollEvents();
-        }        
+        }
         glfwTerminate();
         dialog.dispose();
     }
@@ -197,30 +225,30 @@ public class ModelViewer {
 
     static String prevFileLocation = "";
     static int textureID = -1;
-  
+
     static void applySettings(Shader shader) throws Exception {
         Settings.camera.setViewMatrix(WIDTH, HEIGHT);
 
         shader.setBool("applyLighting", Settings.hasLighting);
         shader.setBool("applyRimLighting", Settings.hasRimLighting);
-        shader.setUniform("lightPos", Settings.lighting.position );
+        shader.setUniform("lightPos", Settings.lighting.position);
 
-        shader.setUniform("ambientLight", Settings.lighting.ambient );
-        shader.setUniform("specularLight", Settings.lighting.specular );
-        shader.setUniform("diffuseLight", Settings.lighting.diffuse );
+        shader.setUniform("ambientLight", Settings.lighting.ambient);
+        shader.setUniform("specularLight", Settings.lighting.specular);
+        shader.setUniform("diffuseLight", Settings.lighting.diffuse);
 
         if (Settings.hasCelShading) {
-            shader.setInt("vertexLevels", Settings.lighting.vertexLevels );
-            shader.setInt("fragLevels", Settings.lighting.fragLevels );
+            shader.setInt("vertexLevels", Settings.lighting.vertexLevels);
+            shader.setInt("fragLevels", Settings.lighting.fragLevels);
         } else {
-            shader.setInt("vertexLevels", Integer.MAX_VALUE );
-            shader.setInt("fragLevels", Integer.MAX_VALUE );
+            shader.setInt("vertexLevels", Integer.MAX_VALUE);
+            shader.setInt("fragLevels", Integer.MAX_VALUE);
         }
 
         String fileLocation = Settings.materialFileLoc;
-        if (fileLocation.isEmpty() ) {
+        if (fileLocation.isEmpty()) {
             textureID = -1;
-        } else if (fileLocation!= prevFileLocation) {
+        } else if (fileLocation != prevFileLocation) {
             textureID = loadMaterial(shader);
             prevFileLocation = fileLocation;
         }
