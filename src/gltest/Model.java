@@ -44,6 +44,21 @@ public class Model {
         }
     }
 
+    public void drawCountour(Matrix4f viewMatrix, int replacementTexture)
+    {
+        for (int i = 0; i < meshes.length; i++) {
+            Mesh tmp = meshes[i];
+            Shader program = tmp.getProgram();
+            program.use();
+            program.setUniform("viewMatrix", viewMatrix);
+            int nVertices = tmp.getVertexIndices().length;
+            int texture = replacementTexture < 0 ? textureMap.get(tmp.getName()) : replacementTexture;
+            glBindTexture(GL_TEXTURE_2D, texture);
+            glBindVertexArray(vao[i]);
+            glDrawArrays(GL_TRIANGLES, 0, nVertices);
+        }
+    }
+
     /**
      * getMeshNames of this model. 
      * @return A Set of names of each mesh
