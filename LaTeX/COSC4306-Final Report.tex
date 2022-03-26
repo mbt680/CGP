@@ -1,5 +1,6 @@
 \documentclass[12pt]{report}
 \usepackage[letterpaper]{geometry}
+\usepackage{graphicx}
 
 \setlength{\parskip}{1em}
 
@@ -7,21 +8,19 @@
 \author{Mathieu Carriere\\Bradley McFadden\\Joy McGibbon}
 \date{April 4, 2022}
 
+\renewcommand{\thechapter}{}
+\renewcommand{\thesection}{\arabic{section}}
+\renewcommand{\thesubsection}{\thesection .\arabic{subsection}}
+
 \begin{document}
 \maketitle
 
-\include{abstract}
-
-\section{Introduction} \include{introduction}
-
-\section{Prior and related work} \include{related}
-
-\section{Description} \include{description}
-
-\section{Experimental results} \include{results}
-
-\section{Conclusions} \include{conclusions}
-
+\input{abstract}
+\input{introduction}
+\input{related}
+\input{description}
+\input{results}
+\input{conclusions}
 \include{bibliography}
 
 \end{document}
