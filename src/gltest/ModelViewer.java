@@ -176,6 +176,7 @@ public class ModelViewer {
                 }
             }
 
+            
             // Main draw loop
             glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
             glLineWidth(1.0f);
@@ -185,9 +186,10 @@ public class ModelViewer {
                 model.draw(Settings.camera.viewMatrix, textureID);
             }
             glDisable( GL_POLYGON_OFFSET_FILL);
-
+            
             glfwSwapBuffers(window);
             glfwPollEvents();
+            
         }        
 
         // Free memory used by the models
