@@ -4,3 +4,5 @@ faces.txt
 *vnfile.txt
 *vtfile.txt
 *vertices.txt
+*.aux
+*.log

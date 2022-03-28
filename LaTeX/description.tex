@@ -1,1 +1,71 @@
 \thechapter{Description}
+% referring to the colour discretization process
+\thesection{Cel shading}
+% referring to the lines within the front facing side of the model that are added in
+\thesection{Suggestive contours}
+% referring to the lines between the model and the background
+\thesection{Outlines}
+% probably could add a section about lighting the model
+\thesection{Implementation}
+The described features were implemented into a real-time rendering system. The system itself 
+was written in OpenGL3. Specifically, we used LWJGL's implementation of OpenGL. We took advantage
+of the vertex and fragment shaders that OpenGL3 requires to be used. The use of vertex and fragment
+shaders allows us to implement most algorithms on the GPU, which saves CPU cycles and increases the
+performance of the application.
+
+Essentially, our system is a real-time renderer for 3D models that handles lighting, arbitrary
+textures, and allows shading effects to be toggled on or off for comparison. A camera is supported
+so that the model can be examined from a variety of viewing angles. 
+
+% I'm going to include a flow chart or something here to have a visual aid
+
+% model_converter | Conversion stage
+The first stage of our system takes in .obj files and reformats parts of the file in order to make
+it easier to parse. This was implemented as a separate Python program, since it needs only be done 
+once per model.
+% WavefrontParser, MtlParser | Parsing stage
+The second stage of the system parses a .obj file to produce a prototype of a Model that our system
+is later able to render. In doing so, the vertices, vertex normals, and texture coordinates from the
+file are packed into the prototype model. Additionally, the indices that use this data to define
+faces of the model are also read. At this stage, textures are also read in for the model from the
+.mtl file referenced by the  .obj file. One caveat is that imported models should be triangulated,
+as our system has no procedure in place to triangulate polygons.
+% Model, setupBuffers | Initialization
+The next stage of the system packs the Model data into a format that the vertex shader can 
+understand. An strided array of nine floating point values per vertex is created. The first three
+values each stride represent the vertex data, the next three are the vertex normal, and the final 
+three contain texture coordinates. These values are passed as attributes to the vertex shader.
+The buffer only ever has to be calculated once per model, so this stage does not repeat. 
+% Model, .vs, .fs | Rendering
+Every frame, each model is rendered. The render proceeds by passing light and camera parameters to 
+the vertex shader, along with the vertex, vertex normal and texture coordinates from the previous 
+stage. Two rendering stages happen for our program, the outline render loop, and the inner render
+loop.
+
+The outline render loop draws only the back faces of the model in a black wireframe. Edges
+are drawn at a size of 5 pixels instead of the default 1 pixel, so they stick out from the model.
+Furthermore, the polygons of the model are draw slightly offset to further accentuate the outlines.
+One issue with this approach to drawing outlines is that the size of the outlines is constant no 
+matter the distance to the model, so far away objects end up with much more noticeable outlines
+than closer models.
+
+% a figure of the wireframe would be cool here
+
+The vertex shader is the entry point for the OpenGL pipeline, so its main role is to forward the 
+parameters that the fragment shader uses, and to specify the position of each vertex sent to it. 
+Additionally, the vertex shader calculates the lighting normal.
+
+The fragment shader does the bulk of the work of our application. In the fragment shader, two main
+procedures happen. First, the colour of the lighting for the fragment is found. This is a multi-step
+process that involves applying diffuse lighting, rim lighting, and reducing extreme light and dark 
+values in order to preserve the colour of the model. Afterward, cel shading is applied to discretize
+the colours of the model.
+
+% a figure of the model without the wireframe seems appropriate here
+
+% a figure of the model with wireframe seems appropriate here
+% maybe all three images could be in a single figure
+
+
+
+
