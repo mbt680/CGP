@@ -1,4 +1,5 @@
 \thechapter{Description}
+
 % referring to the colour discretization process
 \thesection{Cel shading}
 % referring to the lines within the front facing side of the model that are added in
@@ -15,9 +16,16 @@ performance of the application.
 
 Essentially, our system is a real-time renderer for 3D models that handles lighting, arbitrary
 textures, and allows shading effects to be toggled on or off for comparison. A camera is supported
-so that the model can be examined from a variety of viewing angles. 
+so that the model can be examined from a variety of viewing angles. A high-level overview of the
+system is presented in \autoref{fig-sys-overview}.
 
 % I'm going to include a flow chart or something here to have a visual aid
+\begin{figure}[h]
+    \centering
+    \includegraphics[width=0.5\textwidth]{img/system-overview.png}
+    \caption{An overview of stages in the system}
+    \label{fig-sys-overview}
+\end{figure}
 
 % model_converter | Conversion stage
 The first stage of our system takes in .obj files and reformats parts of the file in order to make
@@ -39,8 +47,15 @@ The buffer only ever has to be calculated once per model, so this stage does not
 % Model, .vs, .fs | Rendering
 Every frame, each model is rendered. The render proceeds by passing light and camera parameters to 
 the vertex shader, along with the vertex, vertex normal and texture coordinates from the previous 
-stage. Two rendering stages happen for our program, the outline render loop, and the inner render
-loop.
+stage. Two rendering stages happen for our program, the outline render loop, and the model render
+loop. These stages are shown visually in \autoref{fig-render-overview}.
+
+\begin{figure}[h]
+    \centering
+    \includegraphics[width=0.5\textwidth]{img/rendering-overview.png}
+    \caption{An overview of stages in the rendering step}
+    \label{fig-render-overview}
+\end{figure}
 
 The outline render loop draws only the back faces of the model in a black wireframe. Edges
 are drawn at a size of 5 pixels instead of the default 1 pixel, so they stick out from the model.

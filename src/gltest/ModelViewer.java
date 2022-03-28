@@ -119,15 +119,26 @@ public class ModelViewer {
         SettingsDialog dialog = new SettingsDialog();
         loadLighting(yellowShader);
         
+        // Default texture
+        Model.setDefaultTexture(TextureLoader.loadTexture(TextureLoader.loadImage(dir + "/data/textures/white.png")));
 
         List<Shader> shaderList = new ArrayList<>();
         shaderList.add(yellowShader);
         shaderList.add(blackShader);
 
+        String modelPath = "/data/engineer14/eng.obj";
+        String modelName = "engineer";
+        if (args.length == 2) {
+            modelPath = args[0];
+            modelName = args[1];
+            // System.out.println(args[0] + " " + args[1]);
+        } else {
+            // System.out.println(args.length);
+        }
         System.out.println("About to load model");
         // Load models.
         WavefrontParser.setDefaultShader(yellowShader);
-        Map<String, Model> modelMap = WavefrontParser.parse(dir + "/data/engineer14/eng.obj");
+        Map<String, Model> modelMap = WavefrontParser.parse(dir + modelPath);
         for (String key : modelMap.keySet()) {
             Model model = modelMap.get(key);
             System.out.println("Model: " + model.getName());
@@ -138,7 +149,7 @@ public class ModelViewer {
         }
 
         // Get model by the name of "engineer_morphs_low"
-        Model teddy = modelMap.get("engineer");
+        Model teddy = modelMap.get(modelName);
 
         if (teddy == null) {
             System.out.println("Model is null!");
@@ -178,6 +189,13 @@ public class ModelViewer {
             glfwSwapBuffers(window);
             glfwPollEvents();
         }        
+
+        // Free memory used by the models
+        for (String key : modelMap.keySet()) {
+            Model model = modelMap.get(key);
+            model.delete();
+        }
+
         glfwTerminate();
         dialog.dispose();
     }
