@@ -174,6 +174,7 @@ public class ModelViewer {
                     Model model = modelMap.get(key);
                     model.draw(Settings.camera.viewMatrix, textureID);
                 }
+                glDisable( GL_POLYGON_OFFSET_FILL);
             }
 
             
@@ -185,8 +186,7 @@ public class ModelViewer {
                 Model model = modelMap.get(key);
                 model.draw(Settings.camera.viewMatrix, textureID);
             }
-            glDisable( GL_POLYGON_OFFSET_FILL);
-            
+
             glfwSwapBuffers(window);
             glfwPollEvents();
             

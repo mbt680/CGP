@@ -66,6 +66,9 @@ than closer models.
 
 % a figure of the wireframe would be cool here
 
+The model render loop handles the lighting and the cel shading of the object, and the its work is
+done in the vertex and frament shaders. The steps are detailed below.
+
 The vertex shader is the entry point for the OpenGL pipeline, so its main role is to forward the 
 parameters that the fragment shader uses, and to specify the position of each vertex sent to it. 
 Additionally, the vertex shader calculates the lighting normal.
@@ -74,13 +77,39 @@ The fragment shader does the bulk of the work of our application. In the fragmen
 procedures happen. First, the colour of the lighting for the fragment is found. This is a multi-step
 process that involves applying diffuse lighting, rim lighting, and reducing extreme light and dark 
 values in order to preserve the colour of the model. Afterward, cel shading is applied to discretize
-the colours of the model.
+the colours of the model. 
 
 % a figure of the model without the wireframe seems appropriate here
 
 % a figure of the model with wireframe seems appropriate here
 % maybe all three images could be in a single figure
 
+\autoref{fig:teapot-comparison} shows the rendering process at three stages, drawing the outline,
+drawing the inner model, and the combined final result. One drawback to this approach of drawing
+outlines is that the rendering pipeline is used twice per model. However, it may be not quite as 
+intensive since only back faces are drawn, and the wireframe of the model is not filled.
 
+\begin{figure}[h]
+    \centering
+    \begin{subfigure}[b]{0.3\textwidth}
+        \includegraphics[width=\textwidth]{img/teapot-wireframe.png}
+        \caption{Outline render}
+        \label{fig:outline-render}
+    \end{subfigure}
+    ~
+    \begin{subfigure}[b]{0.3\textwidth}
+        \includegraphics[width=\textwidth]{img/teapot-model.png}
+        \caption{Model render}
+        \label{fig:model-render}
+    \end{subfigure}
+    ~
+    \begin{subfigure}[b]{0.3\textwidth}
+        \includegraphics[width=\textwidth]{img/teapot-complete.png}
+        \caption{Final render}
+        \label{fig:complete-render}
+    \end{subfigure}
+    \caption{Comparison of output at each rendering stage}
+    \label{fig:teapot-comparison}
+\end{figure}
 
 
