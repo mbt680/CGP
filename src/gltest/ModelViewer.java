@@ -83,6 +83,7 @@ public class ModelViewer {
             glViewport((width - imageSize)/2, (height - imageSize)/2, imageSize, imageSize);
         }   
     };
+
     public static void main(String[] args) throws Exception {
         long window;
         if (!glfwInit()) {
@@ -106,38 +107,31 @@ public class ModelViewer {
         String dir = System.getProperty("user.dir");
 
         // Setup shaders
-        Shader yellowShader = new Shader(dir + "/shaders/color.vs", dir + "/shaders/color.fs");
         Shader blackShader = new Shader(dir + "/shaders/color.vs", dir + "/shaders/color.fs");
 
         // create uniform for camera view
-        yellowShader.createUniform("viewMatrix");
-        // set uniform containing colour that the shader uses
-        yellowShader.setConstantUniform3fv("ourColor", new Vector3f(1f, 0.933f, 0.345f));
         blackShader.createUniform("viewMatrix");
         blackShader.setConstantUniform3fv("ourColor", new Vector3f(0f, 0f, 0f));
+        blackShader.createUniform("applySolidColour");
         
         SettingsDialog dialog = new SettingsDialog();
-        loadLighting(yellowShader);
+        blackShader.use();
+        loadLighting(blackShader);
         
         // Default texture
         Model.setDefaultTexture(TextureLoader.loadTexture(TextureLoader.loadImage(dir + "/data/textures/white.png")));
 
-        List<Shader> shaderList = new ArrayList<>();
-        shaderList.add(yellowShader);
-        shaderList.add(blackShader);
-
+        // Load model from command line args
         String modelPath = "/data/engineer14/eng.obj";
         String modelName = "engineer";
         if (args.length == 2) {
             modelPath = args[0];
             modelName = args[1];
-            // System.out.println(args[0] + " " + args[1]);
-        } else {
-            // System.out.println(args.length);
-        }
+        } 
+
         System.out.println("About to load model");
         // Load models.
-        WavefrontParser.setDefaultShader(yellowShader);
+        WavefrontParser.setDefaultShader(blackShader);
         Map<String, Model> modelMap = WavefrontParser.parse(dir + modelPath);
         for (String key : modelMap.keySet()) {
             Model model = modelMap.get(key);
@@ -155,17 +149,21 @@ public class ModelViewer {
             System.out.println("Model is null!");
         }
 
-        glEnable(GL_DEPTH_TEST);
+        teddy.setProgramForAllKeys(blackShader);
 
+        glEnable(GL_DEPTH_TEST);
         while (!glfwWindowShouldClose(window)) {
             glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
             glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-            applySettings(yellowShader);
+            applySettings(blackShader);
 
             // Ouline draw loop
             if (Settings.hasContours) {
                 teddy.setProgramForAllKeys(blackShader);
+                blackShader.use();
+                // Set the model to draw in just ourColour, with no lighting
+                blackShader.setBool("applySolidColour", true);
                 glEnable( GL_POLYGON_OFFSET_FILL );
                 glPolygonOffset( -2.5f, -2.5f );
                 glPolygonMode( GL_FRONT_AND_BACK, GL_LINE );
@@ -175,12 +173,14 @@ public class ModelViewer {
                     model.draw(Settings.camera.viewMatrix, textureID);
                 }
             }
-
             
             // Main draw loop
             glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
             glLineWidth(1.0f);
-            teddy.setProgramForAllKeys(yellowShader);
+            teddy.setProgramForAllKeys(blackShader);
+            blackShader.use();
+            // Set the model to draw in the colour of its texture, with lighting
+            blackShader.setBool("applySolidColour", false);
             for (String key : modelMap.keySet()) {
                 Model model = modelMap.get(key);
                 model.draw(Settings.camera.viewMatrix, textureID);
@@ -220,6 +220,8 @@ public class ModelViewer {
   
     static void applySettings(Shader shader) throws Exception {
         Settings.camera.setViewMatrix(WIDTH, HEIGHT);
+
+        shader.use();
 
         shader.setBool("applyLighting", Settings.hasLighting);
         shader.setBool("applyRimLighting", Settings.hasRimLighting);

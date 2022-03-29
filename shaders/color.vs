@@ -30,10 +30,6 @@ void main()
     // Calculate position based on view matrix
     gl_Position = viewMatrix * vec4(aPos, 1.0); // convert aPos to homogoneous coordinates
 
-    // Select initial color from texture, currently just samples aPos for all points
-    if (ptColor == vec3(0,0,0)) {
-        ptColor = ourColor;
-    }
     ptColor = vec3(0.0, 0.0, 0.0);
     if (aTex.y < 0) {
         ptTex = vec2(aTex.x, -aTex.y);
@@ -54,5 +50,4 @@ void main()
     ptSpecularLight = specularLight;
     ptDiffuseLight = diffuseLight;
     ptApplyLight = vec3(1, applyLighting, applyRimLighting);
-
 }

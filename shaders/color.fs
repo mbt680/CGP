@@ -2,9 +2,12 @@
 
 out vec4 FragColor;
 
+uniform bool applySolidColour;
+
 in vec3 ptColor;
 in vec2 ptTex;
 in vec3 ptNorm;
+
 flat in int levels;
 
 in vec3 ptLightNorm, ptAmbientLight, ptSpecularLight, ptDiffuseLight, ptApplyLight;
@@ -18,7 +21,10 @@ void main()
 {
     vec4 texColor = texture(ourTexture, ptTex);
     // variables that do nothing can be optimized out in GLSL by default
-    FragColor = applyCelShading(getLightingColor(), levels) * texColor + vec4(ptColor,0)*0;
+    if (applySolidColour)
+        FragColor = vec4(ptColor, 0);
+    else
+        FragColor = applyCelShading(getLightingColor(), levels) * texColor + vec4(ptColor,0)*0;
 }
 
 vec4 applyCelShading(vec4 colour, int levels) {
