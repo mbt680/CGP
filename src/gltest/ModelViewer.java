@@ -150,18 +150,20 @@ public class ModelViewer {
             System.out.println("Model is null!");
         }
 
-        glEnable(GL_DEPTH_TEST);
+        // glEnable(GL_DEPTH_TEST);
+        glEnable(GL_POLYGON_OFFSET_FILL);
 
         while (!glfwWindowShouldClose(window)) {
+            glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
             glStencilOp(GL_KEEP, GL_KEEP, GL_REPLACE);
             glEnable(GL_STENCIL_TEST);
+            glEnable(GL_DEPTH_TEST);
 
-            glClearColor(0, 0, 0, 1);
             glClearStencil(0);
             glStencilMask(0xFF);
             glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
 
-            applySettings(blackShader);
+            applySettings(yellowShader);
 
             glEnable(GL_STENCIL_TEST);
             glStencilFunc(GL_ALWAYS, 1, 0xFF);
@@ -178,30 +180,33 @@ public class ModelViewer {
             }
 
             glStencilOp(GL_KEEP, GL_KEEP, GL_KEEP);
-            glStencilFunc(GL_EQUAL, 0, 0xFF);
             glStencilMask(0x00);
+            glStencilFunc(GL_EQUAL, 0, 0xFF);
             glDisable(GL_DEPTH_TEST);
 
-            glPolygonMode(GL_FRONT_AND_BACK, Settings.hasContours ? GL_LINE : GL_FILL);
-            glLineWidth(1.0f);
+            if(Settings.hasContours)
+            {
+            glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+            glLineWidth(5.0f);
             teddy.setProgramForAllKeys(blackShader);
             for (String key : modelMap.keySet()) {
                 Model model = modelMap.get(key);
                 model.draw(Settings.camera.viewMatrix, textureID);
             }
+        }
 
+            glStencilFunc(GL_ALWAYS, 1, 0xFF);
             glDisable(GL_STENCIL_TEST);
             glEnable(GL_DEPTH_TEST);
 
-            /*
-             * glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
-             * glLineWidth(1.0f);
-             * teddy.setProgramForAllKeys(yellowShader);
-             * for (String key : modelMap.keySet()) {
-             * Model model = modelMap.get(key);
-             * model.draw(Settings.camera.viewMatrix, textureID);
-             * }
-             */
+            // Main draw loop
+            glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+            glLineWidth(1.0f);
+            teddy.setProgramForAllKeys(yellowShader);
+            for (String key : modelMap.keySet()) {
+                Model model = modelMap.get(key);
+                model.draw(Settings.camera.viewMatrix, textureID);
+            }
 
             glfwSwapBuffers(window);
             glfwPollEvents();
