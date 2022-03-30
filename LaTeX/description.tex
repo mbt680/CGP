@@ -2,12 +2,89 @@
 
 % referring to the colour discretization process
 \thesection{Cel shading}
+Cel shading refers to an NPR technique where to better simulate a cartoon art style, the tones of 
+an image are broken down into bands. The colour palette of a scene is reduced to a handful of colours.
+The technique simulates how an artist might draw an image, where only a few shades are used, and few
+separate colours are used.
+
+To perform cel shading, a number of discrete bands n must be chosen. Higher values for n produce more 
+bands of colour, which leads to less harsh contrast in the image, but fewer bands create more contrast,
+and therefore a more dramatic effect. To get the final colour of a pixel, the RGB values are divided by
+n+1, which returns the index of the band. Then, the index is multiplied by the size of the band, which
+produces the final colour. Examples of cel shading for a particular model are shown in 
+\autoref{fig:cel-band-comparison}. 
+
+\begin{figure}[h]
+    \centering
+    \begin{subfigure}[b]{0.15\textwidth}
+        \includegraphics[width=\textwidth]{img/cel-shading-n1.png}
+        \caption{n = 1}
+        \label{fig:cel-shading-n1}
+    \end{subfigure}
+    ~
+    \begin{subfigure}[b]{0.15\textwidth}
+        \includegraphics[width=\textwidth]{img/cel-shading-n2.png}
+        \caption{n = 2}
+        \label{fig:cel-shading-n2}
+    \end{subfigure}
+    ~
+    \begin{subfigure}[b]{0.15\textwidth}
+        \includegraphics[width=\textwidth]{img/cel-shading-n4.png}
+        \caption{n = 4}
+        \label{fig:cel-shading-n4}
+    \end{subfigure}
+
+    \begin{subfigure}[b]{0.15\textwidth}
+        \includegraphics[width=\textwidth]{img/cel-shading-n8.png}
+        \caption{n = 8}
+        \label{fig:cel-shading-n8}
+    \end{subfigure}
+    ~
+    \begin{subfigure}[b]{0.15\textwidth}
+        \includegraphics[width=\textwidth]{img/cel-shading-n16.png}
+        \caption{n = 16}
+        \label{fig:cel-shading-n16}
+    \end{subfigure}
+    ~
+    \begin{subfigure}[b]{0.15\textwidth}
+        \includegraphics[width=\textwidth]{img/cel-shading-none.png}
+        \caption{None}
+        \label{fig:cel-shading-none}
+    \end{subfigure}
+    \caption{Comparison of number of cel shading bands}
+    \label{fig:cel-band-comparison}
+\end{figure}
+
+One can notice sharp edges on the model. This is implementation specific, and happens because the 
+colour passed to the fragment shader is interpolated between vertices by OpenGL. Normally, this creates 
+a smooth effect and saves processing power, but when performing cel shading, it can destroy the effect, 
+so it is turned off. Unfortunately, doing so creates jagged lines in models with a low polygon count, 
+but the effect is  not as noticeable for higher polygon count models, such as in 
+\autoref{fig:cel-shading-high-poly}.
+
+\begin{figure}[h]
+    \centering
+    \begin{subfigure}[b]{0.15\textwidth}
+        \includegraphics[width=\textwidth]{img/cel-shading-highpoly-n18.png}
+        \caption{n = 18}
+        \label{fig:cel-shading-high-poly-n18}
+    \end{subfigure}
+    ~
+    \begin{subfigure}[b]{0.15\textwidth}
+        \includegraphics[width=\textwidth]{img/cel-shading-highpoly-none.png}
+        \caption{None}
+        \label{fig:cel-shading-high-poly-none}
+    \end{subfigure}
+    \caption{Cel shading with a high polygon count model}
+    \label{fig:cel-shading-high-poly}
+\end{figure}
+
 % referring to the lines within the front facing side of the model that are added in
 \thesection{Suggestive contours}
 % referring to the lines between the model and the background
 \thesection{Outlines}
 % probably could add a section about lighting the model
-\thesection{Implementation}
+\thesection{System overview}
 The described features were implemented into a real-time rendering system. The system itself 
 was written in OpenGL3. Specifically, we used LWJGL's implementation of OpenGL. We took advantage
 of the vertex and fragment shaders that OpenGL3 requires to be used. The use of vertex and fragment
@@ -91,21 +168,27 @@ intensive since only back faces are drawn, and the wireframe of the model is not
 
 \begin{figure}[h]
     \centering
-    \begin{subfigure}[b]{0.3\textwidth}
+    \begin{subfigure}[b]{0.2\textwidth}
         \includegraphics[width=\textwidth]{img/teapot-wireframe.png}
-        \caption{Outline render}
+        \caption{Outline}
         \label{fig:outline-render}
     \end{subfigure}
     ~
-    \begin{subfigure}[b]{0.3\textwidth}
+    \begin{subfigure}[b]{0.2\textwidth}
+        \includegraphics[width=\textwidth]{img/teapot-outline-noshade.png}
+        \caption{Unshaded}
+        \label{fig:model-noshade}
+    \end{subfigure}
+    ~
+    \begin{subfigure}[b]{0.2\textwidth}
         \includegraphics[width=\textwidth]{img/teapot-model.png}
-        \caption{Model render}
+        \caption{Shading}
         \label{fig:model-render}
     \end{subfigure}
     ~
-    \begin{subfigure}[b]{0.3\textwidth}
+    \begin{subfigure}[b]{0.2\textwidth}
         \includegraphics[width=\textwidth]{img/teapot-complete.png}
-        \caption{Final render}
+        \caption{Final}
         \label{fig:complete-render}
     \end{subfigure}
     \caption{Comparison of output at each rendering stage}
