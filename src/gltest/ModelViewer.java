@@ -172,10 +172,10 @@ public class ModelViewer {
                     Model model = modelMap.get(key);
                     model.draw(Settings.camera.viewMatrix, textureID);
                 }
+                glEnable( GL_POLYGON_OFFSET_FILL);
+                glPolygonOffset(-2.5f, -2.5f);
             }
             
-            glEnable( GL_POLYGON_OFFSET_FILL);
-            glPolygonOffset(-2.5f, -2.5f);
             // Main draw loop
             glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
             glLineWidth(1.0f);
