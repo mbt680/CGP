@@ -1,1 +1,31 @@
 \thechapter{Prior and related work}
+Gooch et al.'s work in technical illustration demonstrates many of the common 
+non-photorealistic rendering effects. The authors made the observation that there was a 
+disconnect between the style of artists and illustrators, and the style created by computer 
+graphics programmers. Where computer graphics artists were concerned with techniques to 
+create a realistic image, illustrators of technical manuals opt fir a style that emphasizes
+the geometry of an object, while removing extraenous detail. The authors note that technical
+illustration needs this characteristic, as the viewer does not have the ability to move
+around a printed image to get more information. To produce a shaded technical rendering of
+an object, Gooch et al. render objects with black edge lines, no shadowing, intensities far 
+from black or white, colour indicated by surface normal, and a single light source that 
+provides white highlights (also known as rim lighting). It is interesting to note that the 
+authors provide a method for approximating their model using phong shading with negative 
+light colours.
+
+The work of DeCarlo et al. starts from a similar question \cite{decarlo03}, how can the shape 
+of a 3D object be conveyed with just lines? The research describes two techniques to display 
+an object's shape, namely contours and suggestive contours. Contours describe an area of an 
+image where a surface turns away from the viewer, becoming invisible. Similarly, suggestive
+contours are like contours, but describe areas where the surface of an object turns away from
+viewer, yet remains visible. Additionally, Decarlo et al. provide mathematical definitions
+and algorithms that detail how contours and suggestive contours can be produced on a model.
+
+Decaudin et al. draw upon several techniques to render 3D scenes in a cartoon style 
+\cite{decaudin96}. Their work presents a rendering algorithm that proceeds in four stages. 
+Firstly, they render the scene with ambient lighting. Next, they find the outlines of each 
+object in the scene. For each light source, they render the scene as illuminated by it, and 
+then find the project shadows from other objects. Finally, they combine the steps to produce 
+a cartoon style image. Notably, their ambient lighting stage renders each object with a 
+single uniform colour, and the shadows of the scene are also a single colour, which seems 
+like a form of cel shading.
