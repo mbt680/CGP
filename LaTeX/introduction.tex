@@ -1,2 +1,26 @@
 \thechapter{Introduction} 
-In the field of computer graphics, non-photorealistic rendering is a somewhat circular term that refers to the use of rendering techniques to achieve a non-photorealistic effect.
+In the field of computer graphics, non-photorealistic rendering (NPR) is a somewhat circular term that 
+refers to the use of rendering techniques to achieve a non-photorealistic effect. There are several situations in which a non-photorealistic rendering is advantageous. 
+
+The first field is technical illustration, as described by \cite{gooch98}. Technical illustrations are commonly found
+in manuals for products that need to be disassembled for repairs, or in training documentation for a 
+particular device. As such, the depictions of the device are static images, and it is often the goal of
+the illustrators to convey as much information as possible with these static images. Often, realistic
+shading is omitted, and image are drawn with an isometric perspective, so the scale and shape of 
+geometry is easier to read. In addition, outlines are commonly added. If a light source is used, 
+sometimes a technique called "rim lighting" is applied that highlights edges of faces that is pointed 
+away from a light source.
+
+Another field in which NPR is commonly used, is in interactive media. Games and animation that use NPR
+often apply it as a design choice. For one reason or another, a realistic rendering may be seen as
+too visually busy, or does not provide the user with as much visual information as the designers wish.
+It may also be that designers wish to imitate a style closer to that of cartoons, for one reason or 
+another. Cartoons are generally drawn in a wide variety of styles, but most have the following 
+characteristics: Foreground objects such as characters are drawn with outlines. Most foreground objects
+are drawn with a single colour, and shading is shown with a darker version of this colour. This 
+technique is referred to as cel shading, and is very common in many stylized modern games, including
+examples such as Sable.
+
+The goal behind this project is to write a program that applies common NPR effects to 3D models, to 
+create our own NPR rendering of the models. In particular, we will implement cel shading, object 
+contours, and rim highlights to achieve our final NPR rendering of our models. 
