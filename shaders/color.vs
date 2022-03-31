@@ -13,6 +13,7 @@ uniform vec3 ambientLight, specularLight, diffuseLight;
 uniform int shininess;
 uniform int vertexLevels;
 uniform int fragLevels;
+uniform bool pointLight;
 uniform bool applyLighting;
 uniform bool applyRimLighting;
 
@@ -45,7 +46,7 @@ void main()
     // Set up lighting values for fragment shader
     ptNorm = vec3(aNorm);
     levels = fragLevels;
-    ptLightNorm = normalize(viewMatrix * vec4(lightPos, 0)).xyz;
+    ptLightNorm = normalize(viewMatrix * vec4(lightPos, int(pointLight))).xyz;
     ptAmbientLight = ambientLight; 
     ptSpecularLight = specularLight;
     ptDiffuseLight = diffuseLight;

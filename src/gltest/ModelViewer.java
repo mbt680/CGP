@@ -23,6 +23,7 @@ public class ModelViewer {
         public static Camera camera = new Camera();
         public static Light lighting = new Light();
         public static String materialFileLoc = "";
+        public static boolean pointLight = true;
         public static boolean hasCelShading = true;
         public static boolean hasLighting = true;
         public static boolean hasRimLighting = true;
@@ -223,6 +224,7 @@ public class ModelViewer {
 
         shader.use();
 
+        shader.setBool("pointLight", Settings.pointLight);
         shader.setBool("applyLighting", Settings.hasLighting);
         shader.setBool("applyRimLighting", Settings.hasRimLighting);
         shader.setUniform("lightPos", Settings.lighting.position );
