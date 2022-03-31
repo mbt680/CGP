@@ -164,7 +164,7 @@ public class ModelViewer {
             applySettings(yellowShader);
 
             // Ouline draw loop
-            if (Settings.hasContours) {
+            /*if (Settings.hasContours) {
                 teddy.setProgramForAllKeys(blackShader);
                 glEnable( GL_POLYGON_OFFSET_FILL );
                 glPolygonOffset( -2.5f, -2.5f );
@@ -175,7 +175,7 @@ public class ModelViewer {
                     model.draw(Settings.camera.viewMatrix, textureID);
                 }
                 glDisable( GL_POLYGON_OFFSET_FILL);
-            }
+            }*/
 
             
             // Main draw loop
@@ -184,12 +184,11 @@ public class ModelViewer {
             teddy.setProgramForAllKeys(yellowShader);
             for (String key : modelMap.keySet()) {
                 Model model = modelMap.get(key);
-                model.draw(Settings.camera.viewMatrix, textureID);
+                model.draw(Settings.camera.viewMatrix, textureID, Settings.hasContours);
             }
 
             glfwSwapBuffers(window);
             glfwPollEvents();
-            
         }        
 
         // Free memory used by the models

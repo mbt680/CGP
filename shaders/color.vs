@@ -18,6 +18,10 @@ uniform bool applyRimLighting;
 
 //in  vec2 textureCoord;
 
+out float ndotv;
+out float t_kr;
+out float t_dwkr;
+
 out vec3 ptColor;
 out vec3 ptNorm;
 out vec2 ptTex;
@@ -29,6 +33,26 @@ void main()
 {
     // Calculate position based on view matrix
     gl_Position = viewMatrix * vec4(aPos, 1.0); // convert aPos to homogoneous coordinates
+
+    vec3 pdir1 = aTex;
+	vec3 pdir2 = aTex;
+	float curv1 = 1;
+	float curv2 = 1;
+	vec4 dcurv = vec4(0,0,0,0);
+
+    ndotv = (1.0f / length(aPos)) * dot(aNorm, aPos);
+
+    if(!(ndotv < 0.0f)){
+		vec3 w = normalize(aPos - aNorm * dot(aPos, aNorm));
+  		float u = dot(w, pdir1);
+  		float v = dot(w, pdir2);
+  		float u2 = u*u;
+    	float v2 = v*v;
+  		t_kr = (curv1*u2) + (curv2*v2);
+  		float uv = u*v;
+  		float dwII = (u2*u*dcurv.x) + (3.0*u*uv*dcurv.y) + (3.0*uv*v*dcurv.z) + (v*v2*dcurv.w);
+  		t_dwkr = dwII + 2.0 * curv1 * curv2 * ndotv/sqrt((1.0 - pow(ndotv, 2.0)));
+  	}
 
     // Select initial color from texture, currently just samples aPos for all points
     if (ptColor == vec3(0,0,0)) {

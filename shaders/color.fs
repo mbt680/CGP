@@ -7,6 +7,15 @@ in vec2 ptTex;
 in vec3 ptNorm;
 flat in int levels;
 
+in float ndotv;
+in float t_kr;
+in float t_dwkr;
+
+//in float fz;
+//in float c_limit;
+//in float sc_limit;
+//in float dwkr_limit;
+
 in vec3 ptLightNorm, ptAmbientLight, ptSpecularLight, ptDiffuseLight, ptApplyLight;
 
 uniform sampler2D ourTexture;
@@ -17,8 +26,31 @@ vec4 getLightingColor();
 void main()
 {
     vec4 texColor = texture(ourTexture, ptTex);
+
+	vec4 lineColor = vec4(1.0, 1.0, 1.0, 1.0); 
+
+    float fz = 0.1;
+    float c_limit = 1.0;
+    float sc_limit = 1.0;
+    float dwkr_limit = 0.05;
+
+    // use feature size
+	float kr = fz*abs(t_kr); // absolute value to use it in limits
+	float dwkr = fz*fz*t_dwkr; // two times fz because derivative
+	float dwkr2 = (dwkr-dwkr*pow(ndotv, 2.0));
+
+	// compute limits
+	float contour_limit = c_limit*(pow(ndotv, 2.0)/kr);
+	sc_limit *= (kr/dwkr2);
+	// contours
+	if(contour_limit<1.0)
+	    {lineColor.xyz = min(lineColor.xyz, vec3(contour_limit, contour_limit, contour_limit));}
+	// suggestive contours
+	else if((sc_limit<1.0) && dwkr2>dwkr_limit)
+	    {lineColor.xyz = min(lineColor.xyz, vec3(sc_limit, sc_limit, sc_limit));}
+
     // variables that do nothing can be optimized out in GLSL by default
-    FragColor = applyCelShading(getLightingColor(), levels) * texColor + vec4(ptColor,0)*0;
+    FragColor = min (lineColor, applyCelShading(getLightingColor(), levels) * texColor + vec4(ptColor,0)*0);
 }
 
 vec4 applyCelShading(vec4 colour, int levels) {

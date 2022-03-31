@@ -49,7 +49,7 @@ public class Model {
     /**
      * draw this model.
      */
-    public void draw(Matrix4f viewMatrix, int replacementTexture) {
+    public void draw(Matrix4f viewMatrix, int replacementTexture, boolean hasContours) {
         for (int i = 0; i < meshes.length; i++) {
             Mesh tmp = meshes[i];
             Shader program = tmp.getProgram();
