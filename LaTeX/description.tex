@@ -1,4 +1,13 @@
 \thechapter{Description}
+\thesection{Lighting}
+
+
+The Phong lighting model is used, with specular, diffuse, and ambient light. Specular light concentrates light in one direction, providing highlights, diffuse light scatters light equally, providing shadows, and ambient light provides an equal amount of light to all parts of the surface from every direction.
+
+Rim lighting is also added to provide additional highlights and increase the cartoon appearance of the render. It highlights the edge of the object, and as a result improves the rendering from some angles, but appears incorrect from others.
+
+Lighting is implemented in the fragment shader, rather than in the vertex shader, decreasing efficiency as it must be calculated for every fragment rather than the relatively small number of vertices, but providing more precise results. 
+
 
 % referring to the colour discretization process
 \thesection{Cel shading}

@@ -35,30 +35,29 @@ vec4 applyCelShading(vec4 colour, int levels) {
 // Lighting effects
 vec4 getLightingColor() 
 { 
-    vec4 ambient, diffuse, specular, ltColor;
+    vec4 ambient, diffuse, specular, rim, ltColor;
 
     ambient = vec4(ptAmbientLight, 0);
+    float d = dot(ptLightNorm, ptNorm);
 
     if (ptApplyLight.y > 0) {
         // add diffuse lighting
-        float d = dot(ptLightNorm, ptNorm);
         diffuse = vec4(ptDiffuseLight, 0).xyzw * d;
+        // add specualar lighting back, small effect with corrected norms
+        vec3 halfway = normalize(ptLightNorm - ptNorm);
+        float s = max(pow(max(dot(ptNorm, halfway), 0.0), .5), 0.0);
+        specular = vec4(ptSpecularLight * s, 0);
     }
 
     // add rim lighting around edge of shadow
     if (ptApplyLight.z > 0) {
-        float threshold = 0.26;
-        float s = 1 - dot(ptNorm, ptLightNorm);
-        specular = vec4((s < 0 ? 0 : s) * ptSpecularLight.xyz, 0);
-        // Dont draw on parts that should be completely in shadow
-        if (specular.x > threshold)
-            specular = vec4(0,0,0,0);
+        float r = 1 - d;
+        if (r > 0.9 && r < 1.1)
+            rim = vec4(0.4, 0.4, 0.4, 0.4);
     }
 
     // Apply cel shading
-    specular = applyCelShading(specular, 2);
-    diffuse = round(diffuse * levels) / levels;
-    ltColor = ambient.xyzw + specular.xyzw + diffuse.xyzw;
+    ltColor = ambient.xyzw + specular.xyzw + diffuse.xyzw + rim.xyzw;
 
     // Reduce extreme black/white lighting values so color preserved
     ltColor = max(ltColor.xyzw, vec4(0.2,0.2,0.2,0));
