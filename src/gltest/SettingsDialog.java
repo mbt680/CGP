@@ -33,6 +33,7 @@ import gltest.ModelViewer.Settings;
 public class SettingsDialog extends JFrame {
 	private static final long serialVersionUID = 1L;
 
+	private JCheckBox chkPointLight;
 	private JCheckBox chkCelShading;
 	private JCheckBox chkLighting;
 	private JCheckBox chkRimLighting;
@@ -83,11 +84,16 @@ public class SettingsDialog extends JFrame {
 
 	private JPanel effects = new JPanel(new GridLayout(3,2)) { {
 		setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
+		chkPointLight = new JCheckBox("Point Light", Settings.pointLight);
 		chkCelShading = new JCheckBox("Cel Shading", Settings.hasCelShading);
 		chkLighting = new JCheckBox("Diffuse Lighting", Settings.hasLighting);
 		chkRimLighting = new JCheckBox("Rim Lighting", Settings.hasRimLighting);
 		chkContours = new JCheckBox("Contours", Settings.hasContours);
 		chkSugContours = new JCheckBox("Suggestive Contours", Settings.hasSugContours);
+
+		chkPointLight.addActionListener(new ActionListener() {
+			@Override public void actionPerformed(ActionEvent e) { Settings.pointLight = chkPointLight.isSelected(); }	
+		});
 
 		chkCelShading.addActionListener(new ActionListener() {
 			@Override public void actionPerformed(ActionEvent e) { Settings.hasCelShading = chkCelShading.isSelected(); }	
@@ -106,6 +112,7 @@ public class SettingsDialog extends JFrame {
 		});
 
 		add(chkLighting);
+		add(chkPointLight);
 		add(chkRimLighting);	
 		add(chkCelShading);	
 		add(chkContours);		
