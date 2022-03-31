@@ -22,7 +22,7 @@ uniform bool applyRimLighting;
 out vec3 ptColor;
 out vec3 ptNorm;
 out vec2 ptTex;
-flat out int levels;
+flat out int lightLevels, textureLevels;
 
 out vec3 ptLightNorm, ptAmbientLight, ptSpecularLight, ptDiffuseLight, ptApplyLight;
 
@@ -45,7 +45,8 @@ void main()
 
     // Set up lighting values for fragment shader
     ptNorm = vec3(aNorm);
-    levels = fragLevels;
+    lightLevels = fragLevels;
+    textureLevels = vertexLevels;
     ptLightNorm = normalize(viewMatrix * vec4(lightPos, int(pointLight))).xyz;
     ptAmbientLight = ambientLight; 
     ptSpecularLight = specularLight;

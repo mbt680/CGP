@@ -8,7 +8,7 @@ in vec3 ptColor;
 in vec2 ptTex;
 in vec3 ptNorm;
 
-flat in int levels;
+flat in int lightLevels, textureLevels;
 
 in vec3 ptLightNorm, ptAmbientLight, ptSpecularLight, ptDiffuseLight, ptApplyLight;
 
@@ -24,7 +24,7 @@ void main()
     if (applySolidColour)
         FragColor = vec4(ptColor, 0);
     else
-        FragColor = applyCelShading(getLightingColor(), levels) * texColor;
+        FragColor = applyCelShading(getLightingColor(), lightLevels) * applyCelShading(texColor, textureLevels);
 }
 
 vec4 applyCelShading(vec4 colour, int levels) {
@@ -36,17 +36,18 @@ vec4 applyCelShading(vec4 colour, int levels) {
 vec4 getLightingColor() 
 { 
     vec4 ambient, diffuse, specular, rim, ltColor;
-
-    ambient = vec4(ptAmbientLight, 1);
     float d = dot(ptLightNorm, ptNorm);
 
     if (ptApplyLight.y > 0) {
+        ambient = vec4(ptAmbientLight, 1);
         // add diffuse lighting
         diffuse = vec4(ptDiffuseLight, 1).xyzw * d;
         // add specualar lighting back, small effect with corrected norms
         vec3 halfway = normalize(ptLightNorm - ptNorm);
         float s = max(pow(max(dot(ptNorm, halfway), 0.0), .5), 0.0);
         specular = vec4(ptSpecularLight * s, 1);
+    } else {
+        ambient = vec4(1, 1, 1, 1);
     }
 
     // add rim lighting around edge of shadow

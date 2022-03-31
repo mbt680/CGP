@@ -10,6 +10,6 @@ public class Light {
     public final Vector3f diffuse = new Vector3f( 0.5f, 0.5f, 0.5f );
     public final Vector3f specular = new Vector3f( 0.5f, 0.5f, 0.5f );
 
-    public int vertexLevels = 32;
-    public int fragLevels = 18;
+    public int lightingLevels = 32;
+    public int textureLevels = 18;
 }

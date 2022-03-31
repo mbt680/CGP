@@ -25,6 +25,7 @@ public class ModelViewer {
         public static String materialFileLoc = "";
         public static boolean pointLight = true;
         public static boolean hasCelShading = true;
+        public static boolean textureHasCelShading = true;
         public static boolean hasLighting = true;
         public static boolean hasRimLighting = true;
         public static boolean hasContours = true;
@@ -234,8 +235,8 @@ public class ModelViewer {
         shader.setUniform("diffuseLight", Settings.lighting.diffuse );
 
         if (Settings.hasCelShading) {
-            shader.setInt("vertexLevels", Settings.lighting.vertexLevels );
-            shader.setInt("fragLevels", Settings.lighting.fragLevels );
+            shader.setInt("vertexLevels", Settings.lighting.lightingLevels );
+            shader.setInt("fragLevels", Settings.lighting.textureLevels );
         } else {
             shader.setInt("vertexLevels", Integer.MAX_VALUE );
             shader.setInt("fragLevels", Integer.MAX_VALUE );

@@ -51,8 +51,8 @@ public class SettingsDialog extends JFrame {
 			Settings.materialFileLoc = materialSourceTxt.getText();
 		}
 		Settings.lighting.position = new Vector3f(xLightPos.value, yLightPos.value, zLightPos.value);
-		Settings.lighting.vertexLevels = colorLevelsVertex.value;
-		Settings.lighting.fragLevels = colorLevelsFragment.value;
+		Settings.lighting.lightingLevels = colorLevelsVertex.value;
+		Settings.lighting.textureLevels = colorLevelsFragment.value;
 	}
 		
 	public SettingsDialog() {
@@ -86,7 +86,7 @@ public class SettingsDialog extends JFrame {
 		setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
 		chkPointLight = new JCheckBox("Point Light", Settings.pointLight);
 		chkCelShading = new JCheckBox("Cel Shading", Settings.hasCelShading);
-		chkLighting = new JCheckBox("Diffuse Lighting", Settings.hasLighting);
+		chkLighting = new JCheckBox("Lighting", Settings.hasLighting);
 		chkRimLighting = new JCheckBox("Rim Lighting", Settings.hasRimLighting);
 		chkContours = new JCheckBox("Contours", Settings.hasContours);
 		chkSugContours = new JCheckBox("Suggestive Contours", Settings.hasSugContours);
@@ -167,11 +167,11 @@ public class SettingsDialog extends JFrame {
 
 	private JPanel celShadingEffects = new JPanel(new FlowLayout(FlowLayout.LEFT)) { {
 		setBorder(new CompoundBorder( BorderFactory.createEmptyBorder(5, 5, 5, 5), BorderFactory.createTitledBorder(new TitledBorder("Cel Shading Levels"))));
-		colorLevelsVertex = new IntTextField(Settings.lighting.vertexLevels, 3);
-		colorLevelsFragment = new IntTextField(Settings.lighting.fragLevels, 3);
+		colorLevelsVertex = new IntTextField(Settings.lighting.lightingLevels, 3);
+		colorLevelsFragment = new IntTextField(Settings.lighting.textureLevels, 3);
 
-		//add(new JLabel("Vertex Shader: ")); 	add(colorLevelsVertex);
-		add(new JLabel("Fragment Shader: "));	add(colorLevelsFragment);
+		add(new JLabel("Texture: ")); 	add(colorLevelsVertex);
+		add(new JLabel("Lighting: "));	add(colorLevelsFragment);
 	} };
 
 	private JPanel endPanel = new JPanel(new FlowLayout(FlowLayout.TRAILING)) { {
