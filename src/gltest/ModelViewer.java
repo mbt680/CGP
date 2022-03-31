@@ -164,8 +164,6 @@ public class ModelViewer {
                 blackShader.use();
                 // Set the model to draw in just ourColour, with no lighting
                 blackShader.setBool("applySolidColour", true);
-                glEnable( GL_POLYGON_OFFSET_FILL );
-                glPolygonOffset( -2.5f, -2.5f );
                 glPolygonMode( GL_FRONT_AND_BACK, GL_LINE );
                 glLineWidth(5.0f);
                 for (String key : modelMap.keySet()) {
@@ -174,6 +172,8 @@ public class ModelViewer {
                 }
             }
             
+            glEnable( GL_POLYGON_OFFSET_FILL);
+            glPolygonOffset(-2.5f, -2.5f);
             // Main draw loop
             glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
             glLineWidth(1.0f);
