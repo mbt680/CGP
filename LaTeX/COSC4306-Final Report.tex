@@ -3,6 +3,8 @@
 \usepackage{graphicx}
 \usepackage{hyperref}
 \usepackage{subcaption}
+\usepackage{graphicx,wrapfig,lipsum}
+\usepackage{listings}
 
 \setlength{\parskip}{1em}
 
@@ -13,6 +15,15 @@
 \renewcommand{\thechapter}{\chapter*}
 \renewcommand{\thesection}{\section*}
 \renewcommand{\thesubsection}{\subsection*}
+
+\lstset{ 
+	frame=single,
+	showstringspaces=false,
+	basicstyle=\ttfamily,
+	keywordstyle=\color{Black!50!Green}\ttfamily,
+	stringstyle=\color{Black!50!Purple}\ttfamily,
+	commentstyle=\color{Black!20!Blue}\ttfamily,
+}
 
 \begin{document}
 \maketitle
