@@ -1,8 +1,10 @@
 \thechapter{Conclusions} 
-Our implementation can produce a cartoon-style rendering from a variety of models and allows for customization, but when inspecting details of the model their are some obvious issues, especially with models that are not smooth.
+Our implementation can produce a cartoon-style rendering from a variety of models and allows for customization, but when inspecting details of the model there are some obvious issues, especially with models that are not smooth.
 
 The jagged lines produced by applying cel shading or applying rim lighting to models with lower vertex counts could potentially be fixed by increasing the vertex count to make the model smoother, but would make rendering the model much less efficient. Methods proposed in  \cite{riyad16} to smooth the model vertices could also be used to improve rendering of models with rough edges. 
 
 Lighting, and rim lighting in particular, could be further improved by geometry dependent lighting methods described in \cite{lee06}. This would enable automatic customization of the lighting to enhance particular aspects of the model and increase the overall quality of the image generated, and also give a more consistent appearance for rim lighting as the model would consist of smooth curves.
 
-The implementation for cel shading textures could have been improved by defining a specific discrete range of colors for the model to use, allowing for a larger variety of customization and more accurate outputs.
+Cel shading textures could have been improved by defining a specific discrete range of colors to map the initial colours to, allowing for a larger variety of customization and more accurately coloured outputs. This is especially the case for models with textures that had colors that were not smoothly distributed.
+
+The cartoon renderings produced from 3D models were not optimal in all cases, but models with smooth curves, colouring, and a large number of vertices produced more consistent and visually appealing results. Through further modification to the initial model the same simple techniques could be applied successfully to a larger variety of models.

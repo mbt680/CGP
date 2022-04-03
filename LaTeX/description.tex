@@ -3,28 +3,28 @@
 
 \begin{figure}[h]
     \centering
-        \begin{subfigure}[b]{0.2\textwidth}
+        \begin{subfigure}[b]{0.18\textwidth}
         \includegraphics[width=\textwidth]{img/Lighting/ambient.png}
         \caption{Ambient}
         \label{fig:ambient}
     \end{subfigure}
     ~
     \centering
-    \begin{subfigure}[b]{0.2\textwidth}
+    \begin{subfigure}[b]{0.18\textwidth}
         \includegraphics[width=\textwidth]{img/Lighting/diffuse.png}
         \caption{Diffuse}
         \label{fig:diffuse}
     \end{subfigure}
      ~
     \centering
-    \begin{subfigure}[b]{0.2\textwidth}
+    \begin{subfigure}[b]{0.18\textwidth}
         \includegraphics[width=\textwidth]{img/Lighting/specular.png}
         \caption{Specular}
         \label{fig:specular}
     \end{subfigure}
     ~
     \centering
-    \begin{subfigure}[b]{0.2\textwidth}
+    \begin{subfigure}[b]{0.18\textwidth}
         \includegraphics[width=\textwidth]{img/Lighting/combined.png}
         \caption{All}
         \label{fig:combined}
@@ -37,13 +37,13 @@ The Phong lighting model is used, with specular, diffuse, and ambient light. Spe
 
 \begin{figure}[h]
     \centering
-    \begin{subfigure}[b]{0.31\textwidth}
+    \begin{subfigure}[b]{0.25\textwidth}
     \includegraphics[width=\textwidth]{img/Lighting/Rim.png}
     \caption{Engineer}
     \label{fig:Rim}
     \end{subfigure}
     \centering
-    \begin{subfigure}[b]{0.31\textwidth}
+    \begin{subfigure}[b]{0.25\textwidth}
     \includegraphics[width=\textwidth]{img/Lighting/RimSkull.png}
     \caption{Skull}
     \label{fig:RimSkull}
@@ -54,12 +54,10 @@ The Phong lighting model is used, with specular, diffuse, and ambient light. Spe
 
 Rim lighting is also added to provide additional highlights and increase the cartoon appearance of the render as specular highlights are not that effective. It highlights edges of the model perpendicular to the light within a range. This is likely as properties of the model's material is consistent throughout it's entire texture. It highlights the edge of the object, and as a result improves the rendering from some angles, but appears incorrect from some models that do not have smooth curves, and is highly dependant on the distance of the light from the object. 
 
-\newpage 
 \begin{lstlisting}[language=C]
-vec4 ambient, diffuse, specular, rim, ltColor;
-float d = dot(ptLightNorm, ptNorm);
+d = dot(ptLightNorm, ptNorm);
 
-// add phong lighting
+// add Phong lighting
 ambientPortion = ambientColour;
 diffusePortion = diffuseColour * d;
 halfway = normalize(ptLightNorm - ptNorm);
@@ -67,15 +65,15 @@ s = max(dot(ptNorm, halfway), 0.0) ^ 2;
 specularPortion = specularColour  * s;
 
 // add rim lighting
-float r = 1 - d;
-if (r > 0.9 && r < 1.1)
+r = 1 - d;
+if (r > 0.9)
     rimPortion = vec4(0.4, 0.4, 0.4, 1);
 
 lighting = ambientPortion + diffusePortion
          + specularPortion + rimPortion;
 \end{lstlisting}
 
-Lighting is implemented in the fragment shader, rather than in the vertex shader, decreasing efficiency as it must be calculated for every fragment rather than the relatively small number of vertices, but providing more precise results. Our implementation of phong lighting is as described in \cite{texbook}, and the model can be displayed with either a directional or point light source.
+Lighting is implemented in the fragment shader, rather than in the vertex shader, decreasing efficiency as it must be calculated for every fragment rather than the relatively small number of vertices, but providing more precise results. Our implementation of Phong lighting is as described By Angel \cite{texbook}, and the model can be displayed with either a directional or point light source.
 
 % referring to the colour discretization process
 \thesection{Cel shading}
@@ -87,7 +85,7 @@ separate colours are used.
 To perform cel shading, a number of discrete bands n must be chosen. Higher values for n produce more 
 bands of colour, which leads to less harsh contrast in the image, but fewer bands create more contrast,
 and therefore a more dramatic effect. To get the final colour of a pixel, the RGB values are divided by
-n+1, which returns the index of the band. Then, the index is multiplied by the size of the band, which
+$n+1$, which returns the index of the band. Then, the index is multiplied by the size of the band, which
 produces the final colour. Examples of cel shading for a particular model are shown in 
 \autoref{fig:cel-band-comparison}. 
 
@@ -95,31 +93,31 @@ produces the final colour. Examples of cel shading for a particular model are sh
     \centering
     \begin{subfigure}[b]{0.15\textwidth}
         \includegraphics[width=\textwidth]{img/cel-shading-n1.png}
-        \caption{n = 1}
+        \caption{$n = 1$}
         \label{fig:cel-shading-n1}
     \end{subfigure}
     ~
     \begin{subfigure}[b]{0.15\textwidth}
         \includegraphics[width=\textwidth]{img/cel-shading-n2.png}
-        \caption{n = 2}
+        \caption{$n = 2$}
         \label{fig:cel-shading-n2}
     \end{subfigure}
     ~
     \begin{subfigure}[b]{0.15\textwidth}
         \includegraphics[width=\textwidth]{img/cel-shading-n4.png}
-        \caption{n = 4}
+        \caption{$n = 4$}
         \label{fig:cel-shading-n4}
     \end{subfigure}
 
     \begin{subfigure}[b]{0.15\textwidth}
         \includegraphics[width=\textwidth]{img/cel-shading-n8.png}
-        \caption{n = 8}
+        \caption{$n = 8$}
         \label{fig:cel-shading-n8}
     \end{subfigure}
     ~
     \begin{subfigure}[b]{0.15\textwidth}
         \includegraphics[width=\textwidth]{img/cel-shading-n16.png}
-        \caption{n = 16}
+        \caption{$n = 16$}
         \label{fig:cel-shading-n16}
     \end{subfigure}
     ~
@@ -143,7 +141,7 @@ but the effect is  not as noticeable for higher polygon count models, such as in
     \centering
     \begin{subfigure}[b]{0.15\textwidth}
         \includegraphics[width=\textwidth]{img/cel-shading-highpoly-n18.png}
-        \caption{n = 18}
+        \caption{$n = 18$}
         \label{fig:cel-shading-high-poly-n18}
     \end{subfigure}
     ~
@@ -162,7 +160,7 @@ This is done by drawing lines on all the outer edges of the model. So as to clea
 
 \begin{figure}[h]
     \centering
-    \includegraphics[width=0.5\textwidth]{img/Contour.jpg}
+    \includegraphics[width=0.3\textwidth]{img/Contour.jpg}
     \caption{An overview of stages in the rendering step}
     \label{fig-render-overview}
 \end{figure}
@@ -175,7 +173,7 @@ This helps to break up the form of the model in a way similar to how one dose wh
 
 \begin{figure}[h]
     \centering
-    \includegraphics[width=0.5\textwidth]{img/SuggestiveContours.png}
+    \includegraphics[width=0.3\textwidth]{img/SuggestiveContours.png}
     \caption{An overview of stages in the rendering step}
     \label{fig-render-overview}
 \end{figure}
@@ -185,70 +183,68 @@ This helps to break up the form of the model in a way similar to how one dose wh
 
 \begin{figure}[h]
     \centering
-        \begin{subfigure}[b]{0.2\textwidth}
+        \begin{subfigure}[b]{0.16\textwidth}
         \includegraphics[width=\textwidth]{img/textures/Original.png}
-        \caption{Original}
+        \caption{Engineer}
         \label{fig:Original}
     \end{subfigure}
     ~
     \centering
-    \begin{subfigure}[b]{0.2\textwidth}
+    \begin{subfigure}[b]{0.16\textwidth}
         \includegraphics[width=\textwidth]{img/textures/CelShadeTexture6.png}
         \caption{6 Levels}
         \label{fig:CelShadeTexture4}
     \end{subfigure}
     ~
-    \begin{subfigure}[b]{0.2\textwidth}
+    \begin{subfigure}[b]{0.16\textwidth}
         \includegraphics[width=\textwidth]{img/textures/CelShadeTexture8.png}
         \caption{8 Levels}
         \label{fig:CelShadeTexture8}
+    \end{subfigure}
+    ~
+    \begin{subfigure}[b]{0.18\textwidth}
+        \includegraphics[width=\textwidth]{img/textures/OriginalSkull.png}
+        \caption{Skull}
+        \label{fig:OriginalSkull}
+	\end{subfigure}
+    ~
+    \begin{subfigure}[b]{0.18\textwidth}
+        \includegraphics[width=\textwidth]{img/textures/CelShadeTexture8Skull.png}
+        \caption{8 Levels}
+        \label{fig:CelShadeTexture8Skull}
     \end{subfigure}
     %\begin{subfigure}[b]{0.2\textwidth}
      %   \includegraphics[width=\textwidth]{img/textures/TextureLightingCelShade.png}
     %    \caption{Final}
     %    \label{fig:TextureLightingCelShade}
     %\end{subfigure}
-    \caption{Engineer}
+    \caption{Cel Shaded Textures}
     \label{fig:TexturesEngineer}
 \end{figure}
-
-%\begin{wrapfigure}{r}{0.4\textwidth}
-\begin{figure}
-\centering
-\begin{subfigure}[b]{0.15\textwidth}
-        \includegraphics[width=\textwidth]{img/textures/OriginalSkull.png}
-        \caption{Original}
-        \label{fig:OriginalSkull}
-\end{subfigure}
-    ~
-    \begin{subfigure}[b]{0.15\textwidth}
-        \includegraphics[width=\textwidth]{img/textures/CelShadeTexture8Skull.png}
-        \caption{8 Levels}
-        \label{fig:CelShadeTexture8Skull}
-    \end{subfigure}
-\caption{Skull}
-\end{figure}
-%\end{wrapfigure} 
 
 Texture coordinates are loaded from the initial .obj file and stored with each vertex, and can then be used both to render the model with its original texture or to replace the texture with another image. In the fragment shader textures are used to map fragments to the color at the fragment's texture coordinate interpolated from the stored vertex coordinate. The color mapped by the coordinate in the model's textures can then be further modified through cel shading so photo realistic versions are rendered in a consistent toon style.
 
 \begin{figure}[h]
     \centering
-        \begin{subfigure}[b]{0.3\textwidth}
+        \begin{subfigure}[b]{0.4\textwidth}
         \includegraphics[width=\textwidth]{img/textures/space.png}
         \caption{Initial Texture}
         \label{fig:Space}
     \end{subfigure}
-    ~
+~
+\hspace{24pt}
+~
     \centering
-    \begin{subfigure}[b]{0.25\textwidth}
+    \begin{subfigure}[b]{0.18\textwidth}
         \includegraphics[width=\textwidth]{img/textures/TextureReplacementSkull.png}
         \caption{Skull}
         \label{fig:TextureReplacementSkull}
     \end{subfigure}
-     ~
+~
+\hspace{24pt}
+~
     \centering
-    \begin{subfigure}[b]{0.2\textwidth}
+    \begin{subfigure}[b]{0.15\textwidth}
         \includegraphics[width=\textwidth]{img/textures/TextureReplacement.png}
         \caption{Engineer}
         \label{fig:TextureReplacement}

@@ -1,19 +1,27 @@
 \thechapter{Experimental results} 
 
-%\begin{wrapfigure}{r}{0.5\textwidth}
-\begin{figure}[h]
-    \centering
-\begin{subfigure}[b]{0.28\textwidth}
-        \includegraphics[width=\textwidth]{img/Textures/TextureLightingCelShade.png}
-\end{subfigure}
-\caption{Cel Shaded Texture Final}
- \label{fig:TextureLightingCelShade}
-\end{figure}
-%\end{wrapfigure} 
-
 Our system was able to produce the best results using models with higher vertex counts and smooth curves like the skull, while the engineer was more problematic, but increasing the vertex count also significantly increased the time to produce the render. Many aspects needed to be customized to particular models to get optimal results.
 
-When our simple Cel Shading algorithm is applied to some textures the colours output need correction especially at lower levels as in \ref{fig:CelShadeTexture4}, but combined with cel shaded lighting using more levels for the texture the desired effect can be produced \ref{fig:CelShadeTexture4}. 
+\begin{figure}[h]
+\centering
+\begin{subfigure}[b]{0.2\textwidth}
+        \includegraphics[width=\textwidth]{img/Textures/FinalSkull.png}
+        \caption{Skull}
+ 		\label{fig:FinalSkull}
+\end{subfigure}
+~
+\hspace{36pt}
+~
+\begin{subfigure}[b]{0.18\textwidth}
+        \includegraphics[width=\textwidth]{img/Textures/TextureLightingCelShade.png}
+        \caption{Engineer}
+ 		\label{fig:TextureLightingCelShade}
+\end{subfigure}
+\caption{Final Renders}
+ \label{fig:FinalRenders}
+\end{figure} 
+
+When our simple Cel Shading algorithm is applied to some textures the colours output need correction especially at lower levels as in \autoref{fig:LightingPosRim}, but combined with cel shaded lighting using more levels for the texture the desired effect can be produced as shown in \autoref{fig:TextureLightingCelShade}. 
 
 %\begin{wrapfigure}{r}{0.5\textwidth}
 \begin{figure}[h]
@@ -23,7 +31,9 @@ When our simple Cel Shading algorithm is applied to some textures the colours ou
         \caption{Directional}
         \label{fig:LightingPosDir}
 \end{subfigure}
-    ~
+~
+\hspace{24pt}
+~
     \begin{subfigure}[b]{0.18\textwidth}
         \includegraphics[width=\textwidth]{img/Lighting/Point.png}
         \caption{Point}
@@ -34,15 +44,16 @@ When our simple Cel Shading algorithm is applied to some textures the colours ou
  \end{figure}
 %\end{wrapfigure} 
 
-Positioning of the light for optimally rending the lighting is highly dependant on the model, and the area of the model that is being viewed. Depending on the positioning of the lighting the effect can vary greatly, demonstrated in \ref{fig:LightingPosRim} where the rim lighting on the model appears dramatically different depending on the distance away it is.
+Positioning of the light for optimally rending the lighting is highly dependant on the model, and the area of the model that is being viewed. Depending on the positioning of the lighting the effect can vary greatly, demonstrated in \autoref{fig:LightingPosRim} where the rim lighting on the model appears dramatically different depending on the distance away it is.
 
+\newpage %move to description?
 As for adding in our contours and suggestive contours. We have cycled through three methods.
 
-Our first implementation was only able to handle contours and was done using OpenGLs built- in PolygonMode system. More specifically, it was done by re-rendering the model in GL_Line mode. Before offsetting in the Z axis relative to the camera. Theoretically making it so that the only part visible would be the lines outlining the model.
+Our first implementation was only able to handle contours and was done using OpenGLs built - in PolygonMode system. More specifically, it was done by re-rendering the model in GL\_Line mode. Before offsetting in the Z axis relative to the camera. Theoretically making it so that the only part visible would be the lines outlining the model.
 
 \begin{figure}[h]
     \centering
-    \includegraphics[width=0.5\textwidth]{img/ModelB.png}
+    \includegraphics[width=0.3\textwidth]{img/ModelB.png}
     \caption{An overview of stages in the rendering step}
     \label{fig-render-overview}
 \end{figure}
@@ -51,14 +62,14 @@ The problem with this is implementation, next to its simplicity, is that it prod
 
 \begin{figure}[h]
     \centering
-    \includegraphics[width=0.5\textwidth]{img/ModelA.png}
+    \includegraphics[width=0.3\textwidth]{img/ModelA.png}
     \caption{An overview of stages in the rendering step}
     \label{fig-render-overview}
 \end{figure}
 
 \begin{figure}[h]
     \centering
-    \includegraphics[width=0.5\textwidth]{img/ModelC.png}
+    \includegraphics[width=0.3\textwidth]{img/ModelC.png}
     \caption{An overview of stages in the rendering step}
     \label{fig-render-overview}
 \end{figure}
@@ -69,7 +80,7 @@ While this was happening, suggestive contours would be calculated inside of the 
 
 \begin{figure}[h]
     \centering
-    \includegraphics[width=0.5\textwidth]{img/ModelD.png}
+    \includegraphics[width=0.3\textwidth]{img/ModelD.png}
     \caption{An overview of stages in the rendering step}
     \label{fig-render-overview}
 \end{figure}
