@@ -51,3 +51,5 @@ red component. This is done from observations that artists tended to favour use 
 dark grays instead of black and white, and preferred to mix in warm colours to their mid tones. 
 The authors also add a dedicated rim lighting term to their Phong model in order to make upward
 facing surfaces more likely to be rim shaded.
+
+To create images that are even closer to traditional hand drawn line renderings Al-Rousan et al used Laplacian smoothing to reduce rough and sharp edges of models, creating a simplified model to reduce details in a realistic way before using other algorithms to outline contours of the model \cite{riyad16}. Similarly Lee et al focussed on improving lighting through dividing objects into curved surface patches, then applying lighting effects to each surface patch independently to optimally highlight details and draw the viewer's eye \cite{lee06}. In both cases simplification and modification of the initial model allowed for clearer renderings, but also required complicated pre-processing to the model.

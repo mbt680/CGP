@@ -29,43 +29,54 @@
         \caption{All}
         \label{fig:combined}
     \end{subfigure}
-    \caption{Lighting}
+    \caption{Phong Lighting}
     \label{fig:Lighting}
 \end{figure}
 
-The Phong lighting model is used, with specular, diffuse, and ambient light. Specular light concentrates light in one direction, providing highlights, diffuse light scatters light equally, providing shadows, and ambient light provides an equal amount of light to all parts of the surface from every direction.
+The Phong lighting model is used, with specular, diffuse, and ambient light. Specular light concentrates light in one direction, providing highlights, diffuse light scatters light equally, providing shadows, and ambient light provides an equal amount of light to all parts of the surface from every direction. 
 
 \begin{figure}[h]
     \centering
-    \begin{subfigure}[b]{0.25\textwidth}
+    \begin{subfigure}[b]{0.3\textwidth}
     \includegraphics[width=\textwidth]{img/Lighting/Rim.png}
     \caption{Engineer}
     \label{fig:Rim}
     \end{subfigure}
     \centering
-    \begin{subfigure}[b]{0.25\textwidth}
+    \begin{subfigure}[b]{0.3\textwidth}
     \includegraphics[width=\textwidth]{img/Lighting/RimSkull.png}
     \caption{Skull}
     \label{fig:RimSkull}
     \end{subfigure}
-    \caption{Rim}
+    \caption{Rim Lighting}
     \label{fig:RimLighting}
 \end{figure}
 
-Rim lighting is also added to provide additional highlights and increase the cartoon appearance of the render as specular highlights are not that effective. This is likely as properties of the model's material is consistent throughout it's entire texture. It highlights the edge of the object, and as a result improves the rendering from some angles, but appears incorrect from some models that do not have smooth curves, and is highly dependant on the distance of the light from the object. 
+\newpage 
 
-Lighting is implemented in the fragment shader, rather than in the vertex shader, decreasing efficiency as it must be calculated for every fragment rather than the relatively small number of vertices, but providing more precise results. 
-
+Rim lighting is also added to provide additional highlights and increase the cartoon appearance of the render as specular highlights are not that effective. It highlights edges of the model perpendicular to the light within a range. This is likely as properties of the model's material is consistent throughout it's entire texture. It highlights the edge of the object, and as a result improves the rendering from some angles, but appears incorrect from some models that do not have smooth curves, and is highly dependant on the distance of the light from the object. 
 
 \begin{lstlisting}[language=C]
-\\
-\\
-\\
-\\
-\\
-\\
-\\
+vec4 ambient, diffuse, specular, rim, ltColor;
+float d = dot(ptLightNorm, ptNorm);
+
+// add phong lighting
+ambientPortion = ambientColour;
+diffusePortion = diffuseColour * d;
+halfway = normalize(ptLightNorm - ptNorm);
+s = max(dot(ptNorm, halfway), 0.0) ^ 2;
+specularPortion = specularColour  * s;
+
+// add rim lighting
+float r = 1 - d;
+if (r > 0.9 && r < 1.1)
+    rimPortion = vec4(0.4, 0.4, 0.4, 1);
+
+lighting = ambientPortion + diffusePortion
+         + specularPortion + rimPortion;
 \end{lstlisting}
+
+Lighting is implemented in the fragment shader, rather than in the vertex shader, decreasing efficiency as it must be calculated for every fragment rather than the relatively small number of vertices, but providing more precise results. Our implementation of phong lighting is as described in \cite{texbook}, and the model can be displayed with either a directional or point light source.
 
 % referring to the colour discretization process
 \thesection{Cel shading}
@@ -127,7 +138,7 @@ colour passed to the fragment shader is interpolated between vertices by OpenGL.
 a smooth effect and saves processing power, but when performing cel shading, it can destroy the effect, 
 so it is turned off. Unfortunately, doing so creates jagged lines in models with a low polygon count, 
 but the effect is  not as noticeable for higher polygon count models, such as in 
-\autoref{fig:cel-shading-high-poly}. This could potentially be fixed by methods proposed by Al-Rousan to smooth the model vertices, but would require increasing the number of vertices and  would make rendering the model less efficient \cite{riyad16}.
+\autoref{fig:cel-shading-high-poly}. 
 
 \begin{figure}[h]
     \centering
@@ -178,7 +189,7 @@ Texture coordinates are loaded from the initial .obj file and stored with each v
         \begin{subfigure}[b]{0.2\textwidth}
         \includegraphics[width=\textwidth]{img/textures/Original.png}
         \caption{Original}
-        \label{fig:OriginalSkull}
+        \label{fig:Original}
     \end{subfigure}
     ~
     \centering
@@ -202,10 +213,6 @@ Texture coordinates are loaded from the initial .obj file and stored with each v
     \label{fig:TexturesEngineer}
 \end{figure}
 
-
-When our simple Cel Shading algorithm is applied to some textures the colours output need correction especially at lower levels as in \ref{fig:CelShadeTexture4}, but combined with cel shaded lighting using more levels for the texture the desired effect can be produced. The implementation for textures could have been improved by defining a specific discrete range of colors for the model to use.
-
-\newpage 
 
 % probably could add a section about lighting the model
 \thesection{System overview}

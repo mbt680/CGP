@@ -1,20 +1,50 @@
 \thechapter{Experimental results} 
 
+\begin{wrapfigure}{r}{0.5\textwidth}
+\centering
+\begin{subfigure}[b]{0.28\textwidth}
+        \includegraphics[width=\textwidth]{img/Textures/TextureLightingCelShade.png}
+\end{subfigure}
+\caption{Cel Shaded Texture Final}
+ \label{fig:TextureLightingCelShade}
+\end{wrapfigure} 
 
-%add images showing light changes w/position
+Our system was able to produce the best results using models with higher vertex counts and smooth curves like the skull, while the engineer was more problematic, but increasing the vertex count also significantly increased the time to produce the render. Many aspects needed to be customized to particular models to get optimal results.
 
-Positioning of the light for optimally rending the lighting is highly dependant on the model, and the area of the model that is being viewed. The effect produced by lighting, and rim lighting in particular, could be further improved by geometry dependent lighting methods described in \cite{lee06}, where the objects are divided into curved surface patches and lighting is applied to each independently. This would enable customization of the lighting to enhance particular aspects of the model and increase the overall quality of the image generated.
+When our simple Cel Shading algorithm is applied to some textures the colours output need correction especially at lower levels as in \ref{fig:CelShadeTexture4}, but combined with cel shaded lighting using more levels for the texture the desired effect can be produced \ref{fig:CelShadeTexture4}. 
+
+%\begin{wrapfigure}{r}{0.5\textwidth}
+\begin{figure}[h]
+\centering
+\begin{subfigure}[b]{0.15\textwidth}
+        \includegraphics[width=\textwidth]{img/Lighting/Directional.png}
+        \caption{Directional}
+        \label{fig:LightingPosDir}
+\end{subfigure}
+    ~
+    \begin{subfigure}[b]{0.15\textwidth}
+        \includegraphics[width=\textwidth]{img/Lighting/Point.png}
+        \caption{Point}
+        \label{fig:LightingPosPos}
+    \end{subfigure}
+\caption{Rim Lighting and Light Position}
+ \label{fig:LightingPosRim}
+ \end{figure}
+%\end{wrapfigure} 
+
+Positioning of the light for optimally rending the lighting is highly dependant on the model, and the area of the model that is being viewed. Depending on the positioning of the lighting the effect can vary greatly, demonstrated in \ref{fig:LightingPosRim} where the rim lighting on the model appears dramatically different depending on the distance away it is.
+
 
 \begin{figure}[h]
     \centering
-        \begin{subfigure}[b]{0.4\textwidth}
+        \begin{subfigure}[b]{0.3\textwidth}
         \includegraphics[width=\textwidth]{img/textures/space.png}
         \caption{Initial Texture}
-        \label{fig:OriginalSkull}
+        \label{fig:Space}
     \end{subfigure}
     ~
     \centering
-    \begin{subfigure}[b]{0.2\textwidth}
+    \begin{subfigure}[b]{0.25\textwidth}
         \includegraphics[width=\textwidth]{img/textures/TextureReplacementSkull.png}
         \caption{Skull}
         \label{fig:TextureReplacementSkull}
@@ -27,7 +57,8 @@ Positioning of the light for optimally rending the lighting is highly dependant 
         \label{fig:TextureReplacement}
     \end{subfigure}
     \caption{Replaced Textures}
-    \label{fig:TexturesEngineer}
+    \label{fig:TexturesReplacement}
 \end{figure}
 
-Using a photo-realistic image transformed through cel shading as the new texture can produce interesting renders with the same process used for the original textures. While this was not an initial goal for our project it did not require any significant changes to our implementation.
+Using a photo-realistic image transformed through cel shading as the new texture can produce interesting renders with the same process used for the original textures.
+
