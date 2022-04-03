@@ -16,13 +16,13 @@ When our simple Cel Shading algorithm is applied to some textures the colours ou
 %\begin{wrapfigure}{r}{0.5\textwidth}
 \begin{figure}[h]
 \centering
-\begin{subfigure}[b]{0.15\textwidth}
+\begin{subfigure}[b]{0.18\textwidth}
         \includegraphics[width=\textwidth]{img/Lighting/Directional.png}
         \caption{Directional}
         \label{fig:LightingPosDir}
 \end{subfigure}
     ~
-    \begin{subfigure}[b]{0.15\textwidth}
+    \begin{subfigure}[b]{0.18\textwidth}
         \includegraphics[width=\textwidth]{img/Lighting/Point.png}
         \caption{Point}
         \label{fig:LightingPosPos}
@@ -33,32 +33,4 @@ When our simple Cel Shading algorithm is applied to some textures the colours ou
 %\end{wrapfigure} 
 
 Positioning of the light for optimally rending the lighting is highly dependant on the model, and the area of the model that is being viewed. Depending on the positioning of the lighting the effect can vary greatly, demonstrated in \ref{fig:LightingPosRim} where the rim lighting on the model appears dramatically different depending on the distance away it is.
-
-
-\begin{figure}[h]
-    \centering
-        \begin{subfigure}[b]{0.3\textwidth}
-        \includegraphics[width=\textwidth]{img/textures/space.png}
-        \caption{Initial Texture}
-        \label{fig:Space}
-    \end{subfigure}
-    ~
-    \centering
-    \begin{subfigure}[b]{0.25\textwidth}
-        \includegraphics[width=\textwidth]{img/textures/TextureReplacementSkull.png}
-        \caption{Skull}
-        \label{fig:TextureReplacementSkull}
-    \end{subfigure}
-     ~
-    \centering
-    \begin{subfigure}[b]{0.2\textwidth}
-        \includegraphics[width=\textwidth]{img/textures/TextureReplacement.png}
-        \caption{Engineer}
-        \label{fig:TextureReplacement}
-    \end{subfigure}
-    \caption{Replaced Textures}
-    \label{fig:TexturesReplacement}
-\end{figure}
-
-Using a photo-realistic image transformed through cel shading as the new texture can produce interesting renders with the same process used for the original textures.
 

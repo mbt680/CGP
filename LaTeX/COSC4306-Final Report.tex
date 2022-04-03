@@ -1,10 +1,12 @@
 \documentclass[12pt]{report}
-\usepackage[letterpaper]{geometry}
+\usepackage[letterpaper, margin={1in, 1in}]{geometry}
 \usepackage{graphicx}
 \usepackage{hyperref}
 \usepackage{subcaption}
 \usepackage{graphicx,wrapfig,lipsum}
 \usepackage{listings}
+\usepackage[dvipsnames]{xcolor}
+\usepackage{framed}
 
 \setlength{\parskip}{1em}
 
@@ -12,17 +14,17 @@
 \author{Mathieu Carriere\\Bradley McFadden\\Joy McGibbon}
 \date{April 4, 2022}
 
-\renewcommand{\thechapter}{\chapter*}
-\renewcommand{\thesection}{\section*}
-\renewcommand{\thesubsection}{\subsection*}
+\renewcommand{\thechapter}{\newpage \section*}
+\renewcommand{\thesection}{\subsection*}
+\renewcommand{\thesubsection}{\subsubsection*}
 
 \lstset{ 
 	frame=single,
 	showstringspaces=false,
 	basicstyle=\ttfamily,
-	keywordstyle=\color{Black!50!Green}\ttfamily,
-	stringstyle=\color{Black!50!Purple}\ttfamily,
-	commentstyle=\color{Black!20!Blue}\ttfamily,
+	keywordstyle=\color{Black!30!Green}\ttfamily,
+	stringstyle=\color{Black!30!Blue}\ttfamily,
+	commentstyle=\color{Black!30!Purple}\ttfamily,
 }
 
 \begin{document}
