@@ -162,7 +162,7 @@ This is done by drawing lines on all the outer edges of the model. So as to clea
 
 \begin{figure}[h]
     \centering
-    \includegraphics[width=0.5\textwidth]{img/Contour.png}
+    \includegraphics[width=0.5\textwidth]{img/Contour.jpg}
     \caption{An overview of stages in the rendering step}
     \label{fig-render-overview}
 \end{figure}
@@ -212,7 +212,8 @@ This helps to break up the form of the model in a way similar to how one dose wh
     \label{fig:TexturesEngineer}
 \end{figure}
 
-\begin{wrapfigure}{r}{0.4\textwidth}
+%\begin{wrapfigure}{r}{0.4\textwidth}
+\begin{figure}
 \centering
 \begin{subfigure}[b]{0.15\textwidth}
         \includegraphics[width=\textwidth]{img/textures/OriginalSkull.png}
@@ -226,7 +227,8 @@ This helps to break up the form of the model in a way similar to how one dose wh
         \label{fig:CelShadeTexture8Skull}
     \end{subfigure}
 \caption{Skull}
-\end{wrapfigure} 
+\end{figure}
+%\end{wrapfigure} 
 
 Texture coordinates are loaded from the initial .obj file and stored with each vertex, and can then be used both to render the model with its original texture or to replace the texture with another image. In the fragment shader textures are used to map fragments to the color at the fragment's texture coordinate interpolated from the stored vertex coordinate. The color mapped by the coordinate in the model's textures can then be further modified through cel shading so photo realistic versions are rendered in a consistent toon style.
 
