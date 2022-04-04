@@ -1,3 +1,12 @@
+Bradley McFadden
+Joy McGibbon
+Mathieu Carriere
+Computer Graphics project
+April 2022
+
+Instructions for running the code of our project
+====================================================
+
 Compiling all files
 ====================================================
 .\compile.bat or ./compile.sh
