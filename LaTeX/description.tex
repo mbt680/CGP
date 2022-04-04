@@ -379,7 +379,7 @@ The first stage of our system takes in .obj files and reformats parts of the fil
 it easier to parse. This was implemented as a separate Python program, since it needs only be done 
 once per model.
 % WavefrontParser, MtlParser | Parsing stage
-The second stage of the system parses a .obj file to produce a prototype of a Model that our system
+The second stage of the system parses a .obj file to produce a prototype of a model that our system
 is later able to render. In doing so, the vertices, vertex normals, and texture coordinates from the
 file are packed into the prototype model. Additionally, the indices that use this data to define
 faces of the model are also read. At this stage, textures are also read in for the model from the
@@ -387,7 +387,7 @@ faces of the model are also read. At this stage, textures are also read in for t
 as our system has no procedure in place to triangulate polygons.
 % Model, setupBuffers | Initialization
 
-The next stage of the system packs the Model data into a format that the vertex shader can 
+The next stage of the system packs the model's data into a format that the vertex shader can 
 understand. An strided array of nine floating point values per vertex is created. The first three
 values each stride represent the vertex data, the next three are the vertex normal, and the final 
 three contain texture coordinates. These values are passed as attributes to the vertex shader.
@@ -408,7 +408,7 @@ than closer models.
 % a figure of the wireframe would be cool here
 
 The model render loop handles the lighting and the cel shading of the object, and the its work is
-done in the vertex and frament shaders. The steps are detailed below.
+done in the vertex and frament shaders. The steps are detailed in \autoref{fig-render-overview}.
 
 \begin{figure}[h]
     \centering
@@ -427,10 +427,10 @@ process that involves applying diffuse lighting, rim lighting, and reducing extr
 values in order to preserve the colour of the model. Afterward, cel shading is applied to discretize
 the colours of the model. 
 
-% a figure of the model without the wireframe seems appropriate here
-
-% a figure of the model with wireframe seems appropriate here
-% maybe all three images could be in a single figure
+\autoref{fig:teapot-comparison} shows the rendering process at three stages, drawing the outline,
+drawing the inner model, and the combined final result. One drawback to this approach of drawing
+outlines is that the rendering pipeline is used twice per model. However, it may be not quite as 
+intensive since only back faces are drawn, and the wireframe of the model is not filled.
 
 \begin{figure}[h]
     \centering
@@ -460,10 +460,3 @@ the colours of the model.
     \caption{Comparison of output at each rendering stage}
     \label{fig:teapot-comparison}
 \end{figure}
-
-\autoref{fig:teapot-comparison} shows the rendering process at three stages, drawing the outline,
-drawing the inner model, and the combined final result. One drawback to this approach of drawing
-outlines is that the rendering pipeline is used twice per model. However, it may be not quite as 
-intensive since only back faces are drawn, and the wireframe of the model is not filled.
-
-
