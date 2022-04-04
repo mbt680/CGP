@@ -382,7 +382,7 @@ The first stage of our system takes in .obj files and reformats parts of the fil
 it easier to parse. This was implemented as a separate Python program, since it needs only be done 
 once per model.
 % WavefrontParser, MtlParser | Parsing stage
-The second stage of the system parses a .obj file to produce a prototype of a Model that our system
+The second stage of the system parses a .obj file to produce a prototype of a model that our system
 is later able to render. In doing so, the vertices, vertex normals, and texture coordinates from the
 file are packed into the prototype model. Additionally, the indices that use this data to define
 faces of the model are also read. At this stage, textures are also read in for the model from the
@@ -390,7 +390,7 @@ faces of the model are also read. At this stage, textures are also read in for t
 as our system has no procedure in place to triangulate polygons.
 % Model, setupBuffers | Initialization
 
-The next stage of the system packs the Model data into a format that the vertex shader can 
+The next stage of the system packs the model's data into a format that the vertex shader can 
 understand. An strided array of nine floating point values per vertex is created. The first three
 values each stride represent the vertex data, the next three are the vertex normal, and the final 
 three contain texture coordinates. These values are passed as attributes to the vertex shader.
