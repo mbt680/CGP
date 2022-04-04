@@ -176,14 +176,14 @@ but the effect is  not as noticeable for higher polygon count models, such as in
 
 % referring to the lines between the model and the background
 \thesection{Contour}
-Contours are a common technique used in none photorealistic rendering that involves highlighting 
+contours are a common technique used in none photorealistic rendering that involves highlighting 
 the boundaries of an image with outlines. This technique makes a model look more like a drawing 
 and helps show depth in areas where color normally would.
 
 The contours are constructed by adding lines to the model relative to the camera. Creating outlines 
 similar to how it would look if you were trying to sketch the model. With lines drawn around the 
 separate parts of the model, such as limbs or branches, as well as distinct areas, such as teeth on 
-the skull.
+a skull.
 
 \begin{figure}[h]
     \centering
@@ -207,16 +207,14 @@ the skull.
         \caption{Close-Up}
         \label{fig:ZOffset}
     \end{subfigure}
+    \caption{Offset Contours}
+    \label{fig:OffsetOverview}
     \end{figure}
 
 Our first implementation could only handle contours and was made using OpenGL's built-in PolygonMode system.
 More specifically, it was done by re-rendering the model in GL\_Line mode, as seen in the none offset image \autoref{fig:NOffset}.
 Before offsetting the lines away from the camera. Theoretically, making it so that the only part visible 
 would be the lines outlining the model. Creating the middle image \autoref{fig:Offset}.
-
-This method is imperfect, though. While it correctly creates Contours for the model, it also causes 
-additional lines to appear on the model. This effect is more noticeable in areas with a lot of detail or 
-convex faces, as seen most prominently in the face \autoref{fig:ZOffset}.
 
 \begin{figure}[h]
     \centering
@@ -233,7 +231,7 @@ the buffer is set to record where on the screen information is generated before 
 After this, we then move on to rendering the outline. First, by inversing the matrix and making it read-only 
 instead of write-only. It makes it so that new images can only be rendered to areas not written to in the 
 first pass-through. Before finally outlining the image using GL\_Line mode and creating the model seen infigure 
-8. A much less detailed Contour, but without any of the artifacts of our first algorithm \autoref{fig:Stencil}.
+8. A much less detailed contour, but without any of the artifacts of our first algorithm \autoref{fig:Stencil}.
 
 \newpage
 \thesection{Textures}
