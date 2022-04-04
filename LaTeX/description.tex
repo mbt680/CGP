@@ -65,15 +65,9 @@ of the light and fragment position and checking for it to be between 0-0.16. Thi
 does not work well on  models that do not have smooth curves, and the distance and position of the 
 light must also be changed for different models for optimal results. 
 
-Lighting is implemented in the fragment shader, shown in \autoref{listing-phong-lighting}, rather than in the vertex shader, decreasing 
-efficiency as it must be calculated for every fragment rather than the relatively small number of 
-vertices, but providing more precise results. Our implementation of Phong lighting is as described 
-by Angel in \cite{texbook}, and the model can be displayed with either a directional or a point light 
-source. A code snippet of our implementation is provided in \autoref{listing-phong-lighting}.
-
 \begin{lstlisting}[ caption={Fragment shader code for Phong and rim lighting},
-					label={listing-phong-lighting}, 
-					language=C]
+    label={listing-phong-lighting}, 
+    language=C]
 d = dot(ptLightNorm, ptNorm);
 
 // add Phong lighting
@@ -85,11 +79,17 @@ specularPortion = specularColour  * s;
 
 // add rim lighting
 if (d > 0 && d < 0.16)
-    rimPortion = vec4(0.4, 0.4, 0.4, 1);
+rimPortion = vec4(0.4, 0.4, 0.4, 1);
 
 lighting = ambientPortion + diffusePortion
-        + specularPortion + rimPortion;
++ specularPortion + rimPortion;
 \end{lstlisting}
+
+Lighting is implemented in the fragment shader, shown in \autoref{listing-phong-lighting}, rather than in the vertex shader, decreasing 
+efficiency as it must be calculated for every fragment rather than the relatively small number of 
+vertices, but providing more precise results. Our implementation of Phong lighting is as described 
+by Angel in \cite{texbook}, and the model can be displayed with either a directional or a point light 
+source. A code snippet of our implementation is provided in \autoref{listing-phong-lighting}.
 
 \newpage 
 % referring to the colour discretization process
@@ -98,13 +98,6 @@ Cel shading refers to an NPR technique where to better simulate a cartoon art st
 an image are broken down into bands. The colour palette of a scene is reduced to a handful of colours.
 The technique simulates how an artist might draw an image, where only a few shades are used, and few
 separate colours are used.
-
-To perform cel shading, a number of discrete bands n must be chosen. Higher values for n produce more 
-bands of colour, which leads to less harsh contrast in the image, but fewer bands create more contrast,
-and therefore a more dramatic effect. To get the final colour of a pixel, the RGB values are divided by
-$n+1$, which returns the index of the band. Then, the index is multiplied by the size of the band, which
-produces the final colour. Examples of cel shading for a particular model are shown in 
-\autoref{fig:cel-band-comparison}. 
 
 \begin{figure}[h]
     \centering
@@ -147,12 +140,13 @@ produces the final colour. Examples of cel shading for a particular model are sh
     \label{fig:cel-band-comparison}
 \end{figure}
 
-One can notice sharp edges on the model. This is implementation specific, and happens because the 
-colour passed to the fragment shader is interpolated between vertices by OpenGL. Normally, this creates 
-a smooth effect and saves processing power, but when performing cel shading, it can destroy the effect, 
-so it is turned off. Unfortunately, doing so creates jagged lines in models with a low polygon count, 
-but the effect is  not as noticeable for higher polygon count models, such as in 
-\autoref{fig:cel-shading-high-poly}. 
+
+To perform cel shading, a number of discrete bands n must be chosen. Higher values for n produce more 
+bands of colour, which leads to less harsh contrast in the image, but fewer bands create more contrast,
+and therefore a more dramatic effect. To get the final colour of a pixel, the RGB values are divided by
+$n+1$, which returns the index of the band. Then, the index is multiplied by the size of the band, which
+produces the final colour. Examples of cel shading for a particular model are shown in 
+\autoref{fig:cel-band-comparison}. 
 
 \begin{figure}[h]
     \centering
@@ -170,6 +164,13 @@ but the effect is  not as noticeable for higher polygon count models, such as in
     \caption{Cel shading with a high polygon count model}
     \label{fig:cel-shading-high-poly}
 \end{figure}
+
+One can notice sharp edges on the model. This is implementation specific, and happens because the 
+colour passed to the fragment shader is interpolated between vertices by OpenGL. Normally, this creates 
+a smooth effect and saves processing power, but when performing cel shading, it can destroy the effect, 
+so it is turned off. Unfortunately, doing so creates jagged lines in models with a low polygon count, 
+but the effect is  not as noticeable for higher polygon count models, such as in 
+\autoref{fig:cel-shading-high-poly}. 
 
 \newpage 
 
@@ -313,12 +314,6 @@ Contours being set to render as black once they reach the Fragment Shader.
     \label{fig:TexturesEngineer}
 \end{figure}
 
-Texture coordinates are loaded from the initial .obj file and stored with each vertex, and can then be used 
-both to render the model with its original texture or to replace the texture with another image. In the fragment 
-shader textures are used to map fragments to the color at the fragment's texture coordinate interpolated from the 
-stored vertex coordinate. The color mapped by the coordinate in the model's textures can then be further modified 
-through cel shading so photo realistic versions are rendered in a consistent toon style, shown in \autoref{fig:TexturesEngineer}.
-
 \begin{figure}[h]
     \centering
         \begin{subfigure}[b]{0.4\textwidth}
@@ -348,6 +343,12 @@ through cel shading so photo realistic versions are rendered in a consistent too
     \label{fig:TexturesReplacement}
 \end{figure}
 
+Texture coordinates are loaded from the initial .obj file and stored with each vertex, and can then be used 
+both to render the model with its original texture or to replace the texture with another image. In the fragment 
+shader textures are used to map fragments to the color at the fragment's texture coordinate interpolated from the 
+stored vertex coordinate. The color mapped by the coordinate in the model's textures can then be further modified 
+through cel shading so photo realistic versions are rendered in a consistent toon style, shown in \autoref{fig:TexturesEngineer}.
+
 Using a photo-realistic image transformed through cel shading as the new texture, shown in \autoref{fig:TexturesReplacement} can produce interesting 
 renders with the same process used for the original textures. 
 
@@ -361,11 +362,6 @@ of the vertex and fragment shaders that OpenGL3 requires to be used. The use of 
 shaders allows us to implement most algorithms on the GPU, which saves CPU cycles and increases the
 performance of the application.
 
-Essentially, our system is a real-time renderer for 3D models that handles lighting, arbitrary
-textures, and allows shading effects to be toggled on or off for comparison. A camera is supported
-so that the model can be examined from a variety of viewing angles. A high-level overview of the
-system is presented in \autoref{fig-sys-overview}.
-
 % I'm going to include a flow chart or something here to have a visual aid
 \begin{figure}[h]
     \centering
@@ -373,6 +369,11 @@ system is presented in \autoref{fig-sys-overview}.
     \caption{An overview of stages in the system}
     \label{fig-sys-overview}
 \end{figure}
+
+Essentially, our system is a real-time renderer for 3D models that handles lighting, arbitrary
+textures, and allows shading effects to be toggled on or off for comparison. A camera is supported
+so that the model can be examined from a variety of viewing angles. A high-level overview of the
+system is presented in \autoref{fig-sys-overview}.
 
 % model_converter | Conversion stage
 The first stage of our system takes in .obj files and reformats parts of the file in order to make
@@ -406,16 +407,15 @@ matter the distance to the model, so far away objects end up with much more noti
 than closer models.
 
 % a figure of the wireframe would be cool here
-
-The model render loop handles the lighting and the cel shading of the object, and the its work is
-done in the vertex and frament shaders. The steps are detailed in \autoref{fig-render-overview}.
-
 \begin{figure}[h]
     \centering
     \includegraphics[width=0.9\textwidth]{img/rendering-overview.png}
     \caption{An overview of stages in the rendering step}
     \label{fig-render-overview}
 \end{figure}
+
+The model render loop handles the lighting and the cel shading of the object, and the its work is
+done in the vertex and frament shaders. The steps are detailed in \autoref{fig-render-overview}.
 
 The vertex shader is the entry point for the OpenGL pipeline, so its main role is to forward the 
 parameters that the fragment shader uses, and to specify the position of each vertex sent to it. 
@@ -426,11 +426,6 @@ procedures happen. First, the colour of the lighting for the fragment is found. 
 process that involves applying diffuse lighting, rim lighting, and reducing extreme light and dark 
 values in order to preserve the colour of the model. Afterward, cel shading is applied to discretize
 the colours of the model. 
-
-\autoref{fig:teapot-comparison} shows the rendering process at three stages, drawing the outline,
-drawing the inner model, and the combined final result. One drawback to this approach of drawing
-outlines is that the rendering pipeline is used twice per model. However, it may be not quite as 
-intensive since only back faces are drawn, and the wireframe of the model is not filled.
 
 \begin{figure}[h]
     \centering
@@ -460,3 +455,8 @@ intensive since only back faces are drawn, and the wireframe of the model is not
     \caption{Comparison of output at each rendering stage}
     \label{fig:teapot-comparison}
 \end{figure}
+
+\autoref{fig:teapot-comparison} shows the rendering process at three stages, drawing the outline,
+drawing the inner model, and the combined final result. One drawback to this approach of drawing
+outlines is that the rendering pipeline is used twice per model. However, it may be not quite as 
+intensive since only back faces are drawn, and the wireframe of the model is not filled.
