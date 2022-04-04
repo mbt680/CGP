@@ -23,7 +23,7 @@ enhanced edges, and more clear shape from curved hatching. Additionally, they de
 their results on topographical data, to produce easy to read topographical maps of terrain.
 
 The work of DeCarlo et al. starts from a similar question, how can the shape of a 3D object be
-conveyed with just lines\cite{decarlo03}? The research describes two techniques to display 
+conveyed with just lines \cite{decarlo03}? The research describes two techniques to display 
 an object's shape, namely contours and suggestive contours. Contours describe an area of an 
 image where a surface turns away from the viewer, becoming invisible. Similarly, suggestive
 contours are like contours, but describe areas where the surface of an object turns away from
@@ -39,7 +39,6 @@ a cartoon style image. Notably, their ambient lighting stage renders each object
 single uniform colour, and the shadows of the scene are also a single colour, which seems 
 like a form of cel shading.
 
-%\cite{gooch98}
 Work by Mitchell et al. describes how a modified Phong shading model can be used to increase visual
 clarity of rendered models in a first-person actions game like Team Fortress 2 \cite{mitchell07}. One 
 technique employed is a transformation on the dot product of vector $n$ and $I$ in 
@@ -52,4 +51,11 @@ dark grays instead of black and white, and preferred to mix in warm colours to t
 The authors also add a dedicated rim lighting term to their Phong model in order to make upward
 facing surfaces more likely to be rim shaded.
 
-To create images that are even closer to traditional hand drawn line renderings Al-Rousan et al used Laplacian smoothing to reduce rough and sharp edges of models, creating a simplified model to reduce details in a realistic way before using other algorithms to outline contours of the model \cite{riyad16}. Similarly Lee et al focussed on improving directional lighting through dividing objects into curved surface patches, then applying lighting effects to each surface patch independently to optimally highlight details and draw the viewer's eye \cite{lee06}. In both cases simplification and modification of the initial model allowed for clearer renderings, but also required complicated pre-processing to the model.
+To create images that are even closer to traditional hand drawn line renderings Al-Rousan et al used 
+Laplacian smoothing to reduce rough and sharp edges of models, creating a simplified model to reduce 
+details in a realistic way before using other algorithms to outline contours of the model \cite{riyad16}. 
+Similarly, Lee et al focussed on improving directional lighting through dividing objects into curved 
+surface patches, then applying lighting effects to each surface patch independently to optimally 
+highlight details and draw the viewer's eye \cite{lee06}. In both cases simplification and modification 
+of the initial model allowed for clearer renderings, but also required complicated pre-processing to the 
+model.

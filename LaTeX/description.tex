@@ -33,7 +33,10 @@
     \label{fig:Lighting}
 \end{figure}
 
-The Phong lighting model is used, with specular, diffuse, and ambient light combined to give the model a realistic 3D shape. Specular light concentrates light in one direction, providing highlights, diffuse light scatters light equally, providing shadows, and ambient light provides an equal amount of light to all parts of the surface from every direction. 
+The Phong lighting model is used, with specular, diffuse, and ambient light combined to give 
+the model a realistic 3D shape. Specular light concentrates light in one direction, providing 
+highlights, diffuse light scatters light equally, providing shadows, and ambient light provides 
+an equal amount of light to all parts of the surface from every direction. 
 
 \begin{figure}[h]
 \centering
@@ -54,27 +57,42 @@ The Phong lighting model is used, with specular, diffuse, and ambient light comb
 \label{fig:RimLighting}
 \end{figure}
 
-Rim lighting is also added to provide additional highlights and increase the cartoon appearance of the render as specular highlights are not that effective, likely as properties of the model's material is consistent throughout it's entire texture always with a shininess of 0.5. It works by highlighting edges of the model near to perpendicular to the light, by calculating the dot product of the light and fragment position and checking for it to be between 0-0.16. This implementation does not work well on  models that do not have smooth curves, and the distance and position of the light must also be changed for different models for optimal results. 
+Rim lighting is also added to provide additional highlights and increase the cartoon appearance 
+of the render as specular highlights are not that effective, likely as properties of the model's 
+material is consistent throughout it's entire texture always with a shininess of 0.5. It works by 
+highlighting edges of the model near to perpendicular to the light, by calculating the dot product 
+of the light and fragment position and checking for it to be between 0-0.16. This implementation 
+does not work well on  models that do not have smooth curves, and the distance and position of the 
+light must also be changed for different models for optimal results. 
 
-\begin{lstlisting}[language=C]
-d = dot(ptLightNorm, ptNorm);
+Lighting is implemented in the fragment shader, rather than in the vertex shader, decreasing 
+efficiency as it must be calculated for every fragment rather than the relatively small number of 
+vertices, but providing more precise results. Our implementation of Phong lighting is as described 
+by Angel in \cite{texbook}, and the model can be displayed with either a directional or a point light 
+source. A code snippet of our implementation is provided in \autoref{fig-phong-lighting}.
 
-// add Phong lighting
-ambientPortion = ambientColour;
-diffusePortion = diffuseColour * d;
-halfway = normalize(lightNorm - fragmentNorm);
-s = max(dot(fragmentNorm, halfway), 0.0) ^ 0.5;
-specularPortion = specularColour  * s;
+\begin{figure}[h]
+    \centering
+    \begin{lstlisting}[language=C]
+        d = dot(ptLightNorm, ptNorm);
 
-// add rim lighting
-if (d > 0 && d < 0.16)
-    rimPortion = vec4(0.4, 0.4, 0.4, 1);
+        // add Phong lighting
+        ambientPortion = ambientColour;
+        diffusePortion = diffuseColour * d;
+        halfway = normalize(lightNorm - fragmentNorm);
+        s = max(dot(fragmentNorm, halfway), 0.0) ^ 0.5;
+        specularPortion = specularColour  * s;
 
-lighting = ambientPortion + diffusePortion
-         + specularPortion + rimPortion;
-\end{lstlisting}
+        // add rim lighting
+        if (d > 0 && d < 0.16)
+            rimPortion = vec4(0.4, 0.4, 0.4, 1);
 
-Lighting is implemented in the fragment shader, rather than in the vertex shader, decreasing efficiency as it must be calculated for every fragment rather than the relatively small number of vertices, but providing more precise results. Our implementation of Phong lighting is as described By Angel \cite{texbook}, and the model can be displayed with either a directional or point light source.
+        lighting = ambientPortion + diffusePortion
+                + specularPortion + rimPortion;
+    \end{lstlisting}
+    \caption{Fragment shader code for Phong and rim lighting}
+    \label{fig-phong-lighting}
+\end{figure}
 
 \newpage 
 % referring to the colour discretization process
@@ -160,7 +178,9 @@ but the effect is  not as noticeable for higher polygon count models, such as in
 
 % referring to the lines between the model and the background
 \thesection{Outlines}
-This is done by drawing lines on all the outer edges of the model. So as to clearly break it up form the background. As well as to give it a more stylized look. It is a commonly used technique in none photorealstic rendering. Even more so when trying to emulate a hand draw style.
+This is done by drawing lines on all the outer edges of the model. So as to clearly break it up from the 
+background. As well as to give it a more stylized look. It is a commonly used technique in non-photorealstic 
+rendering. Even more so when trying to emulate a hand draw style.
 
 \begin{figure}[h]
     \centering
@@ -181,13 +201,21 @@ This is done by drawing lines on all the outer edges of the model. So as to clea
 
 % referring to the lines within the front facing side of the model that are added in
 \thesection{Suggestive contours}
-Suggestive Contours are a little more complex. Properly stated, “ Suggestive contours are lines drawn on clearly visible parts of the surface, where a true contour would first appear with a minimal change in viewpoint.”  \cite{Contours} Simplified, what this means is that suggestive contours are lines drawn on top of a model where the model is highly concave. So as the show deapth.
+Suggestive Contours are a little more complex. Properly stated, “ Suggestive contours are lines drawn 
+on clearly visible parts of the surface, where a true contour would first appear with a minimal change 
+in viewpoint.”  \cite{Contours} Simplified, what this means is that suggestive contours are lines drawn 
+on top of a model where the model is highly concave. So as the show deapth.
 
-This helps to break up the form of the model in a way similar to how one dose when drawing with pencil and paper. This technique if most comonly used in situations where the model is atempting to look like a darwing or was made with a limited color palette.
+This helps to break up the form of the model in a way similar to how one dose when drawing with pencil 
+and paper. This technique if most comonly used in situations where the model is atempting to look like 
+a darwing or was made with a limited color palette.
 
 Adding in our contours and suggestive contours we have cycled through three methods.
 
-Our first implementation was only able to handle contours and was done using OpenGLs built - in PolygonMode system. More specifically, it was done by re-rendering the model in GL\_Line mode. Before offsetting in the Z axis relative to the camera. Theoretically making it so that the only part visible would be the lines outlining the model.
+Our first implementation was only able to handle contours and was done using OpenGL's built-in PolygonMode 
+system. More specifically, it was done by re-rendering the model in GL\_Line mode. Before offsetting in the 
+Z axis relative to the camera. Theoretically making it so that the only part visible would be the lines 
+outlining the model.
 
 \begin{figure}[h]
 \centering
@@ -213,11 +241,19 @@ Our first implementation was only able to handle contours and was done using Ope
 \end{subfigure}
 \end{figure}
 
-The problem with this is implementation, next to its simplicity, is that it produces a lot of artifacts. With this problem being most pronounced around the face of the model, which has the highest density of polygons. But they can be seen through the model. Flickering in and out of existence as the model is rotated.
+The problem with this is implementation, next to its simplicity, is that it produces a lot of artifacts. 
+With this problem being most pronounced around the face of the model, which has the highest density of polygons. 
+But they can be seen through the model. Flickering in and out of existence as the model is rotated.
 
-Seeing that this was not going to work, we then moved onto our second implementation using the stencil buffer. For contours, we set the stencil buffer to store the position of any pixel that was drawn before rendering the model to the screen. Before disabling writing to the buffer and inverting its data. Making it so that only areas outside that in which the model was drawn could be rendered to. Before once more rending the outline of the model.
+Seeing that this was not going to work, we then moved onto our second implementation using the stencil buffer. 
+For contours, we set the stencil buffer to store the position of any pixel that was drawn before rendering the 
+model to the screen. Before disabling writing to the buffer and inverting its data. Making it so that only areas 
+outside that in which the model was drawn could be rendered to. Before once more rending the outline of the model.
 
-While this was happening, suggestive contours would be calculated inside of the shaders and stored in a matrix, to be passed into the stencil buffer for a third and final pass. But it was as we were going over this that we realized that since we were already doing calculations inside of the fragment shader, it would be easier to manually set the color of the fragment to be black.
+While this was happening, suggestive contours would be calculated inside of the shaders and stored in a matrix, 
+to be passed into the stencil buffer for a third and final pass. But it was as we were going over this that we 
+realized that since we were already doing calculations inside of the fragment shader, it would be easier to 
+manually set the color of the fragment to be black.
 
 \begin{figure}[h]
     \centering
@@ -226,9 +262,15 @@ While this was happening, suggestive contours would be calculated inside of the 
     \label{fig-4}
 \end{figure}
 
-This leads into implementation three. For this implementation, we realized that it would be better to instead do all the work inside of the shaders. As most of the calculations would need to be done inside of them anyways. And by doing it this way, we would be able to generate the Contours in a single pass, instead of needing 3. While also being able to handle both Contours and Suggestive Contours in a near identical way to Contours.
+This leads into implementation three. For this implementation, we realized that it would be better to instead do 
+all the work inside of the shaders. As most of the calculations would need to be done inside of them anyways. And 
+by doing it this way, we would be able to generate the Contours in a single pass, instead of needing 3. While also 
+being able to handle both Contours and Suggestive Contours in a near identical way to Contours.
 
-For the actual implementation, we used the dot product of the normal vector of each face and the view angle. With any result of zero being a contour. While any none zero none negative result being compared to its sourdning faces. With any faces found to be significantly lower to be registerd as a Sujestive Contour. With Contours and Sujestive Contours being set to render as black once they reach the Fragment Shader.
+For the actual implementation, we used the dot product of the normal vector of each face and the view angle. With 
+any result of zero being a contour. While any none zero none negative result being compared to its sourdning faces. 
+With any faces found to be significantly lower to be registerd as a Sujestive Contour. With Contours and Sujestive 
+Contours being set to render as black once they reach the Fragment Shader.
 
 \newpage
 \thesection{Textures}
@@ -274,7 +316,11 @@ For the actual implementation, we used the dot product of the normal vector of e
     \label{fig:TexturesEngineer}
 \end{figure}
 
-Texture coordinates are loaded from the initial .obj file and stored with each vertex, and can then be used both to render the model with its original texture or to replace the texture with another image. In the fragment shader textures are used to map fragments to the color at the fragment's texture coordinate interpolated from the stored vertex coordinate. The color mapped by the coordinate in the model's textures can then be further modified through cel shading so photo realistic versions are rendered in a consistent toon style.
+Texture coordinates are loaded from the initial .obj file and stored with each vertex, and can then be used 
+both to render the model with its original texture or to replace the texture with another image. In the fragment 
+shader textures are used to map fragments to the color at the fragment's texture coordinate interpolated from the 
+stored vertex coordinate. The color mapped by the coordinate in the model's textures can then be further modified 
+through cel shading so photo realistic versions are rendered in a consistent toon style.
 
 \begin{figure}[h]
     \centering
@@ -305,7 +351,8 @@ Texture coordinates are loaded from the initial .obj file and stored with each v
     \label{fig:TexturesReplacement}
 \end{figure}
 
-Using a photo-realistic image transformed through cel shading as the new texture can produce interesting renders with the same process used for the original textures.
+Using a photo-realistic image transformed through cel shading as the new texture can produce interesting 
+renders with the same process used for the original textures.
 
 \newpage 
 
