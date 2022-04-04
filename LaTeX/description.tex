@@ -225,7 +225,7 @@ convex faces, as seen most prominently in the face \autoref{fig:ZOffset}.
     \label{fig:Stencil}
 \end{figure}
 
-Seeing that this would not work, we moved on to our second implementation. This time, we used the stencil 
+Seeing flaw in the implementation, we moved on to our second implementation. This time, we used the stencil 
 buffer instead of offsetting the outline. We needed to render in the reverse order of our first set up to 
 do this. The stencil buffer first needs to be set up and cleared each time the image is rendered. Next, 
 the buffer is set to record where on the screen information is generated before finally rendering the base model.
