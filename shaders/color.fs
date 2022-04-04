@@ -52,8 +52,7 @@ vec4 getLightingColor()
 
     // add rim lighting around edge of shadow
     if (ptApplyLight.z > 0) {
-        float r = 1 - d;
-        if (r > 0.9 && r < 1.1)
+        if (d > 0 && d < 0.16)
             rim = vec4(0.4, 0.4, 0.4, 1);
     }
 

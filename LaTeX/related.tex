@@ -3,14 +3,14 @@ Gooch et al.'s work in technical illustration demonstrates many common non-photo
 rendering effects \cite{gooch98}. The authors made the observation that there was a 
 disconnect between the style of artists and illustrators, and the style created by computer 
 graphics programmers. Where computer graphics artists were concerned with techniques to 
-create a realistic image, illustrators of technical manuals opt fir a style that emphasizes
-the geometry of an object, while removing extraenous detail. The authors note that technical
+create a realistic image, illustrators of technical manuals opt for a style that emphasizes
+the geometry of an object, while removing extraneous detail. The authors note that technical
 illustration needs this characteristic, as the viewer does not have the ability to move
 around a printed image to get more information. To produce a shaded technical rendering of
 an object, Gooch et al. render objects with black edge lines, no shadowing, intensities far 
 from black or white, colour indicated by surface normal, and a single light source that 
 provides white highlights (also known as rim lighting). It is interesting to note that the 
-authors provide a method for approximating their model using phong shading with negative 
+authors provide a method for approximating their model using Phong shading with negative 
 light colours.
 
 The work of Gooch is very similar to \cite{saito90}. Saito and Takahashi also sought to create
@@ -22,8 +22,8 @@ contours, discontinuities, and curved hatching together to produce images of 3D 
 enhanced edges, and more clear shape from curved hatching. Additionally, they demonstrate
 their results on topographical data, to produce easy to read topographical maps of terrain.
 
-The work of DeCarlo et al. starts from a similar question \cite{decarlo03}, how can the shape 
-of a 3D object be conveyed with just lines? The research describes two techniques to display 
+The work of DeCarlo et al. starts from a similar question, how can the shape of a 3D object be
+conveyed with just lines \cite{decarlo03}? The research describes two techniques to display 
 an object's shape, namely contours and suggestive contours. Contours describe an area of an 
 image where a surface turns away from the viewer, becoming invisible. Similarly, suggestive
 contours are like contours, but describe areas where the surface of an object turns away from
@@ -39,10 +39,9 @@ a cartoon style image. Notably, their ambient lighting stage renders each object
 single uniform colour, and the shadows of the scene are also a single colour, which seems 
 like a form of cel shading.
 
-\cite{gooch98}
-Work by Mitchell et al. in \cite{mitchell07} describes how a modified Phong shading model can
-be used to increase visual clarity of rendered models in a first-person actions game like Team
-Fortress 2. One technique employed is a transformation on the dot product of vector n and I in 
+Work by Mitchell et al. describes how a modified Phong shading model can be used to increase visual
+clarity of rendered models in a first-person actions game like Team Fortress 2 \cite{mitchell07}. One 
+technique employed is a transformation on the dot product of vector $n$ and $I$ in 
 the diffuse lighting equation. The transformation prevents models from losing shape information
 on faces opposite a particular light source. The authors transform the Phong model
 to add a function that takes the scale produced by diffuse lighting, and breaks it into three 
@@ -52,4 +51,11 @@ dark grays instead of black and white, and preferred to mix in warm colours to t
 The authors also add a dedicated rim lighting term to their Phong model in order to make upward
 facing surfaces more likely to be rim shaded.
 
-To create images that are even closer to traditional hand drawn line renderings Al-Rousan et al used Laplacian smoothing to reduce rough and sharp edges of models, creating a simplified model to reduce details in a realistic way before using other algorithms to outline contours of the model \cite{riyad16}. Similarly Lee et al focussed on improving lighting through dividing objects into curved surface patches, then applying lighting effects to each surface patch independently to optimally highlight details and draw the viewer's eye \cite{lee06}. In both cases simplification and modification of the initial model allowed for clearer renderings, but also required complicated pre-processing to the model.
+To create images that are even closer to traditional hand drawn line renderings Al-Rousan et al. used 
+Laplacian smoothing to reduce rough and sharp edges of models, creating a simplified model to reduce 
+details in a realistic way before using other algorithms to outline contours of the model \cite{riyad16}. 
+Similarly, Lee et al focussed on improving directional lighting through dividing objects into curved 
+surface patches, then applying lighting effects to each surface patch independently to optimally 
+highlight details and draw the viewer's eye \cite{lee06}. In both cases simplification and modification 
+of the initial model allowed for clearer renderings, but also required complicated pre-processing to the 
+model.
