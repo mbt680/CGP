@@ -174,7 +174,7 @@ but the effect is  not as noticeable for higher polygon count models, such as in
 
 % referring to the lines between the model and the background
 \thesection{Contours}
-Contours are a common technique used in none photorealistic rendering that involves highlighting 
+Contours are a common technique used in non-photorealistic rendering that involves highlighting 
 the boundaries and shape of an image with outlines. This technique makes a model appear like a drawing 
 and helps show depth and other details in areas where color normally would.
 
@@ -215,16 +215,12 @@ the camera, making it so that the only visible lines would be the Contours, resu
 
 \begin{figure}[h]
     \centering
-    \includegraphics[height=100pt]{img/ModelD.png}
+    \includegraphics[width=0.3\textwidth]{img/ModelD.png}
     \caption{Contours using the stencil buffer}
     \label{fig:Stencil}
 \end{figure}
 
-The second implementation used the stencil buffer rather than offsetting the outline. To do this, we needed to render in the reverse order of our first attempt. This is as 
-the stencil buffer first needs to be told where it can to write to. The stencil buffer  
-first needs to be enabled and cleared. Next where on the screen information should be shown 
-
-is stored in the matrix before rendering the base model. 
+The second implementation used the stencil buffer rather than offsetting the outline. To do this, we needed to render in the reverse order of our first attempt. The stencil buffer first needs to be enabled and cleared. Next where on the screen information should be shown is stored in a matrix to be used during rendering. 
  
 After this, we move on to rendering the outline using the inverse of the generated matrix. The matrix is
 set to read-only so new images can only be rendered to areas not written to in the first pass-through.
