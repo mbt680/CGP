@@ -213,8 +213,8 @@ a skull.
 
 Our first implementation only gave some basic suggestive contours and was made using OpenGL's built-in. 
 PolygonMode system. More specifically, it was done by first rendering the model in GL\_Line mode, as 
-seen in the none offset image \autoref{fig:NOffset}. Next, filled polygons are rendered and offset towards the camera. 
-Making it so that the only visible lines would be the Contours. Creating the middle image \autoref{fig:Offset}.
+seen in the none offset image \autoref{fig:NOffset}. Next, filled polygons are rendered and offset towards 
+the camera. Making it so that the only visible lines would be the Contours. Creating the middle image \autoref{fig:Offset}.
 
 \begin{figure}[h]
     \centering
@@ -223,16 +223,17 @@ Making it so that the only visible lines would be the Contours. Creating the mid
     \label{fig:Stencil}
 \end{figure}
 
-Next, we moved on to our second implementation. This time, using the stencil buffer instead of offsetting the 
-outline. To do this, we needed to render in the reverse order of our first attempt. As the stencile buffer 
-first needs to be told where it can to write to. To do this, the stencil buffer first needs to be enabled 
-and cleared. Next, the buffer is set to record where on the screen information is generated. Before rendering 
-the base model.
+Next, we moved on to our second implementation. This time, using the stencil buffer instead of 
+offsetting the outline. To do this, we needed to render in the reverse order of our first attempt. As 
+the stencile buffer first needs to be told where it can to write to. To do this, the stencil buffer 
+first needs to be enabled and cleared. Next, the buffer is set to record where on the screen information 
+is generated. Before rendering the base model.
 
-After this, we then move on to rendering the outline. First, by inversing the matrix and making it read-only 
-instead of write-only. It makes it so that new images can only be rendered to areas not written to in the 
-first pass-through. Before finally outlining the image using GL\_Line mode and creating the model seen infigure 
-8. A much less detailed contour, but without any of the artifacts of our first algorithm \autoref{fig:Stencil}.
+After this, we then move on to rendering the outline. First, by inversing the matrix and making it 
+read-only instead of write-only. It makes it so that new images can only be rendered to areas not 
+written to in the first pass-through. Before finally outlining the image using GL\_Line mode and 
+creating the model seen infigure 8. A much less detailed contour, but without any of the artifacts of 
+our first algorithm \autoref{fig:Stencil}.
 
 \newpage
 \thesection{Textures}
