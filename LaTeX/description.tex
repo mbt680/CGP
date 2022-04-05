@@ -175,7 +175,7 @@ but the effect is  not as noticeable for higher polygon count models, such as in
 \newpage 
 
 % referring to the lines between the model and the background
-\thesection{Contour}
+\thesection{Contours}
 Contours are a common technique used in none photorealistic rendering that involves highlighting 
 the boundaries of an image with outlines. This technique makes a model look more like a drawing 
 and helps show depth in areas where color normally would.
@@ -207,7 +207,7 @@ the skull.
         \caption{Close-Up}
         \label{fig:ZOffset}
     \end{subfigure}
-    \end{figure}
+\end{figure}
 
 Our first implementation could only handle contours and was made using OpenGL's built-in PolygonMode system.
 More specifically, it was done by re-rendering the model in GL\_Line mode, as seen in the none offset image \autoref{fig:NOffset}.
