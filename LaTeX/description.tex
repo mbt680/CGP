@@ -210,8 +210,8 @@ and on areas that have a sharp change in angle.
     \label{fig:ZOffset}
     \end{figure}
 
-Our first implementation only gave some basic suggestive contours and was made using OpenGL's built-in. 
-PolygonMode system. More specifically, it was done by first rendering the model in GL\_Line mode, as 
+Our first implementation only gave contours and some basic suggestive contours and was made using OpenGL's
+built-in. PolygonMode system. More specifically, it was done by first rendering the model in GL\_Line mode, as 
 seen in the none offset image \autoref{fig:NOffset}. Next, filled polygons are rendered and offset towards 
 the camera. Making it so that the only visible lines would be the Contours. Creating the middle image \autoref{fig:Offset}.
 
@@ -222,16 +222,16 @@ the camera. Making it so that the only visible lines would be the Contours. Crea
     \label{fig:Stencil}
 \end{figure}
 
-Next, we moved on to our second implementation using the stencil buffer instead of 
+Next, we moved on to our second implementation using the stencil buffer instead of  
 offsetting the outline. To do this, we needed to render in the reverse order of our first attempt. As 
-the stencil buffer first needs to be told where it can to write to. To do this, the stencil buffer 
+the stencil buffer first needs to be told where it can to write to. To do this, the stencil buffer  
 first needs to be enabled and cleared. Next, the buffer is set to record where on the screen information 
-is generated to a matrix before rendering the base model.
-
+is generated to the buffer before rendering the base model. 
+ 
 After this, we move on to rendering the outline using the inverse of the generated matrix. The matrix is
 set to read-only so new images can only be rendered to areas not written to in the first pass-through.
-Finally the image is outlined using GL\_Line mode to create the model seen in \autoref{fig:Stencil}. Stencil testing produces a much less detailed contour, but without any of the 
-artefacts of our first algorithm.
+Finally the image is outlined using GL\_Line mode to create the model seen in \autoref{fig:Stencil}. Stencil testing 
+produces a much less detailed contour, but without any of the artifacts of our first algorithm.
 
 \newpage
 \thesection{Textures}
