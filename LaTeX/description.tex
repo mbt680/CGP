@@ -35,7 +35,7 @@
 
 The Phong lighting model is used, with specular, diffuse, and ambient light combined to give 
 the model a realistic 3D shape in \autoref{fig:Lighting}. Specular light concentrates light in one direction, providing 
-highlights, diffuse light scatters light equally, providing shadows, and ambient light provides 
+highlights, diffuse lighting scatters light equally, providing shadows, and ambient light provides 
 an equal amount of light to all parts of the surface from every direction. 
 
 \begin{figure}[h]
@@ -61,7 +61,7 @@ Rim lighting, shown in \autoref{fig:RimLighting}, is also added to provide addit
 of the render as specular highlights are not that effective, likely as properties of the model's 
 material is consistent throughout it's entire texture always with a shininess of 0.5. It works by 
 highlighting edges of the model near to perpendicular to the light, by calculating the dot product 
-of the light and fragment position and checking for it to be between 0-0.16. This implementation 
+of the light and fragment position and checking for it to be between 0.00 and 0.16. This implementation 
 does not work well on  models that do not have smooth curves, and the distance and position of the 
 light must also be changed for different models for optimal results. 
 
@@ -175,7 +175,7 @@ but the effect is  not as noticeable for higher polygon count models, such as in
 \newpage 
 
 % referring to the lines between the model and the background
-\thesection{Contour}
+\thesection{Contours}
 Contours are a common technique used in none photorealistic rendering that involves highlighting 
 the boundaries of an image with outlines. This technique makes a model look more like a drawing 
 and helps show depth in areas where color normally would.
@@ -274,7 +274,7 @@ first pass-through. Before finally outlining the image using GL\_Line mode and c
     %    \caption{Final}
     %    \label{fig:TextureLightingCelShade}
     %\end{subfigure}
-    \caption{Cel Shaded Textures}
+    \caption{Cel shaded textures}
     \label{fig:TexturesEngineer}
 \end{figure}
 
@@ -382,7 +382,7 @@ done in the vertex and frament shaders. The steps are detailed in \autoref{fig-r
 
 The vertex shader is the entry point for the OpenGL pipeline, so its main role is to forward the 
 parameters that the fragment shader uses, and to specify the position of each vertex sent to it. 
-Additionally, the vertex shader calculates the lighting normal.
+Additionally, the vertex shader calculates the lighting vector relative to the viewing angle.
 
 The fragment shader does the bulk of the work of our application. In the fragment shader, two main
 procedures happen. First, the colour of the lighting for the fragment is found. This is a multi-step
@@ -421,5 +421,5 @@ the colours of the model.
 
 \autoref{fig:teapot-comparison} shows the rendering process at three stages, drawing the outline,
 drawing the inner model, and the combined final result. One drawback to this approach of drawing
-outlines is that the rendering pipeline is used twice per model. However, it may be not quite as 
+outlines is that the rendering pipeline is used twice per model. However, it may not be quite as 
 intensive since only back faces are drawn, and the wireframe of the model is not filled.
