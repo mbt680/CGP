@@ -174,9 +174,10 @@ but the effect is  not as noticeable for higher polygon count models, such as in
 
 % referring to the lines between the model and the background
 \thesection{Contours}
+
 Contours are a common technique used in non-photorealistic rendering that involves highlighting 
 the boundaries and shape of an image with outlines. This technique makes a model appear like a drawing 
-and helps show depth and other details in areas where color normally would.
+and helps the model stand out from background objects.
 
 The contours are constructed by adding lines to the model relative to the camera, creating outlines 
 similar to a sketch of the model. This is achieved by drawing lines around distinct parts of the model 
@@ -187,7 +188,7 @@ and on areas that have a sharp change in angle.
         \begin{subfigure}[b]{0.3\textwidth}
         \centering
         \includegraphics[height=100pt]{img/ModelA.png}
-        \caption{No Offset}
+        \caption{No offset}
         \label{fig:NOffset}
     \end{subfigure}
     ~
@@ -201,17 +202,17 @@ and on areas that have a sharp change in angle.
         \begin{subfigure}[b]{0.3\textwidth}
         \centering
         \includegraphics[height=100pt]{img/ModelC.png}
-        \caption{Close-Up}
+        \caption{Close-up}
         \label{fig:ZOffset}
     \end{subfigure}
-    \caption{Contours using GL\_Line and offset}
+    \caption{Contours using GL\_LINE and offset}
     \label{fig:ZOffset}
     \end{figure}
 
-Our first implementation only gave contours and some basic suggestive contours and was made using OpenGL's
-built-in PolygonMode system. More specifically, it was done by first rendering the model in GL\_Line mode, as 
+Our first implementation only gave contours and some basic suggestive contours. It was implemented using OpenGL's
+GL\_LINE and GL\_FILL polygon rendering modes. More specifically, it was done by first rendering the model in GL\_LINE mode, as 
 seen in \autoref{fig:NOffset}. Next, filled polygons are rendered and offset towards 
-the camera, making it so that the only visible lines would be the Contours, resulting in \autoref{fig:Offset}.
+the camera, making it so that the only visible lines would be contours, resulting in \autoref{fig:Offset}.
 
 \begin{figure}[h]
     \centering
@@ -220,12 +221,14 @@ the camera, making it so that the only visible lines would be the Contours, resu
     \label{fig:Stencil}
 \end{figure}
 
-The second implementation used the stencil buffer rather than offsetting the outline. To do this, we needed to render in the reverse order of our first attempt. The stencil buffer first needs to be enabled and cleared. Next where on the screen information should be shown is stored in a matrix to be used during rendering. 
+The second implementation used the stencil buffer rather than offsetting the filled polygons toward the camera. To do this, we needed to render 
+in the reverse order of our first attempt. The stencil buffer first needs to be enabled and cleared. The contents
+of the z-buffer are saved to a matrix, to be used in the next stage of the outline algorithm.
  
 After this, we move on to rendering the outline using the inverse of the generated matrix. The matrix is
 set to read-only so new images can only be rendered to areas not written to in the first pass-through.
-Finally the image is outlined using GL\_Line mode to create the model seen in \autoref{fig:Stencil}. Stencil testing 
-produces a much less detailed contour, but without any of the artifacts of our first algorithm.
+Finally, the image is outlined using GL\_LINE mode to create the model seen in \autoref{fig:Stencil}. Stencil testing 
+produces much less detailed contours, but without any of the artifacts of our first algorithm.
 
 \newpage
 \thesection{Textures}
