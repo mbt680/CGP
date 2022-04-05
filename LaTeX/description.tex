@@ -230,9 +230,9 @@ first needs to be enabled and cleared. Next, the buffer is set to record where o
 is generated. Before rendering the base model.
 
 After this, we move on to rendering the outline. First, by inversing the matrix and making it 
-read-only instead of write-only. It makes it so that new images can only be rendered to areas not 
-written to in the first pass-through. Before finally outlining the image using GL\_Line mode and 
-creating the model seen infigure 8. A much less detailed contour, but without any of the artifacts of 
+read-only instead of write-only. This makes it so that new images can only be rendered to areas not 
+written to in the first pass. Before finally outlining the image using GL\_Line mode and creating 
+the model seen infigure 8. A much less detailed contour, but without any of the artifacts of 
 our first algorithm \autoref{fig:Stencil}.
 
 \newpage
