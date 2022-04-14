@@ -5,8 +5,8 @@ import org.joml.Vector3f;
 
 public class Camera {
     Matrix4f viewMatrix = new Matrix4f();
-    private int scale = 30;
-    private Vector3f translation = new Vector3f(0,60,100);
+    private int scale = 90;
+    private Vector3f translation = new Vector3f(0,14,200);
     private Vector3f rotation = new Vector3f();
 
     Camera() {}

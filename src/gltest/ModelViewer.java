@@ -24,12 +24,12 @@ public class ModelViewer {
         public static Light lighting = new Light();
         public static String materialFileLoc = "";
         public static boolean pointLight = true;
-        public static boolean hasCelShading = true;
-        public static boolean textureHasCelShading = true;
-        public static boolean hasLighting = true;
-        public static boolean hasRimLighting = true;
-        public static boolean hasContours = true;
-        public static boolean hasSugContours = true;
+        public static boolean hasCelShading = false;
+        public static boolean textureHasCelShading = false;
+        public static boolean hasLighting = false;
+        public static boolean hasRimLighting = false;
+        public static boolean hasContours = false;
+        public static boolean hasSugContours = false;
     };
 
     private static final int WIDTH = 600;
@@ -124,8 +124,8 @@ public class ModelViewer {
         Model.setDefaultTexture(TextureLoader.loadTexture(TextureLoader.loadImage(dir + "/data/textures/white.png")));
 
         // Load model from command line args
-        String modelPath = "/data/engineer14/eng.obj";
-        String modelName = "engineer";
+        String modelPath = "/data/skull/skull.obj";
+        String modelName = "skull";
         if (args.length == 2) {
             modelPath = args[0];
             modelName = args[1];

@@ -82,7 +82,7 @@ public class SettingsDialog extends JFrame {
 		setVisible(true); 		
 	}
 
-	private JPanel effects = new JPanel(new GridLayout(3,2)) { {
+	private JPanel effects = new JPanel(new GridLayout(5,1)) { {
 		setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
 		chkPointLight = new JCheckBox("Point Light", Settings.pointLight);
 		chkCelShading = new JCheckBox("Cel Shading", Settings.hasCelShading);
@@ -112,11 +112,10 @@ public class SettingsDialog extends JFrame {
 		});
 
 		add(chkLighting);
-		add(chkPointLight);
 		add(chkRimLighting);	
+		add(chkPointLight);
 		add(chkCelShading);	
 		add(chkContours);		
-		add(chkSugContours);
 	} };
 
 	private JPanel materialSelection = new JPanel(new FlowLayout(FlowLayout.LEFT)) { {
